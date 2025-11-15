@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: python-editor
+    ports:
+      - "5000:5000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./temp:/temp
+    depends_on:
+      - python_image_puller
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: "http://+:5000"
+
+  python_image_puller:
+    image: python:3.11-slim
+    container_name: python_image_puller
+    command: ["echo", "Python image pulled"]
