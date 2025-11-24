@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CookieProvider } from "@/providers/cookie";
-import { cookies } from "next/headers";
 import { themeConfig } from "@/config/themeConfig";
 import { getCookies } from "@/helper/cookies";
 import StyledAntdThemeProvider from "@/providers/StyledAntdThemeProvider";
@@ -28,18 +27,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const themeCookie = getCookies("theme") || "app-dark";
+  console.log("themeCookie ", themeCookie);
   const theme = themeConfig(themeCookie);
 
-  console.log("[] => HHHH", themeCookie);
+  console.log("[] => HHHH", theme);
 
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased pt-4 px-6 overflow-hidden h-screen`}
-        style={{ background: theme.editorBackground }}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased pt-4 overflow-hidden h-screen`}
+        style={{ background: "black" }}
       >
         <CookieProvider>
-          <StyledAntdThemeProvider>{children}</StyledAntdThemeProvider>
+          <StyledAntdThemeProvider>
+            {children}
+          </StyledAntdThemeProvider>
         </CookieProvider>
       </body>
     </html>

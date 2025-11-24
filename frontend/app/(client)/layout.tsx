@@ -13,9 +13,11 @@ export default function RootLayout({
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Header />
         <CookieProviderForLocalStorage>
-          {children}
+          <main className="px-6">
+            <Header />
+            {children}
+          </main>
         </CookieProviderForLocalStorage>
       </PersistGate>
     </Provider>

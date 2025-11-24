@@ -19,12 +19,12 @@ const NRAModal = ({
   ...rest
 }: AModalProps) => {
   const { theme } = useCookieTheme();
-  const { font } = useCookieFont();
+  const { cookieFont } = useCookieFont();
 
   return (
     <BaseAModal
       theme={theme}
-      font={font as WebsiteFontsKey}
+      font={cookieFont as WebsiteFontsKey}
       style={style}
       title={title}
       className={className}

@@ -29,3 +29,9 @@ export const useCookieFont = () => {
   return { font, cookieFont, updateFont };
 };
 
+export const useCookieItems = () => {
+  const { theme, cookieTheme, updateTheme } = useCookieTheme();
+  const { font, cookieFont, updateFont } = useCookieFont();
+  return { theme, cookieTheme, updateTheme, font, cookieFont, updateFont };
+}
+ 

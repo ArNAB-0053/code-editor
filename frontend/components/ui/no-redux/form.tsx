@@ -6,9 +6,9 @@ import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
 
 export const NRAForm = ({ children, ...rest }: IBaseAFormProps) => {
   const { theme } = useCookieTheme();
-  const { font } = useCookieFont();
+  const { cookieFont } = useCookieFont();
   return (
-    <BaseAForm font={font as WebsiteFontsKey} theme={theme} {...rest}>
+    <BaseAForm font={cookieFont as WebsiteFontsKey} theme={theme} {...rest}>
       {children}
     </BaseAForm>
   );
@@ -16,10 +16,10 @@ export const NRAForm = ({ children, ...rest }: IBaseAFormProps) => {
 
 export const NRAFormItem = ({ children, ...rest }: FormItemProps) => {
   const { theme } = useCookieTheme();
-  const { font } = useCookieFont();
+  const { cookieFont } = useCookieFont();
 
   return (
-    <BaseAItem font={font as WebsiteFontsKey} theme={theme} {...rest}>
+    <BaseAItem font={cookieFont as WebsiteFontsKey} theme={theme} {...rest}>
       {children}
     </BaseAItem>
   );

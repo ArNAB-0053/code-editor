@@ -1,3 +1,5 @@
+import { SetterFunctionTypesBool, SetterFunctionTypesString } from "./_base";
+
 export interface OutputHeaderProps {
   isOutput: true;
   editorTheme: string;
@@ -6,24 +8,16 @@ export interface OutputHeaderProps {
   setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export type SetterFunctionTypesBool = React.Dispatch<
-  React.SetStateAction<boolean>
->;
-export type SetterFunctionTypesString = React.Dispatch<
-  React.SetStateAction<string>
->;
-export type SetterFunctionTypesNumber = React.Dispatch<
-  React.SetStateAction<number>
->;
+
 
 export interface EditorHeaderProps {
   isOutput: false;
   editorTheme: string;
   code: string;
-  setCode: setterFunctionTypesString;
+  setCode: SetterFunctionTypesString;
   p_lang: string;
   isCopied: boolean;
-  setIsCopied: setterFunctionTypesBool;
+  setIsCopied: SetterFunctionTypesBool;
   setOutput: setterFunctionTypesString;
   loading: boolean;
   setLoading: setterFunctionTypesBool;

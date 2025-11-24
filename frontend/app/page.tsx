@@ -1,12 +1,12 @@
 import Home from '@/components/home'
+import Header from '@/components/home/header'
 import Link from 'next/link'
-import React from 'react'
 
 const page = () => {
   return (
-    <div>dshgd
-
-      <Link href="/python" >Gooo</Link>
+    <div className="overflow-y-auto h-screen custom-scrollbar scroll-smooth relative">
+      {/* <Link href="/python" >Gooo</Link> */}
+      <Header/>
       <Home/>
     </div>
   )

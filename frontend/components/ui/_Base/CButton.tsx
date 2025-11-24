@@ -123,6 +123,12 @@ const BaseCButton = ({
       break;
   }
 
+  if (variant === "bordered") {
+    backgroundColor = "transparent";
+    borderColor = theme.activeColor;
+    color = theme.activeColor;
+  }
+
   return useDiv ? (
     <StyledBaseCDiv
       $theme={theme}

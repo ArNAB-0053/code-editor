@@ -1,12 +1,16 @@
-"use client"
-import Hero from './hero'
+"use client";
+import Compare from "../compare_guest_logged";
+import Hero from "./hero";
 
 const Home = () => {
   return (
-    <div>
-        <Hero/>
-    </div>
-  )
-}
+    <>
+      <Hero />
+      <div id="compare">
+        <Compare />
+      </div>
+    </>
+  );
+};
 
-export default Home
+export default Home;

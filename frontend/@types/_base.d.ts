@@ -21,3 +21,17 @@ export interface IExtraProps {
   theme: ThemeTypes;
   font: WebsiteFontsKey;
 }
+
+export type SetterFunctionTypesBool = React.Dispatch<
+  React.SetStateAction<boolean>
+>;
+export type SetterFunctionTypesString = React.Dispatch<
+  React.SetStateAction<string>
+>;
+export type SetterFunctionTypesNumber = React.Dispatch<
+  React.SetStateAction<number>
+>;
+export interface IModalProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
