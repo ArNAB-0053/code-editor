@@ -62,7 +62,7 @@ const Compare = () => {
           <NRCButton
             variant="default"
             // hoverColor={theme.activeColor}
-            hoverBgColor='var(--activeColorHover)'
+            hoverBgColor={`${theme.activeColor}d9`}
             className="border-2!"
             style={{ width: "100%" }}
           >
@@ -75,8 +75,8 @@ const Compare = () => {
       <NRACard
         title="Create Account"
         style={{
-          background: 'var(--editorBackground)',
-          color: 'var(--textColor)',
+          background: theme.editorBackground,
+          color: theme.textColor,
           border: `2px solid ${theme.activeColor}50`,
           borderRadius: "12px",
         }}
@@ -87,12 +87,12 @@ const Compare = () => {
           ))}
         </div>
 
-        <Link href="/auth" className="mt-8 flex items-center justify-center">
+        <Link href="/python" className="mt-8 flex items-center justify-center">
           <NRCButton
             type="none"
             variant="bordered"
-            hoverColor='var(--activeColorHover)'
-            hoverBgColor='var(activeColorSameBg)'
+            hoverColor={theme.activeColor}
+            hoverBgColor={`${theme.activeColor}20`}
             // variant=""
             className="border-2!"
             style={{ width: "100%" }}

@@ -1,16 +1,11 @@
 "use client";
 
+
 import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
 import { RxArrowRight } from "react-icons/rx";
 import { NRCButton } from "../ui/no-redux";
 import {
-  inconsolata,
-  inter,
   jetBrainsMono,
-  lexend,
-  open_sans,
-  outfit,
-  poppins,
   prompt,
 } from "@/fonts";
 
@@ -18,7 +13,7 @@ const Hero = () => {
   const { theme } = useCookieTheme();
   const { font } = useCookieFont();
 
-  // if (document) console.log(document?.documentElement.dataset);
+  if (document)  console.log( document?.documentElement.dataset);
 
   return (
     <section
@@ -67,7 +62,7 @@ const Hero = () => {
         <NRCButton
           // type="primary"
           // variant="default"
-          hoverBgColor='var(--activeColorHover)'
+          hoverBgColor={`${theme.activeColor}d9`}
           className="flex items-center gap-2 text-white!"
           // onClick={() => alert("Guest Mode Activated")}
         >

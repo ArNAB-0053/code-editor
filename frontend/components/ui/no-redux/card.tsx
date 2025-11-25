@@ -9,9 +9,9 @@ const NRACard = ({
   children,
   ...rest
 }: IACardProps) => {
-  const { font } = useCookieItems();
+  const { theme, font } = useCookieItems();
   return (
-    <BaseACard font={font} title={title} style={style} className={className} {...rest}>
+    <BaseACard theme={theme} font={font} title={title} style={style} className={className} {...rest}>
       {children}
     </BaseACard>
   );

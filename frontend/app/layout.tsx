@@ -7,6 +7,7 @@ import { themeConfig } from "@/config/themeConfig";
 import { getCookies } from "@/helper/cookies";
 import StyledAntdThemeProvider from "@/providers/StyledAntdThemeProvider";
 import { cookies } from "next/headers";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +45,16 @@ export default async function RootLayout({
         style={{ background: "black" }}
       >
         <CookieProvider>
-          <StyledAntdThemeProvider>{children}</StyledAntdThemeProvider>
+          <StyledAntdThemeProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </StyledAntdThemeProvider>
         </CookieProvider>
       </body>
     </html>

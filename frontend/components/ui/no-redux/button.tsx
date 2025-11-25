@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import BaseCButton from "../_Base/CButton";
+import { useCookieTheme } from "@/hooks/useItemFromCookie";
 
 type CButtonProps = {
   children: React.ReactNode;
@@ -25,8 +26,11 @@ const NRCButton = ({
   hoverBgColor = null,
   variant = "default",
 }: CButtonProps) => {
+  const {theme} = useCookieTheme();
+
   return (
     <BaseCButton
+      theme={theme}
       useDiv={useDiv}
       style={style}
       className={` transition-all duration-150 ease-linear ${className}`}

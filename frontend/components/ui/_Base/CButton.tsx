@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import { ThemeTypes } from "@/@types/theme";
 
 export type BaseCButtonProps = {
+  theme: ThemeTypes;
   children: React.ReactNode;
   useDiv?: boolean;
   onClick?: () => void;
@@ -14,55 +15,8 @@ export type BaseCButtonProps = {
   hoverBgColor?: string | null;
 };
 
-const StyledBaseCButton = styled.button<{
-  $hoverColor: string | null;
-  $hoverBgColor: string | null;
-  $bg: string;
-  $color: string;
-  $borderColor: string;
-}>`
-  background-color: ${({ $bg }) => $bg};
-  color: ${({ $color }) => $color};
-  border: 1px solid ${({ $borderColor }) => $borderColor};
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-
-  &:hover {
-    background: ${({ $hoverBgColor, $bg }) =>
-      $hoverBgColor ?? $bg} !important;
-
-    color: ${({ $hoverColor, $color }) =>
-      $hoverColor ?? $color} !important;
-  }
-`;
-
-const StyledBaseCDiv = styled.div<{
-  $hoverColor: string | null;
-  $hoverBgColor: string | null;
-  $bg: string;
-  $color: string;
-  $borderColor: string;
-}>`
-  background-color: ${({ $bg }) => $bg};
-  color: ${({ $color }) => $color};
-  border: 1px solid ${({ $borderColor }) => $borderColor};
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-
-  &:hover {
-    background-color: ${({ $hoverBgColor, $bg }) =>
-      $hoverBgColor ?? $bg} !important;
-
-    color: ${({ $hoverColor, $color }) =>
-      $hoverColor ?? $color} !important;
-  }
-`;
-
 const BaseCButton = ({
+  theme,
   children,
   onClick,
   useDiv = false,
@@ -73,13 +27,15 @@ const BaseCButton = ({
   hoverBgColor = null,
   variant = "default",
 }: BaseCButtonProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   // Variant-based background
   let backgroundColor =
     variant === "transparent"
       ? "transparent"
       : variant === "sameBg"
       ? "inherit"
-      : 'var(--activeColor)';
+      : theme.activeColor;
 
   // Type-based text / border color
   let color = "#fff";
@@ -88,12 +44,12 @@ const BaseCButton = ({
   switch (type) {
     case "primary":
       color = "#fff";
-      borderColor = 'var(--activeColor)';
+      borderColor = theme.activeColor;
       break;
 
     case "secondary":
-      color = 'var(--activeColorHover)';
-      borderColor = 'var(--activeColorHover)';
+      color = `${theme.activeColor}80`;
+      borderColor = `${theme.activeColor}50`;
       break;
 
     case "danger":
@@ -102,17 +58,17 @@ const BaseCButton = ({
       break;
 
     case "text":
-      color = 'var(--activeColor)';
+      color = theme.activeColor;
       borderColor = "transparent";
       break;
 
     case "link":
-      color = 'var(--activeColor)';
+      color = theme.activeColor;
       borderColor = "transparent";
       break;
 
     case "none":
-      color = 'var(--textColor)';
+      color = theme.textColor;
       borderColor = "transparent";
       backgroundColor = "transparent";
       break;
@@ -120,36 +76,34 @@ const BaseCButton = ({
 
   if (variant === "bordered") {
     backgroundColor = "transparent";
-    borderColor = 'var(--activeColor)';
-    color = 'var(--activeColor)';
+    borderColor = theme.activeColor;
+    color = theme.activeColor;
   }
 
-  return useDiv ? (
-    <StyledBaseCDiv
+  const buttonStyles: React.CSSProperties = {
+    backgroundColor: isHovered && hoverBgColor ? hoverBgColor : backgroundColor,
+    color: isHovered && hoverColor ? hoverColor : color,
+    border: `1px solid ${borderColor}`,
+    padding: "6px 14px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    fontSize: "14px",
+    transition: "all 0.15s ease-linear",
+    ...style,
+  };
+
+  const Component = useDiv ? "div" : "button";
+
+  return (
+    <Component
       onClick={onClick}
-      $hoverColor={hoverColor}
-      $hoverBgColor={hoverBgColor}
-      $bg={backgroundColor}
-      $color={color}
-      $borderColor={borderColor}
-      style={style}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={buttonStyles}
       className={type === "link" ? "underline " + className : className}
     >
       {children}
-    </StyledBaseCDiv>
-  ) : (
-    <StyledBaseCButton
-      onClick={onClick}
-      $hoverColor={hoverColor}
-      $hoverBgColor={hoverBgColor}
-      $bg={backgroundColor}
-      $color={color}
-      $borderColor={borderColor}
-      style={style}
-      className={type === "link" ? "underline " + className : className}
-    >
-      {children}
-    </StyledBaseCButton>
+    </Component>
   );
 };
 
