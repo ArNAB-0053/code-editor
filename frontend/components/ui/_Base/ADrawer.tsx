@@ -94,7 +94,7 @@ export const BaseADrawer = ({
           background: "transparent",
           ...style,
         }}
-        className={`backdrop-blur-md ${className} `}
+        className={`${className} `}
         {...rest}
       >
         {children}

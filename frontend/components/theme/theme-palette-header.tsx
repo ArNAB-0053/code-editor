@@ -1,18 +1,18 @@
 import { themeConfig } from "@/config/themeConfig";
-import { useCookieFont, useCookieItems } from "@/hooks/useItemFromCookie";
-import React from "react";
+import { useFont } from "@/context/FontProvider";
+import { useTheme } from "@/context/ThemeContext";
 
 export const ThemeColorPaletteHeader = () => {
-  const { cookieTheme } = useCookieItems();
-  const { font } = useCookieFont();
+  const { themeName } = useTheme();
+  const { font } = useFont();
   return (
     <div className="flex items-center gap-x-3 mb-4">
       <div
-        style={{ background: `${themeConfig(cookieTheme).activeColor}70` }}
+        style={{ background: `${themeConfig(themeName).activeColor}70` }}
         className="w-6 h-6 rounded-sm flex items-center justify-center"
       >
         <div
-          style={{ background: themeConfig(cookieTheme).activeColor }}
+          style={{ background: themeConfig(themeName).activeColor }}
           className="w-3 h-3 rounded-xs "
         />
       </div>
@@ -27,8 +27,7 @@ export const ThemeColorPaletteHeader = () => {
 };
 
 export const ThemeFontPaletteHeader = () => {
-  const { cookieTheme } = useCookieItems();
-  const { font } = useCookieFont();
+  const { font } = useFont();
   return (
     <div className="flex items-center gap-x-3 mb-4">
       <span className="border-b-2">

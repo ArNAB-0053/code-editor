@@ -2,13 +2,17 @@
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
-import { useCookieItems } from "@/hooks/useItemFromCookie";
 import NRACard from "./ui/no-redux/card";
 import { NRCButton } from "./ui/no-redux";
 import Link from "next/link";
+import { useFont } from "@/context/FontProvider";
+import { useTheme } from "@/context/ThemeContext";
+import { themeConfig } from "@/config/themeConfig";
 
 const Compare = () => {
-  const { theme, font } = useCookieItems();
+  const { font } = useFont();
+  const { themeName } = useTheme();
+  const theme = themeConfig(themeName);
 
   const features = [
     { text: "Database Support", guest: false, user: true },
@@ -29,13 +33,13 @@ const Compare = () => {
       ) : (
         <CloseCircleOutlined style={{ color: "red" }} />
       )}
-      <p className={websiteFonts[font as WebsiteFontsKey]?.className}>{text}</p>
+      <p className={font?.className}>{text}</p>
     </div>
   );
 
   return (
     <div
-      className="flex justify-center gap-8 p-10"
+      className="flex justify-center max-md:flex-col gap-8 p-10"
       //   style={{ background: theme.outputBackground }}
     >
       {/* Guest Card */}
@@ -47,6 +51,7 @@ const Compare = () => {
           border: `2px solid ${theme.border10}`,
           borderRadius: "12px",
         }}
+        className="max-md:w-full!"
       >
         <div
           className={`space-y-2 ${
@@ -80,6 +85,7 @@ const Compare = () => {
           border: `2px solid ${theme.activeColor}50`,
           borderRadius: "12px",
         }}
+        className="max-md:w-full!"
       >
         <div className="space-y-2">
           {features.map((f, idx) => (

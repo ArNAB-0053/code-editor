@@ -1,6 +1,8 @@
 "use client";
+import { useFont } from "@/context/FontProvider";
 import BaseACard, { IACardProps } from "../_Base/ACard";
-import { useCookieItems } from "@/hooks/useItemFromCookie";
+import { useTheme } from "@/context/ThemeContext";
+import { themeConfig } from "@/config/themeConfig";
 
 const NRACard = ({
   title,
@@ -9,7 +11,9 @@ const NRACard = ({
   children,
   ...rest
 }: IACardProps) => {
-  const { theme, font } = useCookieItems();
+  const { font } = useFont();
+    const { themeName } = useTheme();
+    const theme = themeConfig(themeName);
   return (
     <BaseACard theme={theme} font={font} title={title} style={style} className={className} {...rest}>
       {children}

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCookies, setCookies } from "@/helper/cookies";
 import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
@@ -7,6 +7,11 @@ import { websiteFonts } from "@/fonts";
 
 export const useCookieTheme = () => {
   const [cookieTheme, setCookieTheme] = useState(getCookies("theme") || "app-dark");
+  const themeCookie = getCookies("theme");
+
+  useEffect(() => {
+    setCookieTheme(themeCookie!)
+  }, [themeCookie])
   const theme = themeConfig(cookieTheme);
 
   const updateTheme = (value: string) => {

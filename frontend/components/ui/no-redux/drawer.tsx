@@ -1,7 +1,7 @@
-import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
 import { ADrawerProps, BaseADrawer } from "../_Base";
-import NRCButton from "./button";
-import { RxCross2 } from "react-icons/rx";
+import { useTheme } from "@/context/ThemeContext";
+import { themeConfig } from "@/config/themeConfig";
+import { useFont } from "@/context/FontProvider";
 
 export const NRDrawer = ({
   OpenBtn,
@@ -9,8 +9,9 @@ export const NRDrawer = ({
   closeIcon,
   ...rest
 }: ADrawerProps) => {
-  const { theme } = useCookieTheme();
-  const { font } = useCookieFont();
+  const { themeName } = useTheme();
+  const theme = themeConfig(themeName);
+  const { font } = useFont();
   return (
     <BaseADrawer
       theme={theme}

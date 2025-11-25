@@ -58,7 +58,7 @@ const BaseACard = ({
         </>
       }
       style={{ width: "400px", overflowX: "hidden", ...style }}
-      className={className}
+      className={`relative ${className}`}
       {...rest}
     >
       {children}

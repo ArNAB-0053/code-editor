@@ -2,17 +2,20 @@
 import { WebsiteFontsKey } from "@/@types/font";
 import { SelectProps } from "antd";
 import BaseASelect from "../_Base/ASelect";
-import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
+import { useTheme } from "@/context/ThemeContext";
+import { themeConfig } from "@/config/themeConfig";
+import { useFont } from "@/context/FontProvider";
 
 const NRASelect = ({ children, ...rest }: SelectProps) => {
-  const { theme, cookieTheme } = useCookieTheme();
-  const { font } = useCookieFont();
+  const { themeName } = useTheme();
+  const theme = themeConfig(themeName);
+  const { fontName } = useFont();
 
   return (
     <BaseASelect
       theme={theme}
-      font={font as WebsiteFontsKey}
-      themeName={cookieTheme}
+      font={fontName as WebsiteFontsKey}
+      themeName={themeName}
       {...rest}
     >
       {children}

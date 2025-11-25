@@ -1,7 +1,6 @@
 import React from "react";
 import { NRCButton, NRDrawer } from "../ui/no-redux";
 import { RiPaintFill } from "react-icons/ri";
-import { useCookieFont, useCookieItems } from "@/hooks/useItemFromCookie";
 import { editorThemes } from "@/constants/preference-constants";
 import { EditorThemeOptionsTypes } from "@/@types/theme";
 import { themeConfig } from "@/config/themeConfig";
@@ -13,6 +12,8 @@ import ThemeBlobSVG from "@/assets/ThemeBlobSVG";
 import { websiteFonts } from "@/fonts";
 import { getFontLabel } from "@/helper/font-style";
 import { WebsiteFontsKey } from "@/@types/font";
+import { useTheme } from "@/context/ThemeContext";
+import { useFont } from "@/context/FontProvider";
 
 export type ThemeOptions = {
   value: string;
@@ -21,8 +22,9 @@ export type ThemeOptions = {
 };
 
 const ThemePalette = () => {
-  const { theme, cookieTheme } = useCookieItems();
-  const { font } = useCookieFont();
+  const { font, updateFont } = useFont();
+  const { themeName, updateTheme } = useTheme();
+  const theme = themeConfig(themeName);
 
   const themeOptions = Object.entries(
     editorThemes as EditorThemeOptionsTypes
@@ -38,7 +40,7 @@ const ThemePalette = () => {
     font: websiteFonts[key as WebsiteFontsKey],
   }));
 
-  // console.log(fontOptions);
+  // console.log("dsgdsgd =>", font);
 
   return (
     <NRDrawer
@@ -54,6 +56,7 @@ const ThemePalette = () => {
           <RiPaintFill size={17} />
         </NRCButton>
       }
+      className="z-20!"
       closeIcon={false}
     >
       {/* Color Paletter */}
@@ -67,21 +70,22 @@ const ThemePalette = () => {
             className={`
               ${font?.className} 
               h-[70px]! w-full! border-2! relative! overflow-hidden! 
-              ${cookieTheme === x.value ? "opacity-80!" : "opacity-100!"} 
+              ${themeName === x.value ? "opacity-80!" : "opacity-100!"} 
               hover:opacity-80!
             `}
             // hoverBgColor={`${x.activeColor}20`}
             hoverColor={`${x.activeColor}`}
             style={{
               background:
-                cookieTheme === x.value
+                themeName === x.value
                   ? `${x.activeColor}80`
                   : `${x.activeColor}40`,
               borderColor:
-                cookieTheme === x.value ? `${x.activeColor}80` : "transparent",
+                themeName === x.value ? `${x.activeColor}80` : "transparent",
               lineHeight: "16px",
               padding: "0 20px",
             }}
+            onClick={() => updateTheme(x.value)}
           >
             {x.label}
             <ThemeBlobSVG theme={x} />
@@ -91,7 +95,7 @@ const ThemePalette = () => {
 
       {/* Font */}
       <ThemeFontPaletteHeader />
-      <div className="grid grid-cols-2 gap-x-3 gap-y-3 w-full mb-10">
+      <div className="grid grid-cols-3 gap-x-3 gap-y-3 w-full mb-10">
         {fontOptions?.map((x, idx) => (
           <NRCButton
             type="none"
@@ -99,8 +103,8 @@ const ThemePalette = () => {
             key={idx}
             className={`
               ${x?.font?.className} 
-              group h-10! w-full! border-2! border-white/10! relative! overflow-hidden! 
-              ${cookieTheme === x.value ? "opacity-80!" : "opacity-100!"} 
+              group h-16! w-full! border-2! border-white/10! relative! overflow-hidden! 
+              ${themeName === x.value ? "opacity-80!" : "opacity-100!"} 
               hover:opacity-80! transition-all! duration-200! ease-linear!
             `}
             // hoverBgColor={`${x.activeColor}20`}
@@ -115,8 +119,9 @@ const ThemePalette = () => {
               lineHeight: "16px",
               // padding: "0 5px",
             }}
+            onClick={() => updateFont(x.value)}
           >
-            <span className="absolute left-0 top-0 text-[7rem] rotate-15 opacity-10 group-hover:opacity-30 transition-all duration-200 ease-linear">
+            <span className="absolute -left-2 top-2 text-[7rem] tracking-tighter rotate-15 opacity-10 group-hover:opacity-30 transition-all duration-200 ease-linear">
               Aa
             </span>
             {x.label}
