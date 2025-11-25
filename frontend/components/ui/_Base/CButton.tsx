@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
 import styled from "styled-components";
-import { ThemeTypes } from "@/@types/theme";
 
 export type BaseCButtonProps = {
-  theme: ThemeTypes;
   children: React.ReactNode;
   useDiv?: boolean;
   onClick?: () => void;
@@ -17,7 +15,6 @@ export type BaseCButtonProps = {
 };
 
 const StyledBaseCButton = styled.button<{
-  $theme: ThemeTypes;
   $hoverColor: string | null;
   $hoverBgColor: string | null;
   $bg: string;
@@ -33,7 +30,7 @@ const StyledBaseCButton = styled.button<{
   font-size: 14px;
 
   &:hover {
-    background-color: ${({ $hoverBgColor, $bg }) =>
+    background: ${({ $hoverBgColor, $bg }) =>
       $hoverBgColor ?? $bg} !important;
 
     color: ${({ $hoverColor, $color }) =>
@@ -42,7 +39,6 @@ const StyledBaseCButton = styled.button<{
 `;
 
 const StyledBaseCDiv = styled.div<{
-  $theme: ThemeTypes;
   $hoverColor: string | null;
   $hoverBgColor: string | null;
   $bg: string;
@@ -67,7 +63,6 @@ const StyledBaseCDiv = styled.div<{
 `;
 
 const BaseCButton = ({
-  theme,
   children,
   onClick,
   useDiv = false,
@@ -84,7 +79,7 @@ const BaseCButton = ({
       ? "transparent"
       : variant === "sameBg"
       ? "inherit"
-      : theme.activeColor;
+      : 'var(--activeColor)';
 
   // Type-based text / border color
   let color = "#fff";
@@ -93,12 +88,12 @@ const BaseCButton = ({
   switch (type) {
     case "primary":
       color = "#fff";
-      borderColor = theme.activeColor;
+      borderColor = 'var(--activeColor)';
       break;
 
     case "secondary":
-      color = `${theme.activeColor}80`;
-      borderColor = `${theme.activeColor}50`;
+      color = 'var(--activeColorHover)';
+      borderColor = 'var(--activeColorHover)';
       break;
 
     case "danger":
@@ -107,17 +102,17 @@ const BaseCButton = ({
       break;
 
     case "text":
-      color = theme.activeColor;
+      color = 'var(--activeColor)';
       borderColor = "transparent";
       break;
 
     case "link":
-      color = theme.activeColor;
+      color = 'var(--activeColor)';
       borderColor = "transparent";
       break;
 
     case "none":
-      color = theme.textColor;
+      color = 'var(--textColor)';
       borderColor = "transparent";
       backgroundColor = "transparent";
       break;
@@ -125,13 +120,12 @@ const BaseCButton = ({
 
   if (variant === "bordered") {
     backgroundColor = "transparent";
-    borderColor = theme.activeColor;
-    color = theme.activeColor;
+    borderColor = 'var(--activeColor)';
+    color = 'var(--activeColor)';
   }
 
   return useDiv ? (
     <StyledBaseCDiv
-      $theme={theme}
       onClick={onClick}
       $hoverColor={hoverColor}
       $hoverBgColor={hoverBgColor}
@@ -145,7 +139,6 @@ const BaseCButton = ({
     </StyledBaseCDiv>
   ) : (
     <StyledBaseCButton
-      $theme={theme}
       onClick={onClick}
       $hoverColor={hoverColor}
       $hoverBgColor={hoverBgColor}

@@ -5,6 +5,7 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { useCookieItems } from "@/hooks/useItemFromCookie";
 import NRACard from "./ui/no-redux/card";
 import { NRCButton } from "./ui/no-redux";
+import Link from "next/link";
 
 const Compare = () => {
   const { theme, font } = useCookieItems();
@@ -57,25 +58,25 @@ const Compare = () => {
           ))}
         </div>
 
-        <div className="mt-8 flex items-center justify-center">
+        <Link href="/python" className="mt-8 flex items-center justify-center">
           <NRCButton
             variant="default"
             // hoverColor={theme.activeColor}
-            hoverBgColor={`${theme.activeColor}d9`}
+            hoverBgColor='var(--activeColorHover)'
             className="border-2!"
             style={{ width: "100%" }}
           >
             Continue as Guest
           </NRCButton>
-        </div>
+        </Link>
       </NRACard>
 
       {/* Logged In Card */}
       <NRACard
         title="Create Account"
         style={{
-          background: theme.editorBackground,
-          color: theme.textColor,
+          background: 'var(--editorBackground)',
+          color: 'var(--textColor)',
           border: `2px solid ${theme.activeColor}50`,
           borderRadius: "12px",
         }}
@@ -86,19 +87,19 @@ const Compare = () => {
           ))}
         </div>
 
-        <div className="mt-8 flex items-center justify-center">
+        <Link href="/auth" className="mt-8 flex items-center justify-center">
           <NRCButton
             type="none"
             variant="bordered"
-            hoverColor={theme.activeColor}
-            hoverBgColor={`${theme.activeColor}20`}
+            hoverColor='var(--activeColorHover)'
+            hoverBgColor='var(activeColorSameBg)'
             // variant=""
             className="border-2!"
             style={{ width: "100%" }}
           >
             Create Account
           </NRCButton>
-        </div>
+        </Link>
       </NRACard>
     </div>
   );

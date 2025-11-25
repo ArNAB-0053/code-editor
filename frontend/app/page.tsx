@@ -1,6 +1,5 @@
 import Home from '@/components/home'
 import Header from '@/components/home/header'
-import Link from 'next/link'
 
 const page = () => {
   return (

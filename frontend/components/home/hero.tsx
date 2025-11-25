@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
 import { RxArrowRight } from "react-icons/rx";
 import { NRCButton } from "../ui/no-redux";
@@ -16,10 +15,10 @@ import {
 } from "@/fonts";
 
 const Hero = () => {
-  const [open, setOpen] = useState(false);
-
   const { theme } = useCookieTheme();
   const { font } = useCookieFont();
+
+  // if (document) console.log(document?.documentElement.dataset);
 
   return (
     <section
@@ -44,7 +43,9 @@ const Hero = () => {
       <h1
         className={`text-4xl md:text-5xl sm:text-6xl font-bold max-w-3xl leading-[53px] ${prompt.className}`}
       >
-        <span className={`text-4xl md:text-5xl sm:text-6xl ${prompt.className} `}>
+        <span
+          className={`text-4xl md:text-5xl sm:text-6xl ${prompt.className} `}
+        >
           Write, Run & Share Code
         </span>
         <br />
@@ -66,9 +67,9 @@ const Hero = () => {
         <NRCButton
           // type="primary"
           // variant="default"
-          hoverBgColor={`${theme.activeColor}d9`}
+          hoverBgColor='var(--activeColorHover)'
           className="flex items-center gap-2 text-white!"
-          onClick={() => alert("Guest Mode Activated")}
+          // onClick={() => alert("Guest Mode Activated")}
         >
           Continue as Guest
           <RxArrowRight size={18} />
@@ -81,7 +82,7 @@ const Hero = () => {
           hoverColor={theme.activeColor}
           hoverBgColor={`${theme.activeColor}20`}
           className="px-4 py-2 text-sm"
-          onClick={() => setOpen(true)}
+          // onClick={() => setOpen(true)}
         >
           Create Account
         </NRCButton>

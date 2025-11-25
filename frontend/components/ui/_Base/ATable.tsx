@@ -1,3 +1,4 @@
+"use client"
 import { ThemeTypes } from "@/@types/theme";
 import { Table, TableProps, theme } from "antd";
 import React from "react";

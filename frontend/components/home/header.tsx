@@ -4,7 +4,7 @@ import React from "react";
 import Logo from "../Logo";
 
 const Header = () => {
-  const { theme, font } = useCookieItems();
+  const { theme } = useCookieItems();
   return (
     <div
       className="border-2 w-[50vw] h-[70px] place-self-center rounded-full px-4 mt-5 flex items-center"

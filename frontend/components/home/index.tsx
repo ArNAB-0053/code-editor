@@ -1,4 +1,3 @@
-"use client";
 import Compare from "../compare_guest_logged";
 import Hero from "./hero";
 

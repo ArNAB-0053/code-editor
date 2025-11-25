@@ -59,13 +59,13 @@ const Page = () => {
         </div>
 
         <div className="mt-8 flex items-center justify-center">
-          <CB
+          <CButton
             variant="bordered"
             className="border-2!"
             style={{ width: "100%" }}
           >
             Continue as Guest
-          </CB>
+          </CButton>
         </div>
       </ACard>
 
