@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
 import { RxArrowRight } from "react-icons/rx";
 import { NRCButton } from "../ui/no-redux";
@@ -23,7 +22,6 @@ const Hero = () => {
         color: theme.outputColor,
       }}
     >
-      {/* TOP BADGE */}
       <div
         className="px-6 py-3 rounded-full text-xs font-medium mb-6"
         style={{
@@ -34,7 +32,6 @@ const Hero = () => {
         The Ultimate Online Code Editor
       </div>
 
-      {/* MAIN HEADING */}
       <h1
         className={`text-4xl md:text-5xl sm:text-6xl font-bold max-w-3xl leading-[53px] ${prompt.className}`}
       >
@@ -48,7 +45,6 @@ const Hero = () => {
         <span style={{ color: theme.activeColor }}>Without Any Setup</span>
       </h1>
 
-      {/* SUBTEXT */}
       <p
         className={`text-sm md:text-sm sm:text-base opacity-70 mt-4 max-w-lg ${jetBrainsMono.className}`}
       >
@@ -56,7 +52,6 @@ const Hero = () => {
         multiple languages, custom themes, and real-time previews.
       </p>
 
-      {/* CTA BUTTONS */}
       <div className="flex items-center gap-4 mt-10">
         {/* GUEST */}
         <NRCButton
@@ -70,7 +65,6 @@ const Hero = () => {
           <RxArrowRight size={18} />
         </NRCButton>
 
-        {/* CREATE ACCOUNT */}
         <NRCButton
           type="none"
           variant="sameBg"
@@ -83,7 +77,6 @@ const Hero = () => {
         </NRCButton>
       </div>
 
-      {/* FOOT NOTE */}
       <div className="text-xs mt-6">
         <p className=" opacity-40 ">
           No signup required. Fully browser-based. Your preferences are saved

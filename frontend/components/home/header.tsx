@@ -1,11 +1,11 @@
 "use client";
-import { useCookieItems } from "@/hooks/useItemFromCookie";
-import React from "react";
+import { useCookieFont, useCookieItems } from "@/hooks/useItemFromCookie";
 import Logo from "../Logo";
-import { ThemeChange } from "../theme-change";
+import ThemePalette from "../theme/theme-palette";
 
 const Header = () => {
   const { theme } = useCookieItems();
+  const { font } = useCookieFont();
   return (
     <div
       className="border-2 w-[50vw] h-[70px] place-self-center rounded-full px-4 mt-5 flex items-center justify-between"
@@ -14,9 +14,7 @@ const Header = () => {
       }}
     >
       <Logo />
-      <div className="space-x-4">
-        <ThemeChange/>
-      </div>
+      <ThemePalette/>
     </div>
   );
 };
