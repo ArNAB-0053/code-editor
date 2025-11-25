@@ -6,6 +6,7 @@ import { jetBrainsMono, prompt } from "@/fonts";
 import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
 import { useFont } from "@/context/FontProvider";
+import Link from "next/link";
 
 const Hero = () => {
   const { themeName } = useTheme();
@@ -15,7 +16,7 @@ const Hero = () => {
 
   return (
     <section
-      className={`${font?.className} max-lg:mt-20 min-h-[80vh] w-full flex flex-col items-center justify-center px-6 text-center`}
+      className={`${font?.className} pt-68 min-h-[80vh] w-full flex flex-col items-center px-6 text-center`}
       style={{
         // background: theme?.editorBackground,
         color: theme?.outputColor,
@@ -32,7 +33,7 @@ const Hero = () => {
       </div>
 
       <h1
-        className={`text-4xl md:text-5xl sm:text-6xl font-bold max-w-3xl leading-[53px] ${prompt.className}`}
+        className={`text-4xl md:text-5xl sm:text-6xl font-bold max-w-3xl leading-[40px] ${prompt.className}`}
       >
         <span
           className={`text-4xl md:text-5xl sm:text-6xl ${prompt.className} `}
@@ -45,7 +46,7 @@ const Hero = () => {
       </h1>
 
       <p
-        className={`text-xs md:text-sm sm:text-xs opacity-70 mt-4 max-w-lg ${jetBrainsMono.className}`}
+        className={`text-xs md:text-sm sm:text-xs opacity-70 mt-6 max-w-lg ${jetBrainsMono.className}`}
       >
         A lightweight, blazing-fast editor built for developers. Supports
         multiple languages, custom themes, and real-time previews.
@@ -53,27 +54,31 @@ const Hero = () => {
 
       <div className="flex items-center max-sm:flex-col gap-4 mt-10">
         {/* GUEST */}
-        <NRCButton
-          // type="primary"
-          // variant="default"
-          hoverBgColor={`${theme?.activeColor}d9`}
-          className="flex items-center gap-2 text-white!"
-          // onClick={() => alert("Guest Mode Activated")}
-        >
-          Continue as Guest
-          <RxArrowRight size={18} />
-        </NRCButton>
+        <Link href="/python" className="rounded-xl">
+          <NRCButton
+            // type="primary"
+            // variant="default"
+            hoverBgColor={`${theme?.activeColor}d9`}
+            className="flex items-center gap-2 text-white!"
+            // onClick={() => alert("Guest Mode Activated")}
+          >
+            Continue as Guest
+            <RxArrowRight size={18} />
+          </NRCButton>
+        </Link>
 
-        <NRCButton
-          type="none"
-          variant="sameBg"
-          hoverColor={theme?.activeColor}
-          hoverBgColor={`${theme?.activeColor}20`}
-          className="px-4 py-2 text-sm"
-          // onClick={() => setOpen(true)}
-        >
-          Create Account
-        </NRCButton>
+        <Link href="/auth" className="rounded-xl">
+          <NRCButton
+            type="none"
+            variant="sameBg"
+            hoverColor={theme?.activeColor}
+            hoverBgColor={`${theme?.activeColor}20`}
+            className="px-4 py-2 text-sm"
+            // onClick={() => setOpen(true)}
+          >
+            Create Account
+          </NRCButton>
+        </Link>
       </div>
 
       <div className="text-xs mt-6">

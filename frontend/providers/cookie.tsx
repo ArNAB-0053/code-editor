@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useEffect, useLayoutEffect } from "react";
+import { ReactNode, useEffect, useLayoutEffect, useRef } from "react";
 import { getCookies, setCookies } from "@/helper/cookies";
 import {
   selectEditorTheme,
@@ -12,6 +12,7 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { useTheme } from "@/context/ThemeContext";
 import { useFont } from "@/context/FontProvider";
 import { useSelector } from "react-redux";
+import { usePathname } from "next/navigation";
 
 export const CookieProvider = ({ children }: { children: ReactNode }) => {
   const cookieTheme = getCookies("theme");
@@ -57,20 +58,31 @@ export const CookieProviderForLocalStorage = ({
 };
 
 export const CookieProviderToSetPreferrenceToCookie = () => {
+  
+  
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
 
   const { themeName, updateTheme } = useTheme();
   const { fontName, updateFont } = useFont();
 
+  
+
+  // const isUpdatingThemeRef = useRef(false);
+  // const isUpdatingFontRef = useRef(false);
+
   useEffect(() => {
     if (editorTheme !== themeName) {
       updateTheme(editorTheme);
+      // isUpdatingThemeRef.current = true
     }
+  }, [editorTheme, themeName, updateTheme]);
+
+  useEffect(() => {
     if (websiteFont !== fontName) {
       updateFont(websiteFont);
     }
-  }, [editorTheme, themeName, websiteFont, fontName, updateFont, updateTheme]);
+  }, [websiteFont, fontName, updateFont]);
 
-  return true;
+  return null;
 };

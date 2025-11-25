@@ -5,7 +5,7 @@ import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import {
   CookieProviderForLocalStorage,
-  CookieProviderToSetPreferrenceToCookie,
+  // CookieProviderToSetPreferrenceToCookie,
 } from "@/providers/cookie";
 
 export default function RootLayout({
@@ -13,11 +13,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <CookieProviderForLocalStorage>
-          <CookieProviderToSetPreferrenceToCookie />
+          {/* <CookieProviderToSetPreferrenceToCookie /> */}
           <main className="px-6">
             <Header />
             {children}
