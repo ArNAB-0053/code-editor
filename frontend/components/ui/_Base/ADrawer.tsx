@@ -1,4 +1,4 @@
-import { useState, cloneElement, isValidElement } from "react";
+import { useState, cloneElement, isValidElement, ReactElement } from "react";
 import { Drawer, DrawerProps } from "antd";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
@@ -8,7 +8,7 @@ import BaseCButton from "./CButton";
 import { RxCross2 } from "react-icons/rx";
 
 export interface ADrawerProps extends DrawerProps {
-  OpenBtn: any;
+  OpenBtn: ReactElement<{ onClick: () => void }>;
   useSideIndicator?: boolean;
 }
 

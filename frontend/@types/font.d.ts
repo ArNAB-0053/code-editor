@@ -1,7 +1,3 @@
-
-
-export type HeaderProps = OutputHeaderProps | EditorHeaderProps;
-
 export type EditorFontKey =
   | "cascadia"
   | "firacode"

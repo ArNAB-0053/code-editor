@@ -3,6 +3,8 @@ import { ThemeTypes } from "./theme";
 import { WebsiteFontsKey } from "./font";
 import { ReactNode } from "react";
 
+export type HeaderProps = OutputHeaderProps | EditorHeaderProps;
+
 export interface IBaseCAvatarProps {
     name: string; 
     theme: ThemeTypes; 

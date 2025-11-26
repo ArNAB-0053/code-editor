@@ -28,7 +28,7 @@ const Page = () => {
     { text: "Export Code", guest: true, user: true },
   ];
 
-  const Feature = ({ enabled, text }) => (
+  const Feature = ({ enabled, text }: {enabled: boolean, text: string}) => (
     <div className="flex items-center gap-4 text-sm py-1">
       {enabled ? (
         <CheckCircleOutlined style={{ color: "green" }} />

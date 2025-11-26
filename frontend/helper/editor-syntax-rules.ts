@@ -1,4 +1,6 @@
-export default function getEditorSytaxRules (theme: unknown){
+import { EditorThemeTypes } from "@/@types/theme";
+
+export default function getEditorSytaxRules (theme: EditorThemeTypes){
     const syntaxRules = [
       theme.syntaxKeyword && {
         token: "keyword",

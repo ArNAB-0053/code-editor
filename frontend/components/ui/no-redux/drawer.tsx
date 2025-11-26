@@ -2,6 +2,7 @@ import { ADrawerProps, BaseADrawer } from "../_Base";
 import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
 import { useFont } from "@/context/FontProvider";
+import { WebsiteFontsKey } from "@/@types/font";
 
 export const NRDrawer = ({
   OpenBtn,
@@ -11,11 +12,11 @@ export const NRDrawer = ({
 }: ADrawerProps) => {
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
-  const { font } = useFont();
+  const { fontName } = useFont();
   return (
     <BaseADrawer
       theme={theme}
-      font={font}
+      font={fontName as WebsiteFontsKey}
       OpenBtn={OpenBtn}
       closeIcon={closeIcon}
       {...rest}
