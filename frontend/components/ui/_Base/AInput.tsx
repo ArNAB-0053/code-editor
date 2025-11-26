@@ -41,7 +41,7 @@ const BaseAInput = ({
     <StyledAInput
       $theme={theme}
       style={{
-        fontFamily: font.style.fontFamily,
+        fontFamily: websiteFonts[font as WebsiteFontsKey]?.style?.fontFamily,
         ...style,
       }}
       className={`${

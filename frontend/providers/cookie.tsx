@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useLayoutEffect } from "react";
+import { ReactNode, useEffect, useLayoutEffect, useRef } from "react";
 import { getCookies, setCookies } from "@/helper/cookies";
 import {
   selectEditorTheme,
@@ -7,15 +7,19 @@ import {
   setEditorTheme,
   setWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
-import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { WebsiteFontsKey } from "@/@types/font";
+import { useTheme } from "@/context/ThemeContext";
+import { useFont } from "@/context/FontProvider";
+import { useSelector } from "react-redux";
+import { usePathname } from "next/navigation";
 
 export const CookieProvider = ({ children }: { children: ReactNode }) => {
   const cookieTheme = getCookies("theme");
   const cookieFont = getCookies("font");
-  
+
   useLayoutEffect(() => {
+    console.log("cookieTheme", cookieTheme);
     const setCookieTheme = () => {
       if (!cookieTheme) {
         setCookies("theme", 365, "lax", "app-dark");
@@ -39,18 +43,46 @@ export const CookieProviderForLocalStorage = ({
 }: {
   children: ReactNode;
 }) => {
-  const themeFromCookie = getCookies("theme");
-  const fontFromCookie = getCookies("font");
-  const editorTheme = useSelector(selectEditorTheme);
-  const websiteFont = useSelector(selectWebsiteFont);
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
-    if (!themeFromCookie || themeFromCookie === editorTheme) return;
-    if (!fontFromCookie || fontFromCookie === websiteFont) return;
+  const { themeName } = useTheme();
+  const { fontName } = useFont();
+  // console.log("themeName -> ", themeName);
 
-    dispatch(setEditorTheme(themeFromCookie));
-    dispatch(setWebsiteFont(fontFromCookie as WebsiteFontsKey));
-  }, [themeFromCookie, fontFromCookie, websiteFont, dispatch, editorTheme]);
+  useLayoutEffect(() => {
+    // console.log("themeName === > ", themeName, fontName);
+    dispatch(setEditorTheme(themeName));
+    dispatch(setWebsiteFont(fontName as WebsiteFontsKey));
+  }, [themeName, fontName, dispatch]);
   return <>{children}</>;
+};
+
+export const CookieProviderToSetPreferrenceToCookie = () => {
+  
+  
+  const editorTheme = useSelector(selectEditorTheme);
+  const websiteFont = useSelector(selectWebsiteFont);
+
+  const { themeName, updateTheme } = useTheme();
+  const { fontName, updateFont } = useFont();
+
+  
+
+  // const isUpdatingThemeRef = useRef(false);
+  // const isUpdatingFontRef = useRef(false);
+
+  useEffect(() => {
+    if (editorTheme !== themeName) {
+      updateTheme(editorTheme);
+      // isUpdatingThemeRef.current = true
+    }
+  }, [editorTheme, themeName, updateTheme]);
+
+  useEffect(() => {
+    if (websiteFont !== fontName) {
+      updateFont(websiteFont);
+    }
+  }, [websiteFont, fontName, updateFont]);
+
+  return null;
 };

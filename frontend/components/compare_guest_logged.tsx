@@ -1,0 +1,114 @@
+"use client";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { websiteFonts } from "@/fonts";
+import { WebsiteFontsKey } from "@/@types/font";
+import NRACard from "./ui/no-redux/card";
+import { NRCButton } from "./ui/no-redux";
+import Link from "next/link";
+import { useFont } from "@/context/FontProvider";
+import { useTheme } from "@/context/ThemeContext";
+import { themeConfig } from "@/config/themeConfig";
+
+const Compare = () => {
+  const { font } = useFont();
+  const { themeName } = useTheme();
+  const theme = themeConfig(themeName);
+
+  const features = [
+    { text: "Database Support", guest: false, user: true },
+    { text: "File Creation", guest: false, user: true },
+    { text: "Multiple Code Saving", guest: false, user: true },
+    { text: "Code Runner", guest: true, user: true },
+    { text: "Terminal Support", guest: false, user: true },
+    { text: "Theme Customization", guest: false, user: true },
+    { text: "Cloud Sync", guest: false, user: true },
+    { text: "Live Collaboration", guest: false, user: true },
+    { text: "Export Code", guest: true, user: true },
+  ];
+
+  const Feature = ({ enabled, text }: {enabled: boolean, text: string}) => (
+    <div className="flex items-center gap-4 text-sm py-1">
+      {enabled ? (
+        <CheckCircleOutlined style={{ color: "green" }} />
+      ) : (
+        <CloseCircleOutlined style={{ color: "red" }} />
+      )}
+      <p className={font?.className}>{text}</p>
+    </div>
+  );
+
+  return (
+    <div
+      className="flex justify-center max-md:flex-col gap-8 p-10"
+      //   style={{ background: theme.outputBackground }}
+    >
+      {/* Guest Card */}
+      <NRACard
+        title="Continue as Guest"
+        style={{
+          background: "transparent",
+          color: theme.textColor,
+          border: `2px solid ${theme.border10}`,
+          borderRadius: "12px",
+        }}
+        className="max-md:w-full!"
+      >
+        <div
+          className={`space-y-2 ${
+            font?.className
+          }`}
+        >
+          {features.map((f, idx) => (
+            <Feature key={idx} enabled={f.guest} text={f.text} />
+          ))}
+        </div>
+
+        <Link href="/python" className="mt-8 flex items-center justify-center">
+          <NRCButton
+            variant="default"
+            // hoverColor={theme.activeColor}
+            hoverBgColor={`${theme.activeColor}d9`}
+            className="border-2!"
+            style={{ width: "100%" }}
+          >
+            Continue as Guest
+          </NRCButton>
+        </Link>
+      </NRACard>
+
+      {/* Logged In Card */}
+      <NRACard
+        title="Create Account"
+        style={{
+          background: theme.editorBackground,
+          color: theme.textColor,
+          border: `2px solid ${theme.activeColor}50`,
+          borderRadius: "12px",
+        }}
+        className="max-md:w-full!"
+      >
+        <div className="space-y-2">
+          {features.map((f, idx) => (
+            <Feature key={idx} enabled={f.user} text={f.text} />
+          ))}
+        </div>
+
+        <Link href="/python" className="mt-8 flex items-center justify-center">
+          <NRCButton
+            type="none"
+            variant="bordered"
+            hoverColor={theme.activeColor}
+            hoverBgColor={`${theme.activeColor}20`}
+            // variant=""
+            className="border-2!"
+            style={{ width: "100%" }}
+          >
+            Create Account
+          </NRCButton>
+        </Link>
+      </NRACard>
+    </div>
+  );
+};
+
+export default Compare;

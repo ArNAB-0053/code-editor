@@ -6,8 +6,7 @@ import {
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import { Tree } from "antd";
-import { DirectoryTreeProps } from "antd/es/tree";
-import React from "react";
+import { DataNode, DirectoryTreeProps } from "antd/es/tree";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
@@ -16,14 +15,15 @@ import { MODAL_HEIGHT } from "..";
 
 const { DirectoryTree } = Tree;
 
-const StyledDirectoryTree = styled(DirectoryTree)<{ $theme: ThemeTypes }>`
-  &:hover,
+const StyledWrapper = styled.div<{ $theme: ThemeTypes }>`
+  .ant-tree:hover,
   .ant-tree-title:hover {
     color: ${({ $theme }) => $theme.hoverTextColor} !important;
     transition-property: all;
     transition-duration: 150ms;
     transition-timing-function: linear;
   }
+  
   .ant-tree-indent {
     width: 0px !important;
   }
@@ -48,6 +48,7 @@ const StyledDirectoryTree = styled(DirectoryTree)<{ $theme: ThemeTypes }>`
   .ant-tree-node-content-wrapper {
     min-height: 0px !important;
   }
+  
   .ant-tree-node-content-wrapper:hover {
     min-height: 0px !important;
     color: ${({ $theme }) => $theme.hoverTextColor} !important;
@@ -58,23 +59,29 @@ const StyledDirectoryTree = styled(DirectoryTree)<{ $theme: ThemeTypes }>`
   }
 `;
 
-const ADirectoryTree = ({ style, className, ...rest }: DirectoryTreeProps) => {
+const ADirectoryTree = <T extends DataNode = DataNode>({
+  style,
+  className,
+  ...rest
+}: DirectoryTreeProps<T>) => {
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const theme = themeConfig(editorTheme);
+  
   return (
-    <StyledDirectoryTree
-      $theme={theme}
-      className={`${websiteFonts[websiteFont as WebsiteFontsKey]?.className} bg-transparent! transition-all duration-150 ease-linear overflow-x-hidden overflow-y-auto ${className}`}
-      style={{
-        height: MODAL_HEIGHT,
-        color: `${theme.textColor}80`,
-        fontWeight: 400,
-        fontSize: "14px",
-        ...style,
-      }}
-      {...rest}
-    />
+    <StyledWrapper $theme={theme}>
+      <DirectoryTree<T>
+        className={`${websiteFonts[websiteFont as WebsiteFontsKey]?.className} bg-transparent! transition-all duration-150 ease-linear overflow-x-hidden overflow-y-auto ${className}`}
+        style={{
+          height: MODAL_HEIGHT,
+          color: `${theme.textColor}80`,
+          fontWeight: 400,
+          fontSize: "14px",
+          ...style,
+        }}
+        {...rest}
+      />
+    </StyledWrapper>
   );
 };
 

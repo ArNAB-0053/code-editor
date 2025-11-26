@@ -18,8 +18,10 @@ import {
   Roboto_Mono,
   Rubik,
   Source_Code_Pro,
+  Space_Grotesk,
   Urbanist,
   Work_Sans,
+  Yanone_Kaffeesatz,
 } from "next/font/google";
 
 // Editor fonts -> used inside editor like fontFamily: editorFonts[editorfont]
@@ -42,20 +44,22 @@ export const editorFonts: EditorFontsMap = {
 };
 
 // Webiste fonts -> used like websiteFonts[websiteFont].className
-const prompt = Prompt({ subsets: ["latin"], weight: ["400"] });
-const open_sans = Open_Sans({ subsets: ["latin"], weight: ["400"] });
-const work_sans = Work_Sans({ subsets: ["latin"], weight: ["400"] });
-const roboto = Roboto({ subsets: ["latin"], weight: ["400"] });
-const poppins = Poppins({ subsets: ["latin"], weight: ["400"] });
-const montserrat = Montserrat({ subsets: ["latin"], weight: ["400"] });
-const rubik = Rubik({ subsets: ["latin"], weight: ["400"] });
-const inter = Inter({ subsets: ["latin"], weight: ["400"] });
-const lato = Lato({ subsets: ["latin"], weight: ["400"] });
-const nunito = Nunito({ subsets: ["latin"], weight: ["400"] });
-const mulish = Mulish({ subsets: ["latin"], weight: ["400"] });
-const outfit = Outfit({ subsets: ["latin"], weight: ["400"] });
-const lexend = Lexend({ subsets: ["latin"], weight: ["400"] });
-const urbanist = Urbanist({ subsets: ["latin"], weight: ["400"] });
+export const prompt = Prompt({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const open_sans = Open_Sans({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const work_sans = Work_Sans({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const roboto = Roboto({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const poppins = Poppins({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const montserrat = Montserrat({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const rubik = Rubik({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const inter = Inter({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const lato = Lato({ subsets: ["latin"],  weight: ["400"] });
+export const nunito = Nunito({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const mulish = Mulish({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const outfit = Outfit({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const lexend = Lexend({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const urbanist = Urbanist({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const spaceGrotesk = Space_Grotesk({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const yanone = Yanone_Kaffeesatz({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export const websiteFonts: WebsiteFontsMap = {
   prompt,

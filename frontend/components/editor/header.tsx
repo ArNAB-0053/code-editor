@@ -1,6 +1,6 @@
 import { themeConfig } from "@/config/themeConfig";
 import { CopyButton, RunButton, TransparentButton } from "../header-buttons";
-import { HeaderProps } from "@/@types";
+import { HeaderProps } from "@/@types/_base";
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const theme = themeConfig(props.editorTheme);

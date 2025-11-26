@@ -22,14 +22,26 @@ const StyledFormItem = styled(Form.Item)<{
 }>`
   label {
     color: ${({ $theme }) => $theme?.activeColor} !important;
-    font-family: ${({ $font }) => $font?.style?.fontFamily} !important;
+    font-family: ${({ $font }) => websiteFonts[$font]?.style?.fontFamily} !important;
   }
+
+  .ant-select-selection-item {
+    font-family: ${({ $font }) => websiteFonts[$font]?.style?.fontFamily} !important;
 `;
 
-export const BaseAItem = ({ font, theme, children, ...rest }: AItemProps) => {
+export const BaseAItem = ({
+  font,
+  theme,
+  children,
+  ...rest
+}: AItemProps) => {
   return (
-    <StyledFormItem $font={font} $theme={theme} {...rest}>
-        {children}
+    <StyledFormItem
+      $font={font}
+      $theme={theme}
+      {...rest}
+    >
+      {children}
     </StyledFormItem>
   );
 };
@@ -47,7 +59,7 @@ export const BaseAForm = ({
       $theme={theme}
       className={`${websiteFonts[font]?.className} ${className}`}
       style={{
-        fontFamily: font?.style?.fontFamily,
+        fontFamily: websiteFonts[font]?.style?.fontFamily,
         ...style,
       }}
       {...rest}

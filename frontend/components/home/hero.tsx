@@ -1,98 +1,107 @@
-import { useState } from "react";
-import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
-import {
-  NRCButton,
-  NRAModal,
-  NRAInput,
-  NRAForm,
-  NRAFormItem,
-} from "../ui/no-redux";
-import { NRCAvatar } from "../ui/no-redux";
-import NRASelect from "../ui/no-redux/select";
-import { WebsiteFontsKey } from "@/@types/font";
-import { websiteFonts } from "@/fonts";
-import { getFontLabel } from "@/helper/font-style";
+"use client";
+
+import { RxArrowRight } from "react-icons/rx";
+import { NRCButton } from "../ui/no-redux";
+import { jetBrainsMono, prompt } from "@/fonts";
+import { useTheme } from "@/context/ThemeContext";
+import { themeConfig } from "@/config/themeConfig";
+import { useFont } from "@/context/FontProvider";
+import Link from "next/link";
 
 const Hero = () => {
-  const [open, setOpen] = useState(false);
-  const { theme } = useCookieTheme();
-  const { font, cookieFont, updateFont } = useCookieFont();
-
-  // console.log(font);
-  // console.log(cookieFont);
-
-  // console.log(font);
-
-  const handleChange = (value: WebsiteFontsKey) => {
-    updateFont(value);
-  };
-
-  const fontOptions = Object.entries(websiteFonts).map(([key]) => ({
-    value: key,
-    label: getFontLabel(key),
-  }));
+  const { themeName } = useTheme();
+  const theme = themeConfig(themeName);
+  const { font } = useFont();
+  // if (document) console.log(document?.documentElement.dataset);
 
   return (
-    <div
+    <section
+      className={`${font?.className} pt-68 min-h-[80vh] w-full flex flex-col items-center px-6 text-center`}
       style={{
-        background: theme.editorBackground,
+        // background: theme?.editorBackground,
+        color: theme?.outputColor,
       }}
-      className={font.className}
     >
-      <NRCButton
-        // btntype="sameBg"
-        onClick={() => setOpen(true)}
-        // type="text"
-        variant="transparent"
+      <div
+        className="px-6 py-3 rounded-full text-xs font-medium mb-6"
         style={{
-          color: theme.activeColor,
-          // border: `2px solid ${theme.activeColor}`,
+          background: `${theme?.activeColor}50`,
+          color: theme?.activeColor,
         }}
-        className="flex h-8! pl-1! pr-3! items-center text-xs! gap-2 rounded-3xl! cursor-pointer"
       >
-        Continue as Guest
-      </NRCButton>
+        The Ultimate Online Code Editor
+      </div>
 
-      <NRAModal
-        title="Continue as Guest"
-        centered
-        open={open}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-        // footer={false}
-        style={{
-          width: "50vh",
-        }}
-        className="overflow-hidden"
+      <h1
+        className={`text-4xl md:text-5xl sm:text-6xl font-bold max-w-3xl leading-[40px] ${prompt.className}`}
       >
-        <NRAForm layout="vertical" className="">
-          <div className="flex items-start justify-between w-full gap-x-6 mt-8 ">
-            <NRCAvatar theme={theme} name="Guest" />
-            <NRAFormItem
-              label="Name"
-              required
-              tooltip="This is a required field"
-              className="flex-1"
-            >
-              <NRAInput placeholder="input placeholder" value="Guest" />
-            </NRAFormItem>
-          </div>
+        <span
+          className={`text-4xl md:text-5xl sm:text-6xl ${prompt.className} `}
+        >
+          Write, Run & Share Code
+        </span>
+        <br />
+        Instantly —
+        <span style={{ color: theme?.activeColor }}>Without Any Setup</span>
+      </h1>
 
-          <NRAFormItem
-            label="Default font"
-            required
-            tooltip="This is a required field"
+      <p
+        className={`text-xs md:text-sm sm:text-xs opacity-70 mt-6 max-w-lg ${jetBrainsMono.className}`}
+      >
+        A lightweight, blazing-fast editor built for developers. Supports
+        multiple languages, custom themes, and real-time previews.
+      </p>
+
+      <div className="flex items-center max-sm:flex-col gap-4 mt-10">
+        {/* GUEST */}
+        <Link href="/python" className="rounded-xl">
+          <NRCButton
+            // type="primary"
+            // variant="default"
+            hoverBgColor={`${theme?.activeColor}d9`}
+            className="flex items-center gap-2 text-white!"
+            // onClick={() => alert("Guest Mode Activated")}
           >
-            <NRASelect
-              value={cookieFont}
-              style={{ width: 250 }}
-              onChange={handleChange}
-              options={fontOptions}
-            />
-          </NRAFormItem>
-        </NRAForm>
-      </NRAModal>
-    </div>
+            Continue as Guest
+            <RxArrowRight size={18} />
+          </NRCButton>
+        </Link>
+
+        <Link href="/auth" className="rounded-xl">
+          <NRCButton
+            type="none"
+            variant="sameBg"
+            hoverColor={theme?.activeColor}
+            hoverBgColor={`${theme?.activeColor}20`}
+            className="px-4 py-2 text-sm"
+            // onClick={() => setOpen(true)}
+          >
+            Create Account
+          </NRCButton>
+        </Link>
+      </div>
+
+      <div className="text-xs mt-6">
+        <p className=" opacity-40 ">
+          No signup required. Fully browser-based. Your preferences are saved
+          automatically.
+        </p>
+        <>
+          <span className=" opacity-40 mr-1">
+            But if you want extra features, you can sign in and unlock more
+            benefits
+          </span>
+          👉
+          <a
+            href="#compare"
+            style={{ color: `${theme?.activeColor}` }}
+            className="ml-1 underline opacity-80 hover:opacity-100"
+          >
+            See what you get
+          </a>
+        </>
+      </div>
+    </section>
   );
 };
 

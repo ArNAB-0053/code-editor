@@ -14,6 +14,7 @@ const StyledModal = styled(Modal)<{ $theme: ThemeTypes }>`
   .ant-modal-title {
     background-color: ${({ $theme }) => $theme.modalBg} !important;
     color: ${({ $theme }) => $theme.textColor} !important;
+    font-family: inherit !important;
   }
   .ant-modal-close-x {
     color: white !important;
@@ -40,7 +41,9 @@ const BaseAModal = ({
     <StyledModal
       title={
         <>
-          <h3 className="px-2">{title}</h3>
+          <h3 className={`px-2 ${websiteFonts[font]?.className} ${className}`}>
+            {title}
+          </h3>
 
           {useSideIndicator && (
             <div
