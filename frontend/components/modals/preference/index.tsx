@@ -33,7 +33,6 @@ const ActiveField = ({
   activeField: string;
 }) => {
   const isActive = fieldKey === activeField;
-  console.log("activeField -> dnhsghds", activeField);
 
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -81,7 +80,7 @@ const PreferenceModal = ({
   const activeParentField = useSelector(selectParenntKey);
   const editorTheme = useSelector(selectEditorTheme);
 
-  // console.log(activeField);
+  // console.log("activeField", activeField);
   const theme = themeConfig(editorTheme);
   // const activeColor = theme.activeColor;
 
@@ -136,7 +135,13 @@ const PreferenceModal = ({
       title: (
         <div className="my-2 flex items-center gap-x-5 relative">
           <div className="h-[35px] w-0.5 bg-white/5 absolute left-[2.3px] -top-3" />
-          <div className="w-1.5 h-1.5 rounded-full bg-zinc-600 translate-x-[0.1px]" />
+          <div
+            className="w-1.5 h-1.5 rounded-full translate-x-[0.4px] md:translate-x-[0.1px]"
+            style={{
+              background:
+                child.key === activeField ? theme.activeColor : "#52525c",
+            }}
+          />
           <p>{child.title}</p>
         </div>
       ),
@@ -154,8 +159,8 @@ const PreferenceModal = ({
       className="overflow-hidden"
     >
       <div
-        className="w-full flex mt-7  items-center justify-between"
-        style={{ height: MODAL_HEIGHT }}
+        className="w-full flex mt-7  items-center justify-between "
+        style={{ height: MODAL_HEIGHT, width: 'calc(100% + 20px)' }}
       >
         <ADirectoryTree
           treeData={treeDataWithTooltips}
@@ -180,20 +185,22 @@ const PreferenceModal = ({
               );
             }
           }}
-          className="min-w-[25%] pr-3 custom-scrollbar"
+          className="min-w-[25%] pr-6! custom-scrollbar"
         />
 
         <CDivider
           style={{
             height: `calc(${MODAL_HEIGHT} + 2vh)`,
           }}
-          className="-translate-y-1 p-0 pr-0 mr-0"
+          className="-translate-y-1 p-0 pr-0 mx-0!"
           direction="horizontal"
         />
 
         <div
-          className="flex-1 pl-3 overflow-y-auto overflow-x-hidden custom-scrollbar relative "
-          style={{ height: MODAL_HEIGHT }}
+          className="flex-1 pl-3 pr-5 overflow-y-auto overflow-x-hidden custom-scrollbar relative "
+          style={{
+            height: MODAL_HEIGHT,
+          }}
         >
           {renderField()}
         </div>
