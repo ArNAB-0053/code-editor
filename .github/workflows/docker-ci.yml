@@ -24,7 +24,7 @@ jobs:
         #     run: docker compose up frontend backend --abort-on-container-exit
 
           - name: Test Backend Build
-            run: docker compose run --rm backend dotnet --info
+            run: docker compose run --rm --entrypoint "dotnet" backend --info
         
           - name: Test Frontend Build
             run: docker compose run --rm frontent yarn build
