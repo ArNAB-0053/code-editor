@@ -3,10 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@/styles/theme.css";
 import { CookieProvider } from "@/providers/cookie";
-import { themeConfig } from "@/config/themeConfig";
-import { getCookies } from "@/helper/cookies";
-import StyledAntdThemeProvider from "@/providers/StyledAntdThemeProvider";
 import { cookies } from "next/headers";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { FontProvider } from "@/context/FontProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,17 +34,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const theme = await getCookiesServer("theme");
-  // const font = await getCookiesServer("font");
-  // console.log(theme,font)
+  const font = await getCookiesServer("font");
+  console.log(" SERVER ---> ", theme, font);
   return (
     <html lang="en" data-theme={theme} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased pt-4 overflow-hidden h-screen`}
         style={{ background: "black" }}
       >
-        <CookieProvider>
-          <StyledAntdThemeProvider>{children}</StyledAntdThemeProvider>
-        </CookieProvider>
+        <ThemeProvider initialTheme={theme!}>
+          <FontProvider initialFont={font!}>
+            <CookieProvider>{children}</CookieProvider>
+          </FontProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

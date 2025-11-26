@@ -1,10 +1,12 @@
 import React from 'react'
 import { BaseATable } from '../_Base';
 import { TableProps } from 'antd';
-import { useCookieTheme } from '@/hooks/useItemFromCookie';
+import { useTheme } from '@/context/ThemeContext';
+import { themeConfig } from '@/config/themeConfig';
 
 const NRATable = (props: TableProps) => {
-    const { theme, cookieTheme } = useCookieTheme();
+  const { themeName } = useTheme();
+    const theme = themeConfig(themeName);
   return (
     <BaseATable theme={theme} {...props} />
   )

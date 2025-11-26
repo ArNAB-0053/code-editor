@@ -1,7 +1,6 @@
 "use client";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import NRACard from "@/components/ui/no-redux/card";
-import { useCookieItems } from "@/hooks/useItemFromCookie";
 import { NRCButton } from "@/components/ui/no-redux";
 import ACard from "@/components/ui/antd/card";
 import {

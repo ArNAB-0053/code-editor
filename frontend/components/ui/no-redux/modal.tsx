@@ -2,7 +2,9 @@
 import { WebsiteFontsKey } from "@/@types/font";
 import { ModalProps } from "antd/es/modal";
 import { BaseAModal } from "../_Base";
-import { useCookieFont, useCookieTheme } from "@/hooks/useItemFromCookie";
+import { useTheme } from "@/context/ThemeContext";
+import { themeConfig } from "@/config/themeConfig";
+import { useFont } from "@/context/FontProvider";
 
 interface ModalExtraProps {
   useSideIndicator?: boolean;
@@ -18,13 +20,14 @@ const NRAModal = ({
   useSideIndicator = true,
   ...rest
 }: AModalProps) => {
-  const { theme } = useCookieTheme();
-  const { cookieFont } = useCookieFont();
+  const { themeName } = useTheme();
+  const theme = themeConfig(themeName);
+  const { fontName } = useFont();
 
   return (
     <BaseAModal
       theme={theme}
-      font={cookieFont as WebsiteFontsKey}
+      font={fontName as WebsiteFontsKey}
       style={style}
       title={title}
       className={className}

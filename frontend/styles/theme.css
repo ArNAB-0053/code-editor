@@ -1,7 +1,7 @@
 /* ============================================
    APP DARK (Default)
 ============================================ */
-html[data-theme="app-dark"] {
+.app-dark {
   --headerColor: #43434354;
   --baseTextColor: #ffffff;
   --outputBackground: #0f172a8e;
@@ -37,7 +37,7 @@ html[data-theme="app-dark"] {
 /* ============================================
    DRACULA
 ============================================ */
-html[data-theme="dracula"] {
+.dracula {
   --headerColor: #282a36;
   --baseTextColor: #f8f8f2;
   --outputBackground: #1e1f29;
@@ -73,7 +73,7 @@ html[data-theme="dracula"] {
 /* ============================================
    PURPLE NIGHT
 ============================================ */
-html[data-theme="purple-night"] {
+.purple-night {
   --headerColor: #01111d;
   --baseTextColor: #d6deeb;
   --outputBackground: #011627;
@@ -109,7 +109,7 @@ html[data-theme="purple-night"] {
 /* ============================================
    WINTER DARK
 ============================================ */
-html[data-theme="winter-dark"] {
+.winter-dark {
   --headerColor: #01111d;
   --baseTextColor: #d6deeb;
   --outputBackground: #011627;
@@ -145,7 +145,7 @@ html[data-theme="winter-dark"] {
 /* ============================================
    ONE DARK PRO
 ============================================ */
-html[data-theme="one-dark-pro"] {
+.one-dark-pro {
   --headerColor: #21252b;
   --baseTextColor: #abb2bf;
   --outputBackground: #1e2227;
@@ -181,7 +181,7 @@ html[data-theme="one-dark-pro"] {
 /* ============================================
    DARCULA
 ============================================ */
-html[data-theme="darcula"] {
+.darcula {
   --headerColor: #3c3f41;
   --baseTextColor: #a9b7c6;
   --outputBackground: #2b2b2b;
@@ -217,7 +217,7 @@ html[data-theme="darcula"] {
 /* ============================================
    GITHUB DARK DIMMED
 ============================================ */
-html[data-theme="github-dark-dimmed"] {
+.github-dark-dimmed {
   --headerColor: #2d333b;
   --baseTextColor: #adbac7;
   --outputBackground: #22272e;
@@ -253,7 +253,7 @@ html[data-theme="github-dark-dimmed"] {
 /* ============================================
    MIDNIGHT BLUE
 ============================================ */
-html[data-theme="midnight-blue"] {
+.midnight-blue {
   --headerColor: #1b2a41;
   --baseTextColor: #e8f1ff;
   --outputBackground: #0d1b30;
@@ -289,7 +289,7 @@ html[data-theme="midnight-blue"] {
 /* ============================================
    CARBON NIGHT
 ============================================ */
-html[data-theme="carbon-night"] {
+.carbon-night {
   --headerColor: #2b2b2b;
   --baseTextColor: #ffffff;
   --outputBackground: #161616;
@@ -325,7 +325,7 @@ html[data-theme="carbon-night"] {
 /* ============================================
    ZINC DARK
 ============================================ */
-html[data-theme="zinc-dark"] {
+.zinc-dark {
   --headerColor: #27272a;
   --baseTextColor: #fafafa;
   --outputBackground: #18181b;

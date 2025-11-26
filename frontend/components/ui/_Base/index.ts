@@ -7,5 +7,6 @@ export { default as BaseCButton } from "./CButton";
 export { default as BaseCAvatar } from "./CAvatar";
 export * from "./AForm";
 export { default as BaseATable } from "./ATable";
+export * from "./ADrawer";
 // export { default as ASelect } from "./select";
 

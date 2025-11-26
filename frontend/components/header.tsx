@@ -11,12 +11,17 @@ import { AButton } from "./ui/antd";
 import { WebsiteFontsKey } from "@/@types/font";
 import { FaSlidersH } from "react-icons/fa";
 import Link from "next/link";
+import { useTheme } from "@/context/ThemeContext";
+import { useFont } from "@/context/FontProvider";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const theme = themeConfig(editorTheme);
+
+  const { updateTheme } = useTheme();
+  const { updateFont } = useFont();
   return (
     <>
       <div className="w-full flex items-center justify-between mb-2">
@@ -27,6 +32,10 @@ const Header = () => {
             style={{
               fontFamily:
                 "ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace",
+            }}
+            onClick={() => {
+              updateFont(websiteFont);
+              updateTheme(editorTheme);
             }}
           >
             CodeditorX
