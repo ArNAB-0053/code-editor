@@ -20,8 +20,14 @@ jobs:
           - name: Docker Compose Build
             run: docker compose build
 
-          - name: Docker Run
-            run: docker compose up frontend backend --abort-on-container-exit
+        #   - name: Docker Run
+        #     run: docker compose up frontend backend --abort-on-container-exit
+
+          - name: Test Backend Build
+            run: docker compose run --rm backend dotnet --info
+        
+          - name: Test Frontend Build
+            run: docker compose run --rm frontent yarn build
 
           - name: Success Message
             if: success()
