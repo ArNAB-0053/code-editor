@@ -27,7 +27,7 @@ jobs:
             run: docker compose run --rm --entrypoint "dotnet" backend --info
         
           - name: Test Frontend Build
-            run: docker compose run --rm frontent yarn build
+            run: docker compose run --rm frontend yarn build
 
           - name: Success Message
             if: success()
