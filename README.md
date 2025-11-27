@@ -1,7 +1,6 @@
 # Codeitor
 
-This project is a full-stack, containerized code execution platform designed to safely run user-submitted code inside isolated Docker containers.  
-Users can write, execute, and test code directly from the browser, while the backend ensures security, isolation, and consistent runtime environments.
+This project is a full-stack, containerized code execution platform designed to safely run user-submitted code inside isolated Docker containers. Users can write, execute, and test code directly from the browser, while the backend ensures security, isolation, and consistent runtime environments.
 
 ---
 

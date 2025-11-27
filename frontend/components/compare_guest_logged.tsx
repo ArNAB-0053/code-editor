@@ -1,7 +1,5 @@
 "use client";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { websiteFonts } from "@/fonts";
-import { WebsiteFontsKey } from "@/@types/font";
 import NRACard from "./ui/no-redux/card";
 import { NRCButton } from "./ui/no-redux";
 import Link from "next/link";
@@ -39,7 +37,7 @@ const Compare = () => {
 
   return (
     <div
-      className="flex justify-center max-md:flex-col gap-8 p-10"
+      className="flex justify-center max-md:flex-col gap-8 mt-10"
       //   style={{ background: theme.outputBackground }}
     >
       {/* Guest Card */}
