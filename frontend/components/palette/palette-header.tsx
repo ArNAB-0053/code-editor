@@ -30,14 +30,14 @@ export const ThemeFontPaletteHeader = () => {
   const { font } = useFont();
   return (
     <div className="flex items-center gap-x-3 mb-4">
-      <span className="border-b-2">
+      {/* <span className="border-b-2">
         <p className="text-xl -translate-y-1">Aa</p>
-      </span>
+      </span> */}
 
       <h1
         className={`${font?.className}  text-white/80 tracking-wider text-sm`}
       >
-        Font
+        Select a font
       </h1>
     </div>
   );

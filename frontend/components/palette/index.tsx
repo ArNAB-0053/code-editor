@@ -7,7 +7,7 @@ import { themeConfig } from "@/config/themeConfig";
 import {
   ThemeColorPaletteHeader,
   ThemeFontPaletteHeader,
-} from "./theme-palette-header";
+} from "./palette-header";
 import ThemeBlobSVG from "@/assets/ThemeBlobSVG";
 import { websiteFonts } from "@/fonts";
 import { getFontLabel } from "@/helper/font-style";
@@ -21,8 +21,8 @@ export type ThemeOptions = {
   activeColor: string;
 };
 
-const ThemePalette = () => {
-  const { font, updateFont } = useFont();
+export const ThemePalette = () => {
+  const { font } = useFont();
   const { themeName, updateTheme } = useTheme();
   const theme = themeConfig(themeName);
 
@@ -33,14 +33,6 @@ const ThemePalette = () => {
     label,
     activeColor: themeConfig(key)?.activeColor,
   }));
-
-  const fontOptions = Object.entries(websiteFonts).map(([key]) => ({
-    value: key,
-    label: getFontLabel(key),
-    font: websiteFonts[key as WebsiteFontsKey],
-  }));
-
-  // console.log("dsgdsgd =>", font);
 
   return (
     <NRDrawer
@@ -92,7 +84,38 @@ const ThemePalette = () => {
           </NRCButton>
         ))}
       </div>
+    </NRDrawer>
+  );
+};
 
+export const FontPalette = () => {
+  const { fontName, updateFont } = useFont();
+  const { themeName } = useTheme();
+  const theme = themeConfig(themeName);
+
+  const fontOptions = Object.entries(websiteFonts).map(([key]) => ({
+    value: key,
+    label: getFontLabel(key),
+    font: websiteFonts[key as WebsiteFontsKey],
+  }));
+
+  return (
+    <NRDrawer
+      title="Font Palette"
+      OpenBtn={
+        <NRCButton
+          type="none"
+          variant="transparent"
+          hoverColor={theme.activeColor}
+          hoverBgColor={`${theme.activeColor}20`}
+          className="aspect-square! rounded-full! group"
+        >
+          <p className="text-base underline underline-offset-6 italic">Aa</p>
+        </NRCButton>
+      }
+      className="z-20!"
+      closeIcon={false}
+    >
       {/* Font */}
       <ThemeFontPaletteHeader />
       <div className="grid grid-cols-3 gap-x-3 gap-y-3 w-full mb-10">
@@ -110,10 +133,7 @@ const ThemePalette = () => {
             // hoverBgColor={`${x.activeColor}20`}
             // hoverColor={`${x.activeColor}`}
             style={{
-              // background:
-              //   cookieTheme === x.value
-              //     ? `${x.activeColor}80`
-              //     : `${x.activeColor}40`,
+              background: fontName === x.value ? `${theme.activeColor}30` : "",
               // borderColor:
               //   cookieTheme === x.value ? `${x.activeColor}80` : "transparent",
               lineHeight: "16px",
@@ -131,5 +151,3 @@ const ThemePalette = () => {
     </NRDrawer>
   );
 };
-
-export default ThemePalette;

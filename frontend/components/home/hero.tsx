@@ -2,11 +2,21 @@
 
 import { RxArrowRight } from "react-icons/rx";
 import { NRCButton } from "../ui/no-redux";
-import { jetBrainsMono, prompt } from "@/fonts";
+import {
+  jetBrainsMono,
+  play_cu,
+  play_us_modern,
+  prompt,
+  spaceGrotesk,
+} from "@/fonts";
 import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
 import { useFont } from "@/context/FontProvider";
 import Link from "next/link";
+import { FaPlay } from "react-icons/fa";
+import { RotatingLanguageHero } from "./RotatingLanguageHero";
+
+const langs = ["Python", "JavaScript", "Java", "Cpp", "C", "Go"];
 
 const Hero = () => {
   const { themeName } = useTheme();
@@ -16,10 +26,10 @@ const Hero = () => {
 
   return (
     <section
-      className={`${font?.className} pt-68 min-h-[80vh] w-full flex flex-col items-center px-6 text-center`}
+      className={`${font?.className} pt-[20vh] lg:pt-48 xl:pt-60 min-h-svh  w-full flex flex-col items-center text-center`}
       style={{
         // background: theme?.editorBackground,
-        color: theme?.outputColor,
+        color: theme?.textColor,
       }}
     >
       <div
@@ -33,20 +43,55 @@ const Hero = () => {
       </div>
 
       <h1
-        className={`text-4xl md:text-5xl sm:text-6xl font-bold max-w-3xl leading-[40px] ${prompt.className}`}
+        className={`text-4xl md:text-5xl xl:text-[80px] leading-[1.7rem] md:leading-[2.2rem] xl:leading-19 tracking-tight font-medium ${spaceGrotesk.className}`}
       >
-        <span
-          className={`text-4xl md:text-5xl sm:text-6xl ${prompt.className} `}
+        {/* <span
+          className={`text-4xl md:text-5xl xl:text-6xl ${prompt.className} `}
         >
           Write, Run & Share Code
-        </span>
-        <br />
-        Instantly —
+        </span> */}
+        {/* <span
+          className={`text-4xl md:text-5xl xl:text-6xl ${prompt.className} `}
+        >
+          Write & Run Code
+        </span> */}
+        <div
+          className={`text-4xl md:text-5xl xl:text-[62px] ${prompt.className} `}
+        >
+          Write, Run &
+          <span
+            className={`font-normal mx-5 opacity-90 relative ${jetBrainsMono.className}`}
+            style={{ color: theme.activeColor }}
+          >
+            Share
+            <span
+              className="h-[3px] md:h-1 xl:h-[5px] w-28 md:w-[9.2rem] xl:w-48 absolute bottom-5 md:bottom-7 lg:bottom-6 xl:bottom-9 backdrop-blur-2xl -left-1 -rotate-2"
+              style={{
+                background: theme.activeColor,
+              }}
+            />
+          </span>
+          Code
+        </div>
+        <strong>Instantly</strong>
+        <strong className="mx-6">—</strong>
         <span style={{ color: theme?.activeColor }}>Without Any Setup</span>
       </h1>
 
+      {/* <div className="my-10 text-xl flex items-center justify-center gap-x-3">
+        Run
+        <div className="bg-white text-green-500 rounded-full p-2.5">
+          <FaPlay size={18} className="translate-x-px rotate-5" />
+        </div>
+        <span className={`${play_us_modern.className} text-sm `}>
+          Python
+        </span>
+      </div> */}
+
+      <RotatingLanguageHero activeColor={theme.activeColor} />
+
       <p
-        className={`text-xs md:text-sm sm:text-xs opacity-70 mt-6 max-w-lg ${jetBrainsMono.className}`}
+        className={`text-xs md:text-sm sm:text-xs opacity-70 max-w-lg ${jetBrainsMono.className}`}
       >
         A lightweight, blazing-fast editor built for developers. Supports
         multiple languages, custom themes, and real-time previews.

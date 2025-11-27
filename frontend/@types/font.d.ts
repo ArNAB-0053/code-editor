@@ -24,6 +24,10 @@ export const _WebsiteFonts = {
   outfit,
   lexend,
   urbanist,
+  raleway,
+  quicksand,
+  play,
+  karla,
 } as const;
 export type WebsiteFontsKey = keyof typeof _WebsiteFonts;
 export type WebsiteFontsMap = Record<WebsiteFontsKey, NextFont>;

@@ -1,4 +1,4 @@
-import { ThemeOptions } from "@/components/theme/theme-palette";
+import { ThemeOptions } from "@/components/palette";
 
 const ThemeBlobSVG = ({ theme }: { theme: ThemeOptions }) => {
   return (
