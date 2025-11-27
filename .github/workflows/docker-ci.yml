@@ -8,6 +8,7 @@ on:
     
 jobs:
     compose-test:
+        name: Docker Compose CI
         runs-on: ubuntu-latest
     
         steps:
