@@ -35,7 +35,7 @@ export default async function RootLayout({
 }>) {
   const theme = await getCookiesServer("theme");
   const font = await getCookiesServer("font");
-  console.log(" SERVER ---> ", theme, font);
+  console.log(" SERVER ---> ", theme, font);dsadsa
   return (
     <html lang="en" data-theme={theme} suppressHydrationWarning>
       <body
