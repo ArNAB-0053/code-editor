@@ -78,3 +78,7 @@ body {
     backdrop-filter: blur(25px) !important;
     overflow: hidden;
 }
+
+.ant-tooltip {
+  backdrop-filter: blur(20px);
+}
