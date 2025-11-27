@@ -1,0 +1,57 @@
+name: "Docker Compose CI"
+
+on:
+    push: 
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+    
+jobs:
+    compose-test:
+        runs-on: ubuntu-latest
+    
+        steps:
+          - name: Checkout Code
+            uses: actions/checkout@v3
+
+          - name: Setup Docker Buildx
+            uses: docker/setup-buildx-action@v3 
+
+          # - name: Clean Docker Cache
+          #   run: docker builder prune -a -f
+
+          - name: Build Frontend
+            run: docker compose build --no-cache frontend
+          
+          - name: Build Backend
+            run: docker compose build --no-cache backend
+
+        #   - name: Docker Run
+        #     run: docker compose up frontend backend --abort-on-container-exit
+
+          - name: Test Backend Build
+            run: docker compose run --rm --entrypoint "dotnet" backend --info
+        
+          - name: Test Frontend Build
+            run: docker compose run --rm --entrypoint "node" frontend --version
+
+          # - name: Check Backend Health
+          #   run: |
+          #     curl -f http://localhost:5000 || exit 1
+
+          # - name: Check Frontend Health
+          #   run: |
+          #     curl -f http://localhost:3000 || exit 1
+
+          - name: Success Message
+            if: success()
+            run: echo "Docker Compose ran successfully!"
+        
+          - name: Docker Compose Logs - if fails
+            if: failure()
+            run: docker compose logs
+        
+          - name: Stop Container
+            if: always()
+            run: docker compose down -v
+        
