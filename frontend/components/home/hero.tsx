@@ -59,11 +59,14 @@ const Hero = () => {
           Write, Run &
           <Tooltip
             align={{
-              offset: [-70, 10],
+              offset: [0, 10],
             }}
             placement="top"
             title={
-              <p style={{ color: theme.textColor }} className={`${spaceGrotesk.className} text-center text-base leading-5 py-2`}>
+              <p
+                style={{ color: theme.textColor }}
+                className={`${spaceGrotesk.className} text-center text-base leading-5 py-2`}
+              >
                 For share you need to create an acoount
               </p>
             }
@@ -84,12 +87,15 @@ const Hero = () => {
                   background: theme.activeColor,
                 }}
               />
-              <span className="absolute h-16 w-48 -z-1 rounded-xl -left-1 top-2 group-hover:opacity-100 opacity-0 transition-all duration-150 ease-linear" style={{
-                background: `${theme.activeColor}40`
-              }} />
+              <span
+                className="absolute h-8 w-28 md:h-12 md:w-36 lg:h-12 lg:w-36 xl:h-16 xl:w-48 -z-1 rounded-xl -left-1 top-2 group-hover:opacity-100 opacity-0 transition-all duration-150 ease-linear"
+                style={{
+                  background: `${theme.activeColor}40`,
+                }}
+              />
             </span>
-            Code
           </Tooltip>
+          Code
         </div>
         <strong>Instantly</strong>
         <strong className="mx-6">—</strong>
