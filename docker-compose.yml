@@ -1,14 +1,14 @@
 services:
   backend:
     build:
-      context: ./PythonEditor
+      context: ./backend
       dockerfile: Dockerfile
     container_name: python-editor
     ports:
       - "5000:5000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./PythonEditor/temp:/temp
+      - ./backend/temp:/temp
     depends_on:
       - python_image_puller
       - node_image_puller
