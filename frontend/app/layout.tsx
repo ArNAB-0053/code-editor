@@ -39,7 +39,7 @@ export default async function RootLayout({
   return (
     <html lang="en" data-theme={theme} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased pt-4 overflow-hidden h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden h-screen`}
         style={{ background: "black" }}
       >
         <ThemeProvider initialTheme={theme!}>

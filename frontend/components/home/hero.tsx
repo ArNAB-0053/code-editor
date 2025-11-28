@@ -59,7 +59,7 @@ const Hero = () => {
           Write, Run &
           <Tooltip
             align={{
-              offset: [0, 10],
+              offset: [0, 5],
             }}
             placement="top"
             title={

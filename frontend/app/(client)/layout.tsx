@@ -19,7 +19,7 @@ export default function RootLayout({
       <PersistGate loading={null} persistor={persistor}>
         <CookieProviderForLocalStorage>
           {/* <CookieProviderToSetPreferrenceToCookie /> */}
-          <main className="px-6">
+          <main className="px-6 pt-4">
             <Header />
             {children}
           </main>
