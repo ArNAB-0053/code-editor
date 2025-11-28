@@ -1,115 +1,37 @@
-"use client";
-import React from "react";
-import { Table, Tag } from "antd";
-import NRATable from "@/components/ui/no-redux/table";
-import styled from "styled-components";
-import { ThemeTypes } from "@/@types/theme";
-import { useCookieItems, useCookieTheme } from "@/hooks/useItemFromCookie";
-import { FaCheck, FaCross } from "react-icons/fa";
-import { RxCheck, RxCross2 } from "react-icons/rx";
+[HttpPost("signin")]
+public IActionResult SignIn([FromBody] SignInRequest request)
+{
+    var user = _service.SignIn(request.Identifier, request.Password);
 
-const StyledTable = styled(Table)<{ $theme: ThemeTypes; $font: any }>`
-  .ant-table-cell {
-    color: ${({ $theme }) => $theme?.textColor} !important;
-    background: ${({ $theme }) => $theme?.editorBackground} !important;
-    border-bottom: 1px solid ${({ $theme }) => $theme?.border15} !important;
-    border-left: none !important;
-    border-right: none !important;
-  }
-  .ant-table-row:last-child .ant-table-cell {
-    border-bottom: none !important;
-  }
-  .ant-table-cell:before {
-    color: ${({ $theme }) => $theme?.textColor} !important;
-    background: transparent !important;
-  }
-  .ant-table-thead > tr > th,
-  .ant-table-cell,
-  .ant-tag.ant-tag-red,
-  .ant-tag.ant-tag-green {
-    font-family: ${({ $font }) => $font?.style?.fontFamily} !important;
-  }
-`;
+    if (user == null)
+        return Unauthorized(new { message = "Invalid username/email or password" });
 
-const Page = () => {
-  const { theme, font } = useCookieItems();
-  const columns = [
+    return Ok(new
     {
-      title: "Feature",
-      dataIndex: "feature",
-      key: "feature",
-    },
-    {
-      title: "Guest",
-      dataIndex: "guest",
-      key: "guest",
-      align: "center",
-      render: (value: boolean) =>
-        value ? (
-          <RxCheck size={18} className="place-self-center text-green-500 stroke-[1px]" />
-        ) : (
-          <RxCross2 size={18} className="place-self-center text-red-600 stroke-[1px]" />
-        ),
-    },
-    {
-      title: "Logged In",
-      dataIndex: "user",
-      key: "user",
-      align: "center",
-      render: (value: boolean) =>
-        value ? (
-          <RxCheck size={18} className="place-self-center text-green-500 stroke-[1px]" />
-        ) : (
-          <RxCross2 size={18} className="place-self-center text-red-600 stroke-[1px]" />
-        ),
-    },
-  ];
+        message = "Login successful",
+        user = new
+        {
+            id = user.Id,
+            name = user.Name,
+            email = user.Email
+        }
+    });
+}
+  public AuthModel? SignIn(string identifier, string password)
+{
+    identifier = identifier.ToLower();
 
-  const data = [
-    { key: 1, feature: "Database support", guest: false, user: true },
-    { key: 2, feature: "File creation", guest: false, user: true },
-    { key: 3, feature: "Multiple code saving", guest: false, user: true },
-    { key: 4, feature: "Code runner", guest: true, user: true },
-    { key: 5, feature: "Terminal support", guest: false, user: true },
+    // Find by email OR username
+    var filter = Builders<AuthModel>.Filter.Or(
+        Builders<AuthModel>.Filter.Eq(x => x.Email.ToLower(), identifier),
+        Builders<AuthModel>.Filter.Eq(x => x.Name.ToLower(), identifier)
+    );
 
-    // Extra useful features
-    { key: 6, feature: "Theme customization", guest: false, user: true },
-    { key: 7, feature: "Cloud sync", guest: false, user: true },
-    { key: 8, feature: "Collaboration (Live Share)", guest: false, user: true },
-    { key: 9, feature: "Export code", guest: true, user: true },
-    { key: 10, feature: "Editor autosave", guest: false, user: true },
-    { key: 11, feature: "Snippets support", guest: false, user: true },
-  ];
+    var user = _auth.Find(filter).FirstOrDefault();
+    if (user == null) return null;
 
-  console.log("dgysfgds ", font);
-  console.log("dgysfgds ", font?.style?.fontFamily);
+    // Compare raw password
+    if (user.Password != password) return null;
 
-  return (
-    <div className="p-10">
-      <StyledTable
-        style={{
-          fontFamily: font?.style?.fontFamily,
-        }}
-        className={font?.style?.fontFamily}
-        $theme={theme}
-        $font={font}
-        columns={columns}
-        dataSource={data}
-        // bordered
-        pagination={false}
-        // title={() => (
-        //   <h2
-        //     style={{
-        //       fontFamily: font?.style?.fontFamily,
-        //     }}
-        //     className="text-xl font-semibold text-center"
-        //   >
-        //     Feature Comparison: Guest vs Logged In
-        //   </h2>
-        // )}
-      />
-    </div>
-  );
-};
-
-export default Page;
+    return user;
+}

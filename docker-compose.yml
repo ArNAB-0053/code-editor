@@ -10,6 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./backend/temp:/temp
     depends_on:
+      - mongo
       - python_image_puller
       - node_image_puller
     environment:
@@ -31,7 +32,18 @@ services:
       - NODE_ENV=development
     depends_on:
       - backend
-
+  
+  mongo:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: always
+    # environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
 
   python_image_puller:
     image: python:3.11-slim
@@ -42,3 +54,5 @@ services:
       image: node:20-slim
       container_name: node_image_puller
       entrypoint: ["true"]
+volumes:
+  mongo_data:

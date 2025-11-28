@@ -1,3 +1,4 @@
+﻿using backend.Services.implementations;
 using PythonEditor.Models;
 using PythonEditor.Services.implementations;
 using PythonEditor.Services.interfaces;
@@ -15,7 +16,9 @@ builder.Services.AddCors(options =>
 });
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+builder.Services.AddSingleton<AuthServices>();
+builder.Services.AddSingleton<CodeSaveService>();
 builder.Services.Configure<DockerSettings>(
     builder.Configuration.GetSection("DockerSettings")
 );
@@ -25,15 +28,15 @@ builder.Services.AddScoped<ICodeRunner, CodeRunner>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+//if (!app.Environment.IsDevelopment())
+//{
+//    app.UseExceptionHandler("/Home/Error");
+//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+//    app.UseHsts();
+//}
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+//app.UseStaticFiles();
 
 app.UseRouting();
 
@@ -41,8 +44,9 @@ app.UseAuthorization();
 
 app.UseCors("AllowAll");
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
 
 app.Run();
