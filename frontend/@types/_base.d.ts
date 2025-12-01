@@ -1,7 +1,7 @@
 import { FormProps } from "antd";
 import { ThemeTypes } from "./theme";
 import { WebsiteFontsKey } from "./font";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 export type HeaderProps = OutputHeaderProps | EditorHeaderProps;
 
@@ -36,4 +36,10 @@ export type SetterFunctionTypesNumber = React.Dispatch<
 export interface IModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface IBaseCustomProps {
+  children: ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
 }

@@ -1,5 +1,5 @@
 import Logo from "@/components/Logo";
-import { SignUpForm } from "../forms";
+import { SignInForm } from "../forms";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono, spaceGrotesk } from "@/fonts";
 import Link from "next/link";
@@ -16,20 +16,20 @@ const RightSide = () => {
         <Logo />
         <span
           className={cn(
-            "w-[40%] text-end text-sm leading-4",
+            "w-[50%] text-end text-sm leading-4",
             spaceGrotesk.className
           )}
         >
-          Already have account?
+          Don&apos;t have any account?
           <Link
-            href={appUrls.LOGIN}
+            href={appUrls.REGISTER}
             className={cn(
               "underline ml-1 font-medium text-sm hover:opacity-80 transition-all duration-100 ease-linear",
               jetBrainsMono.className
             )}
             style={{ color: theme.activeColor }}
           >
-            Login
+            Create Account
           </Link>
         </span>
       </div>
@@ -46,7 +46,7 @@ const RightSide = () => {
             start for free
           </p>
         </div> */}
-      <SignUpForm />
+      <SignInForm />
     </div>
   );
 };

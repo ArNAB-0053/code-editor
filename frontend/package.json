@@ -13,9 +13,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^2.10.1",
     "antd": "^5.29.0",
+    "axios": "^1.13.2",
+    "clsx": "^2.1.1",
     "concurrently": "^9.2.1",
     "electron-serve": "^3.0.0",
     "formik": "^2.4.9",
@@ -29,7 +32,8 @@
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
     "styled-components": "^6.1.19",
-    "zod": "^4.1.12"
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

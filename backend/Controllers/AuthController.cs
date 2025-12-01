@@ -16,9 +16,9 @@ namespace backend.Controllers
         }
 
         [HttpPost("register")]
-        public AuthModel create(AuthModel auth) => _service.create(auth);
+        public AuthModel Create(AuthModel auth) => _service.create(auth);
 
-        [HttpGet]
+        [HttpGet]  
         public IActionResult GetAllUsers()
         {
             var allUsers = _service.GetAllUsers();
@@ -30,7 +30,7 @@ namespace backend.Controllers
         {
             var user = _service.SignIn(req.Identifier, req.Password);
 
-            if (user == null) Unauthorized(new { message = "Invalid username/email or password" });
+            if (user == null) Unauthorized( new { message = "Invalid username/email or password" });
 
             return Ok(new
                 {

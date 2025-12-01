@@ -13,6 +13,7 @@ export type BaseCButtonProps = {
   variant?: "transparent" | "sameBg" | "bordered" | "default";
   hoverColor?: string | null;
   hoverBgColor?: string | null;
+  disabled: boolean;
 };
 
 const BaseCButton = ({
@@ -26,6 +27,7 @@ const BaseCButton = ({
   hoverColor = null,
   hoverBgColor = null,
   variant = "default",
+  disabled = false,
 }: BaseCButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -80,8 +82,12 @@ const BaseCButton = ({
     color = theme.activeColor;
   }
 
+  const userBg = style.backgroundColor ?? null;
+  const finalBaseBg = userBg ?? backgroundColor;
+
   const buttonStyles: React.CSSProperties = {
-    backgroundColor: isHovered && hoverBgColor ? hoverBgColor : backgroundColor,
+    ...style,
+    backgroundColor: isHovered && hoverBgColor ? hoverBgColor : finalBaseBg,
     color: isHovered && hoverColor ? hoverColor : color,
     border: `1px solid ${borderColor}`,
     padding: "6px 14px",
@@ -89,7 +95,6 @@ const BaseCButton = ({
     cursor: "pointer",
     fontSize: "14px",
     transition: "all 0.15s ease-linear",
-    ...style,
   };
 
   const Component = useDiv ? "div" : "button";
@@ -101,6 +106,7 @@ const BaseCButton = ({
       onMouseLeave={() => setIsHovered(false)}
       style={buttonStyles}
       className={type === "link" ? "underline " + className : className}
+      disabled={disabled}
     >
       {children}
     </Component>

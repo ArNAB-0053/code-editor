@@ -38,7 +38,7 @@ export const openSans = Open_Sans({ subsets: ["latin"], });
 export const cascadia = Cascadia_Code({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 export const firaCode = Fira_Code({ subsets: ["latin"] });
 export const inconsolata = Inconsolata({ subsets: ["latin"] });
-export const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
+export const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 export const sourceCodePro = Source_Code_Pro({ subsets: ["latin"] });
 export const robotoMono = Roboto_Mono({ subsets: ["latin"] });
 

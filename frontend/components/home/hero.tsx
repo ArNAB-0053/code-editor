@@ -15,6 +15,7 @@ import { useFont } from "@/context/FontProvider";
 import Link from "next/link";
 import { RotatingLanguageHero } from "./RotatingLanguageHero";
 import { Tooltip } from "antd";
+import { appUrls } from "@/config/navigation.config";
 
 const Hero = () => {
   const { themeName } = useTheme();
@@ -67,7 +68,7 @@ const Hero = () => {
                 style={{ color: theme.textColor }}
                 className={`${spaceGrotesk.className} text-center text-base leading-5 py-2`}
               >
-                For share you need to create an acoount
+                For share you need to create an account
               </p>
             }
             color={`${theme.activeColor}40`}
@@ -136,7 +137,7 @@ const Hero = () => {
           </NRCButton>
         </Link>
 
-        <Link href="/auth" className="rounded-xl">
+        <Link href={appUrls.REGISTER} className="rounded-xl">
           <NRCButton
             type="none"
             variant="sameBg"
