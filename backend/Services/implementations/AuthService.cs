@@ -22,6 +22,9 @@ namespace backend.Services.implementations
             auth.Name = auth.Name.ToLower();
             auth.Email = auth.Email.ToLower();
 
+            var exists = _auth.Find(x => x.Email == auth.Email).FirstOrDefault();
+            if (exists != null) return null;
+
             _auth.InsertOne(auth);
             return auth;
         }

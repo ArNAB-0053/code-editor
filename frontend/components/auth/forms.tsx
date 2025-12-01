@@ -14,7 +14,6 @@ import { loginSchema, registerSchema } from "@/zod/sign-up.z";
 import { Formik } from "formik";
 import { FaLock, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { ContinueWithGoogle } from "./continue-with-btns";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono, spaceGrotesk } from "@/fonts";
 import { FaArrowRightLong } from "react-icons/fa6";
@@ -22,8 +21,10 @@ import { Checkbox } from "antd";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
 import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { appUrls } from "@/config/navigation.config";
+import toast from "react-hot-toast";
+import { ContinueWithGoogle } from "./continue-with-btns";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -112,6 +113,7 @@ export const SignUpForm = () => {
   const theme = themeConfig(themeName);
 
   const [check, setCheck] = useState(false);
+  const router = useRouter()
 
   const initialValues = {
     name: "",
@@ -125,11 +127,20 @@ export const SignUpForm = () => {
       initialValues={initialValues}
       validate={zodToFormik(registerSchema)}
       onSubmit={async (values, { setSubmitting }) => {
+        const toastId = toast.loading("Signing Up...");
         try {
           const data = await register(values);
-          console.log(data);
+          if (data.status === "success") {
+            toast.success("Logged In Successful", { id: toastId });
+
+            setTimeout(() => {
+              router.push(appUrls.PYTHON);
+            }, 1500);
+          } else {
+            toast.error("Logged In Failed", { id: toastId });
+          }
         } catch (e) {
-          console.log(e);
+          toast.success("Sign Up Failed", { id: toastId });
         } finally {
           setSubmitting(false);
         }
@@ -250,19 +261,31 @@ export const SignInForm = () => {
     password: "",
   };
 
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <Formik
       initialValues={initialValues}
       validate={zodToFormik(loginSchema)}
       onSubmit={async (values, { setSubmitting }) => {
+        const toastId = toast.loading("Authorizing...");
+
         try {
           const data = await login(values);
-          // console.log("data", data);
-          if (data.user) router.push(appUrls.PYTHON);
+          // console.log(data)
+
+          if (data.status === "success") {
+            toast.success("Logged In Successful", { id: toastId });
+
+            setTimeout(() => {
+              router.push(appUrls.PYTHON);
+            }, 1500);
+          } else {
+            toast.error("Logged In Failed", { id: toastId });
+          }
         } catch (e) {
-          console.log(e);
+          // console.log(e);
+          toast.error("Logged In Failed", { id: toastId });
         } finally {
           setSubmitting(false);
         }

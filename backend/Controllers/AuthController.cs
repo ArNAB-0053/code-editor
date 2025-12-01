@@ -16,7 +16,35 @@ namespace backend.Controllers
         }
 
         [HttpPost("register")]
-        public AuthModel Create(AuthModel auth) => _service.create(auth);
+        public IActionResult Create([FromBody] AuthModel auth)
+        {
+            var createdUser = _service.create(auth);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            if (createdUser == null)
+            {
+                return Conflict(new
+                {
+                    message = "Email already in use",
+                    status = "error"
+                });
+            }
+
+            return Ok(new
+            {
+                message = "User registered successfully",
+                status = "success",
+                user = new
+                {
+                    id = createdUser.Id,
+                    name = createdUser.Name,
+                    email = createdUser.Email
+                }
+            });
+        }
 
         [HttpGet]  
         public IActionResult GetAllUsers()
@@ -30,11 +58,12 @@ namespace backend.Controllers
         {
             var user = _service.SignIn(req.Identifier, req.Password);
 
-            if (user == null) Unauthorized( new { message = "Invalid username/email or password" });
+            if (user == null) return Unauthorized( new { message = "Invalid username/email or password", status = "error" });
 
             return Ok(new
                 {
                     message = "Logged In Successfully",
+                    status = "success",
                     user = new
                     {
                         id = user?.Id,

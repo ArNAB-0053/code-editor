@@ -6,6 +6,7 @@ import { CookieProvider } from "@/providers/cookie";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { FontProvider } from "@/context/FontProvider";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +45,10 @@ export default async function RootLayout({
       >
         <ThemeProvider initialTheme={theme!}>
           <FontProvider initialFont={font!}>
-            <CookieProvider>{children}</CookieProvider>
+            <CookieProvider>
+              {children}
+              <Toaster position="top-right" reverseOrder={false} />
+            </CookieProvider>
           </FontProvider>
         </ThemeProvider>
       </body>
