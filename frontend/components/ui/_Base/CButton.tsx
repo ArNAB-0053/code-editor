@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { ThemeTypes } from "@/@types/theme";
+import { cn } from "@/lib/utils";
 
 export type BaseCButtonProps = {
   theme: ThemeTypes;
@@ -105,7 +106,7 @@ const BaseCButton = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={buttonStyles}
-      className={type === "link" ? "underline " + className : className}
+      className={cn(type === "link" ? "underline " + className : className, "disabled:cursor-not-allowed!")}
       disabled={disabled}
     >
       {children}

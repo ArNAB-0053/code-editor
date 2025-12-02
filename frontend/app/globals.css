@@ -82,3 +82,8 @@ body {
 .ant-tooltip {
   backdrop-filter: blur(20px);
 }
+
+/* Line Height reducing from Toast */
+[data-title] {
+  line-height: 0.9rem !important;
+}

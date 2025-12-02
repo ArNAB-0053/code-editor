@@ -23,8 +23,9 @@ import { ThemeTypes } from "@/@types/theme";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { appUrls } from "@/config/navigation.config";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { ContinueWithGoogle } from "./continue-with-btns";
+import { messagesConfig } from "@/config/messages.config";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -113,7 +114,7 @@ export const SignUpForm = () => {
   const theme = themeConfig(themeName);
 
   const [check, setCheck] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const initialValues = {
     name: "",
@@ -127,20 +128,19 @@ export const SignUpForm = () => {
       initialValues={initialValues}
       validate={zodToFormik(registerSchema)}
       onSubmit={async (values, { setSubmitting }) => {
-        const toastId = toast.loading("Signing Up...");
+        const toastId = toast.loading(messagesConfig.SIGN_UP.LOADING);
         try {
           const data = await register(values);
           if (data.status === "success") {
-            toast.success("Logged In Successful", { id: toastId });
-
+            toast.success(messagesConfig.SIGN_UP.SUCCESS, { id: toastId });
             setTimeout(() => {
               router.push(appUrls.PYTHON);
             }, 1500);
           } else {
-            toast.error("Logged In Failed", { id: toastId });
+            toast.error(messagesConfig.SIGN_UP.ERROR, { id: toastId });
           }
-        } catch (e) {
-          toast.success("Sign Up Failed", { id: toastId });
+        } catch (e: unknown) {
+          toast.success(messagesConfig.SIGN_UP.ERROR, { id: toastId });
         } finally {
           setSubmitting(false);
         }
@@ -268,24 +268,19 @@ export const SignInForm = () => {
       initialValues={initialValues}
       validate={zodToFormik(loginSchema)}
       onSubmit={async (values, { setSubmitting }) => {
-        const toastId = toast.loading("Authorizing...");
-
+        const toastId = toast.loading(messagesConfig.LOGIN.LOADING);
         try {
           const data = await login(values);
-          // console.log(data)
-
           if (data.status === "success") {
-            toast.success("Logged In Successful", { id: toastId });
-
+            toast.success(messagesConfig.LOGIN.SUCCESS, { id: toastId });
             setTimeout(() => {
               router.push(appUrls.PYTHON);
             }, 1500);
           } else {
-            toast.error("Logged In Failed", { id: toastId });
+            toast.error(messagesConfig.LOGIN.ERROR, { id: toastId });
           }
-        } catch (e) {
-          // console.log(e);
-          toast.error("Logged In Failed", { id: toastId });
+        } catch (e: unknown) {
+          toast.error(messagesConfig.LOGIN.ERROR, { id: toastId });
         } finally {
           setSubmitting(false);
         }
@@ -341,7 +336,7 @@ export const SignInForm = () => {
               disabled={disabled}
               onClick={handleSubmit}
               className={cn(
-                "w-full! mt-8 flex items-center justify-center gap-x-3 disabled:opacity-40!",
+                "w-full! mt-8 flex items-center justify-center gap-x-3 disabled:opacity-40! ",
                 jetBrainsMono.className
               )}
             >

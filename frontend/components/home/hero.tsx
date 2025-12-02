@@ -4,8 +4,6 @@ import { RxArrowRight } from "react-icons/rx";
 import { NRCButton } from "../ui/no-redux";
 import {
   jetBrainsMono,
-  play_cu,
-  play_us_modern,
   prompt,
   spaceGrotesk,
 } from "@/fonts";
@@ -124,7 +122,7 @@ const Hero = () => {
 
       <div className="flex items-center max-sm:flex-col gap-4 mt-10">
         {/* GUEST */}
-        <Link href="/python" className="rounded-xl">
+        <Link href={appUrls.PYTHON} className="rounded-xl">
           <NRCButton
             // type="primary"
             // variant="default"

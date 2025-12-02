@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useFont } from "@/context/FontProvider";
 import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
+import { appUrls } from "@/config/navigation.config";
 
 const Compare = () => {
   const { font } = useFont();
@@ -61,7 +62,7 @@ const Compare = () => {
           ))}
         </div>
 
-        <Link href="/python" className="mt-8 flex items-center justify-center">
+        <Link href={appUrls.PYTHON} className="mt-8 flex items-center justify-center">
           <NRCButton
             variant="default"
             // hoverColor={theme.activeColor}
@@ -91,7 +92,7 @@ const Compare = () => {
           ))}
         </div>
 
-        <Link href="/python" className="mt-8 flex items-center justify-center">
+        <Link href={appUrls.REGISTER} className="mt-8 flex items-center justify-center">
           <NRCButton
             type="none"
             variant="bordered"

@@ -1,5 +1,8 @@
-﻿using backend.Models;
+﻿using System.IdentityModel.Tokens.Jwt;
+using backend.helper;
+using backend.Models;
 using backend.Services.implementations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -9,10 +12,12 @@ namespace backend.Controllers
     public class AuthController: ControllerBase
     {
         private readonly AuthServices _service;
+        private readonly IConfiguration _config;
 
-        public AuthController(AuthServices service)
+        public AuthController(AuthServices service, IConfiguration config)
         {
             _service = service;
+            _config = config;
         }
 
         [HttpPost("register")]
@@ -60,6 +65,21 @@ namespace backend.Controllers
 
             if (user == null) return Unauthorized( new { message = "Invalid username/email or password", status = "error" });
 
+            var token = JwtHelper.GenerateToken(user, _config);
+
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
+                HttpOnly = true,
+                #if DEBUG
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
+                #else
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                #endif
+                    Expires = DateTime.UtcNow.AddDays(3)
+            });
+
             return Ok(new
                 {
                     message = "Logged In Successfully",
@@ -74,6 +94,13 @@ namespace backend.Controllers
             );
         }
 
-        
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            return Ok(new { userId });
+        }
+
     }
 }

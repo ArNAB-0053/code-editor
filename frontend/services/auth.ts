@@ -31,12 +31,26 @@ export const register = async (config: RegisterFormType) => {
 };
 
 export const login = async (config: LoginFormType) => {
-    const res = await axiosInstance.post(`${URI}/signin`, config)
+    const res = await axiosInstance.post(`${URI}/signin`, config, {
+        withCredentials: true
+    })
 
     if(!res.data) {
         const txt = await res.statusText;
         throw new Error(`HTTP ${res.status}: ${txt}`);
     }
 
-    return res.data
+    return res.data;
 };
+
+export const checkCred = async () => {
+    const res = await axiosInstance.get(`${URI}/me`, {
+        withCredentials: true
+    })
+    if(!res.data) {
+        const txt = await res.statusText;
+        throw new Error(`HTTP ${res.status}: ${txt}`)
+    }
+
+    return res.data;
+}
