@@ -31,11 +31,6 @@ const Avatar = () => {
   const { data: profileDetails, isLoading } = useMyProfile();
   const { theme } = useTheme();
   const { font } = useFont();
-  const [open, setOpen] = useState(false);
-
-  const hide = () => {
-    setOpen(false);
-  };
 
   const dropdownElement = () => (
     <div className=" px-1 pt-1">
@@ -95,7 +90,7 @@ const Avatar = () => {
           )}
         >
           <div
-            className="h-full w-full absolute -left-60 top-0 group-hover:left-0 transition-all ease-linear duration-250"
+            className="h-full w-full absolute -left-60 top-0 group-hover:left-0 transition-all ease-linear duration-200"
             style={{
               backgroundColor: `${theme.activeColor}30`,
             }}
@@ -116,7 +111,7 @@ const Avatar = () => {
           )}
         >
           <div
-            className="h-full w-full absolute -left-60 top-0 group-hover:left-0 transition-all ease-linear duration-250"
+            className="h-full w-full absolute -left-60 top-0 group-hover:left-0 transition-all ease-linear duration-200"
             style={{
               backgroundColor: `${theme.activeColor}30`,
             }}
@@ -126,7 +121,6 @@ const Avatar = () => {
         </StyledDiv>
 
         <div
-          onClick={hide}
           className="text-white mt-6 w-full flex items-center justify-end"
         >
           <NRCButton

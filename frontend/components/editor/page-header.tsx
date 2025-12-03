@@ -1,4 +1,3 @@
-import PreferenceModal from "./modals/preference";
 import { useState } from "react";
 import { themeConfig } from "@/config/themeConfig";
 import {
@@ -7,47 +6,21 @@ import {
 } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { websiteFonts } from "@/fonts";
-import { AButton } from "./ui/antd";
 import { WebsiteFontsKey } from "@/@types/font";
 import { FaSlidersH } from "react-icons/fa";
-import Link from "next/link";
-import { useTheme } from "@/context/ThemeContext";
-import { useFont } from "@/context/FontProvider";
+import { AButton } from "../ui/antd";
+import Logo from "../Logo";
+import PreferenceModal from "../modals/preference";
 
-const Header = () => {
+const PageHeader = () => {
   const [open, setOpen] = useState(false);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const theme = themeConfig(editorTheme);
-
-  const { updateTheme } = useTheme();
-  const { updateFont } = useFont();
   return (
     <>
       <div className="w-full flex items-center justify-between mb-2">
-        <span className="flex justify-center flex-col">
-          <Link
-            href={"/"}
-            className="font-bold text-xl mt-2"
-            style={{
-              fontFamily:
-                "ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace",
-            }}
-            onClick={() => {
-              updateFont(websiteFont);
-              updateTheme(editorTheme);
-            }}
-          >
-            CodeditorX
-          </Link>
-          <p
-            className={`mb-3 italic -mt-2 ${
-              websiteFonts[websiteFont as WebsiteFontsKey]?.className
-            } italic`}
-          >
-            Do whatever you like
-          </p>
-        </span>
+        <Logo/>
 
         <div
           className={`flex items-center justify-end gap-x-3 ${
@@ -89,4 +62,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default PageHeader;

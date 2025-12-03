@@ -1,3 +1,4 @@
+import { Ref } from "react";
 import { SetterFunctionTypesBool, SetterFunctionTypesString } from "./_base";
 
 export interface OutputHeaderProps {
@@ -7,9 +8,6 @@ export interface OutputHeaderProps {
   setOutput: React.Dispatch<React.SetStateAction<string>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
 }
-
-
-
 export interface EditorHeaderProps {
   isOutput: false;
   editorTheme: string;
@@ -24,3 +22,4 @@ export interface EditorHeaderProps {
   setError: setterFunctionTypesString;
 }
 
+export type HeaderProps = OutputHeaderProps | EditorHeaderProps;

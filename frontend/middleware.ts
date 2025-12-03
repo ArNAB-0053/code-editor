@@ -40,5 +40,8 @@ export async function middleware(req: NextRequest) {
 
 // Protect only certain routes
 export const config = {
-  matcher: ["/lang/:path*", "/auth/:path*"],
+  matcher: [
+    // "/lang/:path*",
+     "/auth/:path*"
+    ],
 };

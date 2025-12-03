@@ -4,8 +4,6 @@ import { WebsiteFontsKey } from "./font";
 import React, { ReactNode } from "react";
 import { RegisterFormType } from "@/zod/sign-up.z";
 
-export type HeaderProps = OutputHeaderProps | EditorHeaderProps;
-
 export interface IBaseAFormProps extends Omit<FormProps, "children"> {
   children?: ReactNode;
 }

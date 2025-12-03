@@ -13,6 +13,7 @@ namespace backend.Models
         public string Code { get; set; }
         public string Lang { get; set; }
         public string Output { get; set; } = string.Empty;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 
     public class GetCodeRequest
@@ -20,4 +21,17 @@ namespace backend.Models
         public string UserId { get; set; }
         public string Lang { get; set; }
     }
+
+    public class SaveCodeRequest
+    {
+        public string UserId { get; set; }
+        public string Lang { get; set; }
+        public string Code { get; set; }
+    }
+
+    public class UpdateOutputRequest
+    {
+        public string Output { get; set; }
+    }
+
 }

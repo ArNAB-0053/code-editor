@@ -1,20 +1,31 @@
 import { persistReducer, persistStore } from "redux-persist";
 import preferencesReducer from "./slices/preferenceSlice"
-import activeFieldReduces from "./slices/activeFieldSlice"
+import activeFieldReducer from "./slices/activeFieldSlice"
 import storage from "redux-persist/lib/storage";
 import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./slices/userSlice"
+import editorCodeReducer from "./slices/editorSlice"
 
-const persistConfig = {
+const persistPreferenceConfig = {
     key: "prefercence",
     storage
 }
 
-const persistedPreference = persistReducer(persistConfig, preferencesReducer)
+const persistUserConfig = {
+  key: "user",
+  storage
+}
+
+const persistedPreference = persistReducer(persistPreferenceConfig, preferencesReducer)
+
+const persistedUserDetails = persistReducer(persistUserConfig, userReducer)
 
 export const store = configureStore({
     reducer: {
         preferences: persistedPreference,
-        activeField: activeFieldReduces,
+        activeField: activeFieldReducer,
+        user: persistedUserDetails,
+        editorCode: editorCodeReducer
     },
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

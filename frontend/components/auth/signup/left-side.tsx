@@ -11,7 +11,7 @@ const LeftSide = () => {
   const { font } = useFont();
   return (
     <div
-      className={`h-svh max-md:hidden overflow-hidden p-16 flex flex-col ${font?.className}`}
+      className={`h-svh max-md:hidden overflow-hidden  py-16 px-8 xl:px-16 flex flex-col ${font?.className}`}
       style={{
         background: theme.editorBackground,
       }}

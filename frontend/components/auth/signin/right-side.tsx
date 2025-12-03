@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
 import { appUrls } from "@/config/navigation.config";
+import ReduxPersistProvider from "@/providers/reduxPersistProvider";
 
 const RightSide = () => {
   const { themeName } = useTheme();
@@ -46,7 +47,9 @@ const RightSide = () => {
             start for free
           </p>
         </div> */}
-      <SignInForm />
+      <ReduxPersistProvider>
+        <SignInForm />
+      </ReduxPersistProvider>
     </div>
   );
 };

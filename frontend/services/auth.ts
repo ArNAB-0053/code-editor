@@ -1,6 +1,5 @@
 import axiosInstance from "@/lib/axios-instance";
 import { LoginFormType, RegisterFormType } from "@/zod/sign-up.z";
-import { Axios } from "axios";
 
 export const URI = "api/user"
 

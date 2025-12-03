@@ -4,7 +4,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaCheckCircle, FaPlay } from "react-icons/fa";
 import { IoCopy } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import { AButton } from "./ui/antd";
+import { AButton } from "../ui/antd";
 import { WebsiteFontsKey } from "@/@types/font";
 
 // Clear Button

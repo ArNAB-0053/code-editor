@@ -1,9 +1,24 @@
 import { themeConfig } from "@/config/themeConfig";
-import { CopyButton, RunButton, TransparentButton } from "../header-buttons";
-import { HeaderProps } from "@/@types/_base";
+import { CopyButton, RunButton, TransparentButton } from "./header-buttons";
+import { useRunCode, useUpdateOutput } from "@/services/code";
+import { useSelector } from "react-redux";
+import { HeaderProps } from "@/@types";
+import { selectedEditorId, setOutputRedux } from "@/redux/slices/editorSlice";
+import { useDispatch } from "react-redux";
+import { useRef } from "react";
 
 const EditorHeaderComponent = (props: HeaderProps) => {
+  const dispatch = useDispatch();
+
   const theme = themeConfig(props.editorTheme);
+
+  const runCode = useRunCode();
+  const updateOutput = useUpdateOutput();
+
+  const editorId = useSelector(selectedEditorId);
+  const lastOpt = useRef("");
+
+  console.log(editorId)
 
   // Ouput Header
   if (props.isOutput) {
@@ -22,20 +37,28 @@ const EditorHeaderComponent = (props: HeaderProps) => {
     );
   }
 
-  const runCode = async () => {
+  const handleRunCode = async () => {
     props.setLoading(true);
     props.setOutput("");
     props.setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/CodeRunner", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: props.code, lang: props.p_lang }),
+      const res = await runCode.mutateAsync({
+        code: props.code,
+        lang: props.p_lang,
       });
-
-      const json = await res.json();
-      props.setOutput(json.output ?? "");
+      console.log(res);
+      const output = res.output ?? "";
+      props.setOutput(output);
+      if (lastOpt.current !== output) {
+        console.log("NOT MATCH");
+        updateOutput.mutateAsync(
+          { editorId, output },
+          { onSuccess: (res) => console.log(res) }
+        );
+      } else console.log("MATCHED");
+      lastOpt.current = output;
+      dispatch(setOutputRedux(output));
     } catch (err: any) {
       props.setError(err.message ?? String(err));
     } finally {
@@ -76,7 +99,7 @@ const EditorHeaderComponent = (props: HeaderProps) => {
         />
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
-        <RunButton onClick={runCode} loading={props.loading} />
+        <RunButton onClick={handleRunCode} loading={props.loading} />
       </div>
     </div>
   );

@@ -13,11 +13,20 @@ import {
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import EditorHeaderComponent from "./header";
-import Sider from "../sider";
+import Sider from "./sider";
 import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
+import { useAutoSaveCode } from "@/services/code";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useDispatch } from "react-redux";
+import {
+  setCodeRedux,
+  setEditorId,
+  setLangRedux,
+} from "@/redux/slices/editorSlice";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -38,16 +47,49 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
 
+  const dispatch = useDispatch();
+
   const editorFont = useSelector(selectEditorFont);
   const editorFontSize = useSelector(selectEditorFontSize);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
+  const userId = useSelector(selectedUserId);
+
+  const autoSaveCode = useAutoSaveCode();
 
   const theme = themeConfig(editorTheme);
 
   // refs for monaco editor
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
+
+  const debouncedCode = useDebounce(code, 1000);
+  const lastSaveRef = useRef("");
+
+  useEffect(() => {
+    if (!userId) return;
+    if (debouncedCode.trim() === lastSaveRef.current.trim()) return;
+
+    autoSaveCode.mutateAsync(
+      {
+        userId: userId,
+        lang: p_lang,
+        code
+      },
+      {
+        onSuccess: (res) => {
+          lastSaveRef.current = debouncedCode;
+          dispatch(setCodeRedux(res?.code));
+          dispatch(setLangRedux(res?.lang));
+          dispatch(setEditorId(res?.id));
+          console.log("Success", res);
+        },
+        onError: (res) => {
+          console.log("Failed", res);
+        },
+      }
+    );
+  }, [debouncedCode, userId, p_lang, dispatch]);
 
   useEffect(() => {
     setTimeout(() => {

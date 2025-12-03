@@ -26,6 +26,8 @@ import { appUrls } from "@/config/navigation.config";
 import { toast } from "sonner";
 import { ContinueWithGoogle } from "./continue-with-btns";
 import { messagesConfig } from "@/config/messages.config";
+import { useDispatch } from "react-redux";
+import { setUserEmail, setUserId, setUserName } from "@/redux/slices/userSlice";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -263,6 +265,8 @@ export const SignInForm = () => {
 
   const router = useRouter();
 
+  const dispatch = useDispatch();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -271,8 +275,12 @@ export const SignInForm = () => {
         const toastId = toast.loading(messagesConfig.LOGIN.LOADING);
         try {
           const data = await login(values);
-          console.log(data)
+          // console.log(data);
           if (data.status === "success") {
+            dispatch(setUserId(data?.user?.id));
+            dispatch(setUserName(data?.user?.name));
+            dispatch(setUserEmail(data?.user?.email));
+
             toast.success(messagesConfig.LOGIN.SUCCESS, { id: toastId });
             setTimeout(() => {
               router.push(appUrls.PYTHON);
