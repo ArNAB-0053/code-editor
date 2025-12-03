@@ -1,7 +1,8 @@
 import axiosInstance from "@/lib/axios-instance";
 import { LoginFormType, RegisterFormType } from "@/zod/sign-up.z";
+import { Axios } from "axios";
 
-const URI = "api/auth"
+export const URI = "api/user"
 
 export const register = async (config: RegisterFormType) => {
     const res = await axiosInstance.post(`${URI}/register`, config)
@@ -12,22 +13,6 @@ export const register = async (config: RegisterFormType) => {
     }
 
     return res.data
-
-
-//   const res = await fetch(BACKEND_URI, {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ code }),
-//   });
-
-//   if (!res.ok) {
-//     const txt = await res.text();
-//     throw new Error(`HTTP ${res.status}: ${txt}`);
-//   }
-
-//   const op = await res.json();
-//   return op.output ?? ""
-
 };
 
 export const login = async (config: LoginFormType) => {
@@ -54,3 +39,16 @@ export const checkCred = async () => {
 
     return res.data;
 }
+
+export const profile = async (id: string) => {
+    const res = await axiosInstance.get(`${URI}/${id}`, {
+        withCredentials: true
+    })
+    if(!res.data) {
+        const txt = await res.statusText;
+        throw new Error(`HTTP ${res.status}: ${txt}`)
+    }
+
+    return res.data;
+}
+

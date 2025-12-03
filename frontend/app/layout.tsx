@@ -10,6 +10,7 @@ import { defaultColorConfig } from "@/config/default-colors.config";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { spaceGrotesk } from "@/fonts";
+import CQueryClientProvider from "@/providers/queryClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,26 +40,31 @@ export default async function RootLayout({
 }>) {
   const theme = await getCookiesServer("theme");
   const font = await getCookiesServer("font");
-  // console.log(" SERVER ---> ", theme, font); 
+  // console.log(" SERVER ---> ", theme, font);
   return (
     <html lang="en" data-theme={theme} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden h-screen`}
         style={{ background: "black" }}
       >
-        <ThemeProvider initialTheme={theme!}>
-          <FontProvider initialFont={font!}>
-            <CookieProvider>
-              {children}
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  className: cn("px-2 py-1 text-sm backdrop-blur-[4px] max-w-[400px]! w-fit!", spaceGrotesk.className),
-                }}
-              />
-            </CookieProvider>
-          </FontProvider>
-        </ThemeProvider>
+        <CQueryClientProvider>
+          <ThemeProvider initialTheme={theme!}>
+            <FontProvider initialFont={font!}>
+              <CookieProvider>
+                {children}
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    className: cn(
+                      "px-2 py-1 text-sm backdrop-blur-[4px] max-w-[400px]! w-fit!",
+                      spaceGrotesk.className
+                    ),
+                  }}
+                />
+              </CookieProvider>
+            </FontProvider>
+          </ThemeProvider>
+        </CQueryClientProvider>
       </body>
     </html>
   );

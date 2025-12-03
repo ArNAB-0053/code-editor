@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using backend.helper;
 using backend.Models;
 using backend.Services.implementations;
@@ -7,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
-    [Route ("/api/auth")]
+    [Route("api/user")]
     [ApiController]
-    public class AuthController: ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly AuthServices _service;
         private readonly IConfiguration _config;
@@ -51,55 +52,67 @@ namespace backend.Controllers
             });
         }
 
-        [HttpGet]  
+        [HttpGet]
         public IActionResult GetAllUsers()
         {
             var allUsers = _service.GetAllUsers();
             return Ok(allUsers);
         }
 
+        [HttpGet("{id}")]
+        public AuthModel GetUserById(string id) => _service.GetUserById(id);
+
         [HttpPost("signin")]
         public IActionResult SignIn([FromBody] SignInRequest req)
         {
             var user = _service.SignIn(req.Identifier, req.Password);
 
-            if (user == null) return Unauthorized( new { message = "Invalid username/email or password", status = "error" });
+            if (user == null) return Unauthorized(new { message = "Invalid username/email or password", status = "error" });
 
             var token = JwtHelper.GenerateToken(user, _config);
 
             Response.Cookies.Append("jwt", token, new CookieOptions
             {
                 HttpOnly = true,
-                #if DEBUG
-                    Secure = false,
-                    SameSite = SameSiteMode.Lax,
-                #else
+#if DEBUG
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
+#else
                     Secure = true,
                     SameSite = SameSiteMode.None,
-                #endif
-                    Expires = DateTime.UtcNow.AddDays(3)
+#endif
+                Expires = DateTime.UtcNow.AddDays(3)
             });
 
             return Ok(new
+            {
+                message = "Logged In Successfully",
+                status = "success",
+
+                user = new
                 {
-                    message = "Logged In Successfully",
-                    status = "success",
-                    user = new
-                    {
-                        id = user?.Id,
-                        name = user?.Name,
-                        email = user?.Email
-                    }
+                    id = user?.Id,
+                    name = user?.Name,
+                    email = user?.Email
                 }
+            }
             );
         }
-
         [Authorize]
         [HttpGet("me")]
         public IActionResult Me()
         {
-            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            return Ok(new { userId });
+            var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var email1 = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
+            var email2 = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            var userName = User.FindFirst("name")?.Value;
+            var userId = userId1 ?? userId2;
+            var userEmail = email1 ?? email2;
+
+            return Ok(new { userId, email = userEmail, name = userName });
         }
 
     }

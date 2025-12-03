@@ -2,26 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { appUrls } from "./config/navigation.config";
 
 const BACKEND_URI = process.env.NEXT_PUBLIC_BACKEND_URI!;
-const URI = `${BACKEND_URI}/api/auth/me`;
+const URI = `${BACKEND_URI}/api/user/me`;
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("jwt")?.value;
   const path = req.nextUrl.pathname;
 
-  // PUBLIC ROUTES
-  const publicRoutes = [appUrls.LOGIN, appUrls.REGISTER];
+  const publicRoutes = [appUrls.LOGIN, appUrls.REGISTER]; // PUBLIC ROUTES
   const isPublic = publicRoutes.includes(path);
 
   let isValid = false;
 
   if (token) {
-    const res = await fetch(URI, {
-      method: "GET",
-      headers: {
-        Cookie: `jwt=${token}`,
-      },
-    });
-    isValid = res.ok;
+    try {
+      const res = await fetch(URI, {
+        method: "GET",
+        headers: {
+          Cookie: `jwt=${token}`,
+        },
+      });
+      isValid = res.ok;
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   if (isPublic && isValid) {

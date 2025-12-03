@@ -32,6 +32,8 @@ namespace backend.Services.implementations
         // Get all users
         public List<AuthModel> GetAllUsers() => _auth.Find(x => true).ToList();
 
+        public AuthModel GetUserById(string id) => _auth.Find(x => x.Id == id).FirstOrDefault();
+
         // Sign In
         public AuthModel? SignIn(string identifier, string password)
         {
