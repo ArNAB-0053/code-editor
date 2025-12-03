@@ -87,3 +87,12 @@ body {
 [data-title] {
   line-height: 0.9rem !important;
 }
+
+/* Antd Dropdown CSS */
+.ant-dropdown-menu {
+  background: transparent !important;
+}
+
+.ant-dropdown-menu-item {
+  padding: 0px !important;
+}

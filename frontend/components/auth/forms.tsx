@@ -271,6 +271,7 @@ export const SignInForm = () => {
         const toastId = toast.loading(messagesConfig.LOGIN.LOADING);
         try {
           const data = await login(values);
+          console.log(data)
           if (data.status === "success") {
             toast.success(messagesConfig.LOGIN.SUCCESS, { id: toastId });
             setTimeout(() => {

@@ -2,13 +2,9 @@ import { FormProps } from "antd";
 import { ThemeTypes } from "./theme";
 import { WebsiteFontsKey } from "./font";
 import React, { ReactNode } from "react";
+import { RegisterFormType } from "@/zod/sign-up.z";
 
 export type HeaderProps = OutputHeaderProps | EditorHeaderProps;
-
-export interface IBaseCAvatarProps {
-    name: string; 
-    theme: ThemeTypes; 
-}
 
 export interface IBaseAFormProps extends Omit<FormProps, "children"> {
   children?: ReactNode;
@@ -42,4 +38,13 @@ export interface IBaseCustomProps {
   children: ReactNode;
   style?: React.CSSProperties;
   className?: string;
+}
+export interface IBaseStylingProps {
+  style?: React.CSSProperties;
+  className?: string;
+}
+
+export interface IProfileDetails
+  extends Pick<RegisterFormType, "name"|"password"|"email"> {
+  userId: string;
 }

@@ -1,37 +1,43 @@
-[HttpPost("signin")]
-public IActionResult SignIn([FromBody] SignInRequest request)
-{
-    var user = _service.SignIn(request.Identifier, request.Password);
+import React from 'react';
+import { DownOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Dropdown, Space } from 'antd';
 
-    if (user == null)
-        return Unauthorized(new { message = "Invalid username/email or password" });
+const items: MenuProps['items'] = [
+  {
+    label: (
+      <a href="https://www.antgroup.com" target="_blank" rel="noopener noreferrer">
+        1st menu item
+      </a>
+    ),
+    key: '0',
+  },
+  {
+    label: (
+      <a href="https://www.aliyun.com" target="_blank" rel="noopener noreferrer">
+        2nd menu item
+      </a>
+    ),
+    key: '1',
+  },
+  {
+    type: 'divider',
+  },
+  {
+    label: '3rd menu item',
+    key: '3',
+  },
+];
 
-    return Ok(new
-    {
-        message = "Login successful",
-        user = new
-        {
-            id = user.Id,
-            name = user.Name,
-            email = user.Email
-        }
-    });
-}
-  public AuthModel? SignIn(string identifier, string password)
-{
-    identifier = identifier.ToLower();
+const Avatar = () => (
+  <Dropdown menu={{ items }} trigger={['click']}>
+    <a onClick={(e) => e.preventDefault()}>
+      <Space>
+        Click me
+        <DownOutlined />
+      </Space>
+    </a>
+  </Dropdown>
+);
 
-    // Find by email OR username
-    var filter = Builders<AuthModel>.Filter.Or(
-        Builders<AuthModel>.Filter.Eq(x => x.Email.ToLower(), identifier),
-        Builders<AuthModel>.Filter.Eq(x => x.Name.ToLower(), identifier)
-    );
-
-    var user = _auth.Find(filter).FirstOrDefault();
-    if (user == null) return null;
-
-    // Compare raw password
-    if (user.Password != password) return null;
-
-    return user;
-}
+export default Avatar;

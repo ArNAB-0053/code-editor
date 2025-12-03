@@ -23,7 +23,7 @@ const Hero = () => {
 
   return (
     <section
-      className={`${font?.className} pt-[20vh] lg:pt-48 xl:pt-60 min-h-svh  w-full flex flex-col items-center text-center`}
+      className={`${font?.className} pt-[20vh] lg:pt-48 xl:pt-60 min-h-svh  flex flex-col items-center text-center`}
       style={{
         // background: theme?.editorBackground,
         color: theme?.textColor,

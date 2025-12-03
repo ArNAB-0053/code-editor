@@ -56,8 +56,9 @@ const BaseCButton = ({
       break;
 
     case "danger":
-      color = "#ff4d4f";
+      color = "#fff";
       borderColor = "#ff4d4f";
+      backgroundColor = "#ff4d4f";
       break;
 
     case "text":
@@ -90,7 +91,9 @@ const BaseCButton = ({
     ...style,
     backgroundColor: isHovered && hoverBgColor ? hoverBgColor : finalBaseBg,
     color: isHovered && hoverColor ? hoverColor : color,
-    border: `1px solid ${borderColor}`,
+    borderColor: borderColor,
+    borderWidth: '1px',
+    borderStyle: "solid",
     padding: "6px 14px",
     borderRadius: "8px",
     cursor: "pointer",

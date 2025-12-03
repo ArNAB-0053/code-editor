@@ -2,5 +2,6 @@ export const appUrls = {
     HOME: '/',
     LOGIN: '/auth/sign-in',
     REGISTER: '/auth/sign-up',
-    PYTHON: '/lang/python'
+    PYTHON: '/lang/python',
+    PROFILE: '/profile',
 };
