@@ -13,9 +13,11 @@ export interface EditorHeaderProps {
   p_lang: string;
   isCopied: boolean;
   setIsCopied: SetterFunctionTypesBool;
+  setOpen: SetterFunctionTypesBool;
   loading: boolean;
   setLoading: setterFunctionTypesBool;
   setError: setterFunctionTypesString;
+  isShared: boolean;
 }
 
 export type HeaderProps = OutputHeaderProps | EditorHeaderProps;

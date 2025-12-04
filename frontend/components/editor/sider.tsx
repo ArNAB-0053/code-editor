@@ -16,17 +16,9 @@ const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   }
 `;
 
-const Sider = () => {
+const Sider = ({p_lang}: {p_lang: string}) => {
   const editorTheme = useSelector(selectEditorTheme)
   const theme = themeConfig(editorTheme);
-
-  // Lang character count
-  const countLangChar = appUrls.LANG.length
-
-  // pathname
-  const getPathname = usePathname();
-  const trimmedPathname = getPathname.trim();
-  const pathname = trimmedPathname.slice(countLangChar + 1, trimmedPathname.length);
 
   const languageLogo = (lang: string) => {
     const uri = getDataUrls(lang);
@@ -64,12 +56,12 @@ const Sider = () => {
         >
           <StyledLink
             $theme={theme}
-            $isActive={pathname === x.link}
+            $isActive={p_lang === x.link}
             href={x.link}
             className="border p-2.5 text-center rounded-sm uppercase transition-all ease-linear duration-10"
             style={{
               backgroundColor:
-                pathname === x.link ? theme.activeColor : theme.border10,
+                p_lang === x.link ? theme.activeColor : theme.border10,
               borderColor: theme.border20,
             }}
           >

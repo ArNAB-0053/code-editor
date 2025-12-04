@@ -23,7 +23,7 @@ export const TransparentButton = ({
       onClick={onClick}
       type="default"
       disabled={loading}
-      className={`h-full! text-white! font-medium! ${font?.className}`}
+      className={`h-full! text-white! font-medium! border-none! ${font?.className}`}
     >
       Clear
     </AButton>
@@ -42,21 +42,32 @@ export const CopyButton = ({
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   return (
+    // <AButton
+    //   onClick={onClick}
+    //   btntype="copy"
+    //   className={`h-full! text-white! font-medium! border-none! ${font?.className}`}
+    // >
+    //   {isCopied ? (
+    //     <span className="flex items-center justify-center gap-1 h-full">
+    //       <FaCheckCircle className="text-green-500" />
+    //       {/* Copied */}
+    //     </span>
+    //   ) : (
+    //     <span className="flex items-center justify-center gap-1 h-full">
+    //       <IoCopy />
+    //       {/* Copy */}
+    //     </span>
+    //   )}
+    // </AButton>
     <AButton
       onClick={onClick}
       btntype="copy"
-      className={`h-full! text-white! font-medium! border-none! ${font?.className}`}
+      className={` text-white! p-0! aspect-square font-medium! border-none! ${font?.className}`}
     >
       {isCopied ? (
-        <span className="flex items-center justify-center gap-1 h-full">
-          <FaCheckCircle className="text-green-500" />
-          Copied
-        </span>
+        <FaCheckCircle className="text-green-500" />
       ) : (
-        <span className="flex items-center justify-center gap-1 h-full">
-          <IoCopy />
-          Copy
-        </span>
+        <IoCopy className="opacity-80" size={16} />
       )}
     </AButton>
   );
@@ -77,14 +88,13 @@ export const RunButton = ({
       onClick={onClick}
       btntype="run"
       disabled={loading}
-      className={`h-full! font-semibold! tracking-[1.2px]! flex! items-center! gap-1 disabled:bg-green-300/80! ${font?.className}`}
+      className={`font-semibold! tracking-[1.2px]! flex! items-center! disabled:bg-green-300/80!  aspect-square p-0! ${font?.className}`}
     >
       {loading ? (
         <AiOutlineLoading3Quarters className="animate-spin" />
       ) : (
         <FaPlay />
       )}
-      {loading ? "Running…" : "Run"}
     </AButton>
   );
 };

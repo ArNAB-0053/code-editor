@@ -5,4 +5,5 @@ export const appUrls = {
     LANG: '/lang',
     PYTHON: '/lang/python',
     PROFILE: '/profile',
+    SHARE: '/share'
 };

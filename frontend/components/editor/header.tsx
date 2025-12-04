@@ -11,7 +11,10 @@ import {
 } from "@/redux/slices/editorSlice";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
-import { IoMdCloudDone } from "react-icons/io";
+import { IoMdCloudDone, IoMdShare } from "react-icons/io";
+import { AButton } from "../ui/antd";
+import { FaShare } from "react-icons/fa";
+import { cn } from "@/lib/utils";
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
@@ -93,7 +96,7 @@ const EditorHeaderComponent = (props: HeaderProps) => {
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
       <span className="font-medium text-center flex items-center justify-center gap-x-2 w-[100px]">
         main.py
-        <IoMdCloudDone className="opacity-40 size-3.5" />
+        {/* <IoMdCloudDone className="opacity-40 size-3.5" /> */}
       </span>
 
       <div
@@ -104,11 +107,18 @@ const EditorHeaderComponent = (props: HeaderProps) => {
           borderLeft: theme?.border10,
         }}
       >
-        <TransparentButton
+        {/* <TransparentButton
           onClick={() => {
             dispatch(setCodeRedux(""));
           }}
-        />
+        /> */}
+
+        <AButton
+          onClick={() => props.setOpen(true)}
+          className={cn(props.isShared && "hidden! opacity-0!", "aspect-square! p-0!")}
+        >
+          <IoMdShare size={18} />
+        </AButton>
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />

@@ -16,15 +16,17 @@ namespace backend.Services.implementations
             _code = db.GetCollection<CodeSaveModel>(settings?.CodeSaveCollectionName);
         }
 
-
+        // CREATE
         public CodeSaveModel Create(CodeSaveModel savecode)
         {
             _code.InsertOne(savecode);
             return savecode;
         }
 
+        // GET
         public CodeSaveModel GetCode(string userId, string lang) => _code.Find(x => x.UserId == userId && x.Lang == lang).FirstOrDefault();
 
+        // UPDATE - PUT
         public void Update(string id, CodeSaveModel code)
         {
             var update = Builders<CodeSaveModel>.Update
@@ -37,6 +39,7 @@ namespace backend.Services.implementations
             _code.UpdateOne(x => x.Id == id, update);
         }
 
+        // UPDATE - Only Output (PATCH)
         public void UpdateOutput(string id, string output)
         {
             var update = Builders<CodeSaveModel>.Update
@@ -46,6 +49,7 @@ namespace backend.Services.implementations
             _code.UpdateOne(x => x.Id == id, update);
         }
 
+        // AUTO SAVE - CREATE / UPDATE
         public CodeSaveModel AutoSave(string userid, string lang, string code)
         {
             var existCode = GetCode(userid, lang);
@@ -71,5 +75,9 @@ namespace backend.Services.implementations
 
             return GetCode(userid, lang);
         }
+
+        // SHARE
+        public CodeSaveModel SharedCode(string editorId) => _code.Find(x => x.Id == editorId).FirstOrDefault();
+
     }
 }

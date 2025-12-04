@@ -17,29 +17,30 @@ export const runCode = async (payload: any) => {
   }
 
   return res.data;
-}
+};
 
 export const useRunCode = () => {
   return useMutation({
     mutationFn: (payload: any) => runCode(payload),
-  })
-}
+  });
+};
 
 // UPDATE CODE
 export const updateCode = async (editorId: string, payload: any) => {
-  const res = await axiosInstance.put(`${URI}/update/${editorId}`, payload)
+  const res = await axiosInstance.put(`${URI}/update/${editorId}`, payload);
   if (!res.data) {
     const txt = await res.statusText;
     throw new Error(`HTTP ${res.status}: ${txt}`);
   }
   return res.data;
-}
+};
 
 export const useUpdateCode = () => {
   return useMutation({
-    mutationFn: (editorId: string, payload: any) => updateCode(editorId, payload),
-  })
-}
+    mutationFn: (editorId: string, payload: any) =>
+      updateCode(editorId, payload),
+  });
+};
 
 // UPDATE ONLY OUTPUT
 export const updateOutput = async ({
@@ -83,15 +84,13 @@ export const useGetCode = (payload: any) => {
   return useQuery({
     queryKey: [QUERY_KEYS.CODE, payload.userId, payload.lang],
     queryFn: () => getCode(payload),
-    enabled: !!payload.userId && !!payload.lang
+    enabled: !!payload.userId && !!payload.lang,
   });
 };
 
 // CREATE CODE -> AUTO SAVE also doing creation if doesn't exist but if somewhere hardly needed then can be used this
 export const createCode = async (payload: any) => {
-  const res = await axiosInstance.post(`${URI}/create`, payload, {
-    withCredentials: true,
-  });
+  const res = await axiosInstance.post(`${URI}/create`, payload);
 
   if (!res.data) {
     const txt = await res.statusText;
@@ -124,3 +123,22 @@ export const useAutoSaveCode = () => {
     mutationFn: (payload: any) => autoSaveCode(payload),
   });
 };
+
+// SHARE
+export const getSharedCode = async (editorId: string) => {
+  const res = await axiosInstance.post(`${URI}/share/${editorId}`);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+export const useSharedCode = (editorId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SHARE, editorId],
+    queryFn: () => getSharedCode(editorId),
+    enabled: !!editorId
+  })
+}

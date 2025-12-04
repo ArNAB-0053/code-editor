@@ -18,7 +18,7 @@ import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
-import { useAutoSaveCode } from "@/services/code";
+import { useAutoSaveCode, useGetCode } from "@/services/code";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useDispatch } from "react-redux";
@@ -29,12 +29,21 @@ import {
   setCodeRedux,
   setEditorId,
   setLangRedux,
+  setOutputRedux,
 } from "@/redux/slices/editorSlice";
 import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
 import { AModal } from "../ui/antd";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
+
+export interface IEditorProps {
+  p_lang: string;
+  currentCode: string;
+  currentOutput: string;
+  editorId: string;
+  isShared?: boolean;
+}
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -47,89 +56,31 @@ const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   }
 `;
 
-export default function EditorComponent({
+const CodeEditor = ({
   p_lang,
+  currentCode,
+  currentOutput,
+  editorId,
   isShared = false,
-}: {
-  p_lang: string;
-  isShared?: boolean;
-}) {
+}: IEditorProps) => {
   const defaultCode = getDefaultCode(p_lang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-
-  // Share
   const [open, setOpen] = useState(false);
-
-  const currentCode = useSelector(selectedCode);
-  const currentOutput = useSelector(selectedOutput);
-
-  const dispatch = useDispatch();
 
   const editorFont = useSelector(selectEditorFont);
   const editorFontSize = useSelector(selectEditorFontSize);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
-  const userId = useSelector(selectedUserId);
-  const editorId = useSelector(selectedEditorId);
-
-  const autoSaveCode = useAutoSaveCode();
 
   const theme = themeConfig(editorTheme);
+
+  const dispatch = useDispatch();
 
   // refs for monaco editor
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
-
-  const debouncedCode = useDebounce(currentCode, 1000);
-  const lastSaveRef = useRef("");
-  // const isAutoSaving = useRef(false);
-
-  // useEffect(() => {
-  //   if (currentCode !== debouncedCode) {
-  //     isAutoSaving.current = true;
-  //     toast.loading("Saving…", { id: "autoSave" });
-  //   }
-  // }, [currentCode, debouncedCode]);
-
-  useEffect(() => {
-    if (isShared || !userId) return;
-    if (debouncedCode.trim() === lastSaveRef.current.trim()) {
-      // toast.dismiss("autoSave");
-      return;
-    }
-
-    toast.loading("Saving…", { id: "autoSave" });
-
-    autoSaveCode.mutate(
-      {
-        userId: userId,
-        lang: p_lang,
-        code: debouncedCode,
-      },
-      {
-        onSuccess: (res) => {
-          lastSaveRef.current = debouncedCode;
-          dispatch(setCodeRedux(res?.code));
-          dispatch(setLangRedux(res?.lang));
-          dispatch(setEditorId(res?.id));
-          // isAutoSaving.current = false;
-          toast.success("Saved!", { id: "autoSave" });
-        },
-        onError: (e) => {
-          // isAutoSaving.current = false;
-          toast.error("Failed to save", { id: "autoSave" });
-        },
-      }
-    );
-  }, [isShared, debouncedCode, userId, p_lang, dispatch]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1000);
-  }, [isCopied]);
 
   const syntaxRules = getEditorSytaxRules(theme);
 
@@ -183,14 +134,8 @@ export default function EditorComponent({
   const sharedLink = `http://localhost:3000${appUrls.SHARE}/${editorId}`;
 
   return (
-    <div
-      style={{
-        fontFamily: "Inter, Roboto, system-ui",
-        height: "calc(100vh - 25px)",
-      }}
-      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
-    >
-      <Sider p_lang={p_lang} />
+    <>
+      <Sider />
 
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
@@ -222,7 +167,6 @@ export default function EditorComponent({
                 setLoading={setLoading}
                 setError={setError}
                 setOpen={setOpen}
-                isShared={isShared}
               />
               <div className="pt-2">
                 <Editor
@@ -289,21 +233,21 @@ export default function EditorComponent({
         </StyledSplitter>
       </div>
 
-      {!isShared && (
-        <AModal
-          title="Generate Shared Link"
-          centered
-          open={open}
-          onOk={() => setOpen(false)}
-          onCancel={() => setOpen(false)}
-          footer={false}
-          className="overflow-hidden"
-        >
-          <Link href={sharedLink} target="_blank">
-            {sharedLink}
-          </Link>
-        </AModal>
-      )}
-    </div>
+      <AModal
+        title="Generate Shared Link"
+        centered
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+        footer={false}
+        className="overflow-hidden"
+      >
+        <Link href={sharedLink} target="_blank">
+          {sharedLink}
+        </Link>
+      </AModal>
+    </>
   );
-}
+};
+
+export default CodeEditor;
