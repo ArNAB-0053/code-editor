@@ -3,22 +3,32 @@ import { CopyButton, RunButton, TransparentButton } from "./header-buttons";
 import { useRunCode, useUpdateOutput } from "@/services/code";
 import { useSelector } from "react-redux";
 import { HeaderProps } from "@/@types";
-import { selectedEditorId, setOutputRedux } from "@/redux/slices/editorSlice";
+import {
+  selectedCode,
+  selectedEditorId,
+  setCodeRedux,
+  setOutputRedux,
+} from "@/redux/slices/editorSlice";
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
+import { IoMdCloudDone } from "react-icons/io";
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
 
+  const currentCode = useSelector(selectedCode);
+
+  // console.log("Curr Code", currentCode);
+
   const theme = themeConfig(props.editorTheme);
 
-  const runCode = useRunCode();
-  const updateOutput = useUpdateOutput();
+  const { mutateAsync: runCode } = useRunCode();
+  const { mutateAsync: updateOutput } = useUpdateOutput();
 
   const editorId = useSelector(selectedEditorId);
   const lastOpt = useRef("");
 
-  console.log(editorId)
+  // console.log(editorId)
 
   // Ouput Header
   if (props.isOutput) {
@@ -39,26 +49,27 @@ const EditorHeaderComponent = (props: HeaderProps) => {
 
   const handleRunCode = async () => {
     props.setLoading(true);
-    props.setOutput("");
     props.setError("");
 
     try {
-      const res = await runCode.mutateAsync({
-        code: props.code,
+      const res = await runCode({
+        code: currentCode,
         lang: props.p_lang,
       });
-      console.log(res);
+      // console.log(res);
       const output = res.output ?? "";
-      props.setOutput(output);
       if (lastOpt.current !== output) {
-        console.log("NOT MATCH");
-        updateOutput.mutateAsync(
+        updateOutput(
           { editorId, output },
-          { onSuccess: (res) => console.log(res) }
+          {
+            onSuccess: (res) => {
+              // console.log("Updated", res);
+              lastOpt.current = output;
+              dispatch(setOutputRedux(output));
+            },
+          }
         );
-      } else console.log("MATCHED");
-      lastOpt.current = output;
-      dispatch(setOutputRedux(output));
+      }
     } catch (err: any) {
       props.setError(err.message ?? String(err));
     } finally {
@@ -67,12 +78,12 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   };
 
   function clearOutput() {
-    props.setOutput("");
     props.setError("");
+    dispatch(setOutputRedux(""));
   }
 
   const copyCode = () => {
-    navigator.clipboard.writeText(props.code).then(() => {
+    navigator.clipboard.writeText(currentCode).then(() => {
       props.setIsCopied(true);
     });
   };
@@ -80,8 +91,9 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   return (
     // Editor Header
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
-      <span className="font-medium text-center flex items-center justify-center w-[100px]">
+      <span className="font-medium text-center flex items-center justify-center gap-x-2 w-[100px]">
         main.py
+        <IoMdCloudDone className="opacity-40 size-3.5" />
       </span>
 
       <div
@@ -94,7 +106,7 @@ const EditorHeaderComponent = (props: HeaderProps) => {
       >
         <TransparentButton
           onClick={() => {
-            props.setCode("");
+            dispatch(setCodeRedux(""));
           }}
         />
 

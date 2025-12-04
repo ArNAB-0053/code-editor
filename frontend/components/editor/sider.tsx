@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { appUrls } from "@/config/navigation.config";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   &:hover {
@@ -19,10 +20,13 @@ const Sider = () => {
   const editorTheme = useSelector(selectEditorTheme)
   const theme = themeConfig(editorTheme);
 
+  // Lang character count
+  const countLangChar = appUrls.LANG.length
+
   // pathname
   const getPathname = usePathname();
   const trimmedPathname = getPathname.trim();
-  const pathname = trimmedPathname.slice(1, trimmedPathname.length);
+  const pathname = trimmedPathname.slice(countLangChar + 1, trimmedPathname.length);
 
   const languageLogo = (lang: string) => {
     const uri = getDataUrls(lang);
@@ -64,9 +68,9 @@ const Sider = () => {
             href={x.link}
             className="border p-2.5 text-center rounded-sm uppercase transition-all ease-linear duration-10"
             style={{
-              background:
+              backgroundColor:
                 pathname === x.link ? theme.activeColor : theme.border10,
-                borderColor: theme.border20,
+              borderColor: theme.border20,
             }}
           >
             {x.logo}

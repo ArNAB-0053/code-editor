@@ -1,5 +1,7 @@
 import axiosInstance from "@/lib/axios-instance";
-import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/providers/queryClientProvider";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from ".";
 
 const URI = "api/code";
 
@@ -67,9 +69,7 @@ export const useUpdateOutput = () => {
 
 // GET CODE
 export const getCode = async (payload: any) => {
-  const res = await axiosInstance.post(`${URI}`, payload, {
-    withCredentials: true,
-  });
+  const res = await axiosInstance.post(`${URI}`, payload);
 
   if (!res.data) {
     const txt = await res.statusText;
@@ -79,15 +79,11 @@ export const getCode = async (payload: any) => {
   return res.data;
 };
 
-export const useGetCode = () => {
-  return useMutation({
-    mutationFn: (payload: any) => getCode(payload),
-    onSuccess: (result) => {
-      console.log("Compiler Output:", result);
-    },
-    onError: (result) => {
-      console.log("Compiler Output:", result);
-    },
+export const useGetCode = (payload: any) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.CODE, payload.userId, payload.lang],
+    queryFn: () => getCode(payload),
+    enabled: !!payload.userId && !!payload.lang
   });
 };
 

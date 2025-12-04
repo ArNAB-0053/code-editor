@@ -56,7 +56,7 @@ export default async function RootLayout({
                   position="top-right"
                   toastOptions={{
                     className: cn(
-                      "px-2 py-1 text-sm backdrop-blur-[4px] max-w-[400px]! w-fit!",
+                      "px-4! py-2! text-[12px]! backdrop-blur-[4px] max-w-[400px]! w-fit! ",
                       spaceGrotesk.className
                     ),
                   }}

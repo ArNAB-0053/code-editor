@@ -12,7 +12,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme="dark"
       className="toaster group"
       icons={{
-        success: <FaCheckCircle className="size-4" />,
+        success: <FaCheckCircle className="size-3.5" />,
         info: <FaInfoCircle className="size-4" />,
         warning: <TiWarning className="size-4" />,
         error: <MdError className="size-4" />,

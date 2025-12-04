@@ -23,7 +23,7 @@ namespace backend.Services.implementations
             return savecode;
         }
 
-        public CodeSaveModel GetCode(string userid, string lang) => _code.Find(x => x.UserId == userid && x.Lang == lang).FirstOrDefault();
+        public CodeSaveModel GetCode(string userId, string lang) => _code.Find(x => x.UserId == userId && x.Lang == lang).FirstOrDefault();
 
         public void Update(string id, CodeSaveModel code)
         {

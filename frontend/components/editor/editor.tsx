@@ -18,15 +18,20 @@ import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
-import { useAutoSaveCode } from "@/services/code";
+import { useAutoSaveCode, useGetCode } from "@/services/code";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useDispatch } from "react-redux";
 import {
+  selectedCode,
+  selectedOutput,
   setCodeRedux,
   setEditorId,
   setLangRedux,
+  setOutputRedux,
 } from "@/redux/slices/editorSlice";
+import { toast } from "sonner";
+import { messagesConfig } from "@/config/messages.config";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -41,11 +46,12 @@ const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
 
 export default function EditorComponent({ p_lang }: { p_lang: string }) {
   const defaultCode = getDefaultCode(p_lang);
-  const [code, setCode] = useState(defaultCode);
-  const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+
+  const currentCode = useSelector(selectedCode);
+  const currentOutput = useSelector(selectedOutput);
 
   const dispatch = useDispatch();
 
@@ -56,6 +62,10 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
   const userId = useSelector(selectedUserId);
 
   const autoSaveCode = useAutoSaveCode();
+  const { data: codeData, isLoading: isLoadingCode } = useGetCode({
+    userId,
+    lang: p_lang,
+  });
 
   const theme = themeConfig(editorTheme);
 
@@ -63,18 +73,39 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
 
-  const debouncedCode = useDebounce(code, 1000);
+  const debouncedCode = useDebounce(currentCode, 1000);
   const lastSaveRef = useRef("");
+  // const isAutoSaving = useRef(false);
+
+  // useEffect(() => {
+  //   if (currentCode !== debouncedCode) {
+  //     isAutoSaving.current = true;
+  //     toast.loading("Saving…", { id: "autoSave" });
+  //   }
+  // }, [currentCode, debouncedCode]);
+
+  useEffect(() => {
+    if (!codeData) return;
+    dispatch(setEditorId(codeData?.id));
+    dispatch(setCodeRedux(codeData?.code));
+    dispatch(setOutputRedux(codeData?.output));
+    dispatch(setLangRedux(codeData?.lang));
+  }, [codeData, dispatch]);
 
   useEffect(() => {
     if (!userId) return;
-    if (debouncedCode.trim() === lastSaveRef.current.trim()) return;
+    if (debouncedCode.trim() === lastSaveRef.current.trim()) {
+      // toast.dismiss("autoSave");
+      return;
+    }
 
-    autoSaveCode.mutateAsync(
+    toast.loading("Saving…", { id: "autoSave" });
+
+    autoSaveCode.mutate(
       {
         userId: userId,
         lang: p_lang,
-        code
+        code: debouncedCode,
       },
       {
         onSuccess: (res) => {
@@ -82,10 +113,12 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
           dispatch(setCodeRedux(res?.code));
           dispatch(setLangRedux(res?.lang));
           dispatch(setEditorId(res?.id));
-          console.log("Success", res);
+          // isAutoSaving.current = false;
+          toast.success("Saved!", { id: "autoSave" });
         },
-        onError: (res) => {
-          console.log("Failed", res);
+        onError: (e) => {
+          // isAutoSaving.current = false;
+          toast.error("Failed to save", { id: "autoSave" });
         },
       }
     );
@@ -114,8 +147,6 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
       },
     });
   };
-
-  useEffect(() => {}, [editorTheme]);
 
   const handleOnMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
@@ -153,11 +184,10 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
         fontFamily: "Inter, Roboto, system-ui",
         height: "calc(100vh - 25px)",
       }}
-      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0"
+      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
       <Sider />
 
-      {/* {JSON.stringify(editorFonts[editorFont])} */}
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
@@ -181,23 +211,21 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
               <EditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={false}
-                code={code}
-                setCode={setCode}
                 p_lang={p_lang}
                 isCopied={isCopied}
                 setIsCopied={setIsCopied}
-                setOutput={setOutput}
                 loading={loading}
                 setLoading={setLoading}
                 setError={setError}
               />
               <div className="pt-2">
                 <Editor
-                  value={code}
-                  onChange={(value) => setCode(value ?? "")}
+                  value={currentCode}
+                  onChange={(value) => dispatch(setCodeRedux(value ?? ""))}
                   width="100%"
                   height="calc(95vh - 95px)"
                   defaultLanguage={p_lang}
+                  language={p_lang}
                   defaultValue={defaultCode}
                   theme="app-dark"
                   onMount={handleOnMount}
@@ -227,7 +255,6 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
               <EditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={true}
-                setOutput={setOutput}
                 loading={loading}
                 setError={setError}
               />
@@ -235,7 +262,7 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
                 {error ? (
                   <span style={{ color: "#ffb4b4" }}>{error}</span>
                 ) : (
-                  output ||
+                  currentOutput ||
                   (loading ? (
                     "Running..."
                   ) : (
