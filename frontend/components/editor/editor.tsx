@@ -58,9 +58,10 @@ export default function EditorComponent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const [sharingDetails, setSharingDetails] = useState(null);
 
   // Share
-  const [open, setOpen] = useState(false);
+  
 
   const currentCode = useSelector(selectedCode);
   const currentOutput = useSelector(selectedOutput);
@@ -180,7 +181,9 @@ export default function EditorComponent({
   }, [editorTheme]);
 
   // Generate Shared Link
-  const sharedLink = `http://localhost:3000${appUrls.SHARE}/${editorId}`;
+
+
+  console.log(sharingDetails)
 
   return (
     <div
@@ -221,7 +224,6 @@ export default function EditorComponent({
                 loading={loading}
                 setLoading={setLoading}
                 setError={setError}
-                setOpen={setOpen}
                 isShared={isShared}
               />
               <div className="pt-2">
@@ -287,23 +289,7 @@ export default function EditorComponent({
             </div>
           </Splitter.Panel>
         </StyledSplitter>
-      </div>
-
-      {!isShared && (
-        <AModal
-          title="Generate Shared Link"
-          centered
-          open={open}
-          onOk={() => setOpen(false)}
-          onCancel={() => setOpen(false)}
-          footer={false}
-          className="overflow-hidden"
-        >
-          <Link href={sharedLink} target="_blank">
-            {sharedLink}
-          </Link>
-        </AModal>
-      )}
+      </div>      
     </div>
   );
 }

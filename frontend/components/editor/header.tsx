@@ -6,18 +6,25 @@ import { HeaderProps } from "@/@types";
 import {
   selectedCode,
   selectedEditorId,
-  setCodeRedux,
   setOutputRedux,
 } from "@/redux/slices/editorSlice";
 import { useDispatch } from "react-redux";
-import { useRef } from "react";
-import { IoMdCloudDone, IoMdShare } from "react-icons/io";
-import { AButton } from "../ui/antd";
-import { FaShare } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { IoMdShare } from "react-icons/io";
+import { AButton, AInput, AModal } from "../ui/antd";
 import { cn } from "@/lib/utils";
+import { useCreateShare } from "@/services/share";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { appUrls } from "@/config/navigation.config";
+import Link from "next/link";
+import { IShareDataModel, IShareModel } from "@/@types/share";
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [sharingDetails, setSharingDetails] = useState<IShareDataModel>();
+  const [isSharingLoading, setIsSharingLoading] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const currentCode = useSelector(selectedCode);
 
@@ -27,9 +34,17 @@ const EditorHeaderComponent = (props: HeaderProps) => {
 
   const { mutateAsync: runCode } = useRunCode();
   const { mutateAsync: updateOutput } = useUpdateOutput();
+  const { mutateAsync: createShare } = useCreateShare();
 
   const editorId = useSelector(selectedEditorId);
+  const userId = useSelector(selectedUserId);
   const lastOpt = useRef("");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLinkCopied(false);
+    }, 1000);
+  }, [linkCopied]);
 
   // console.log(editorId)
 
@@ -91,6 +106,33 @@ const EditorHeaderComponent = (props: HeaderProps) => {
     });
   };
 
+  const handleClickShare = async () => {
+    setIsSharingLoading(true);
+    setOpen(true);
+    try {
+      const res = await createShare({
+        EditorId: editorId,
+        SharedByUserId: userId,
+        ShareLimit: 5,
+        ExpireMinutes: 60,
+      });
+      console.log("shared", res);
+      setSharingDetails(res?.data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsSharingLoading(false);
+    }
+  };
+
+  const sharedLink = `http://localhost:3000${appUrls.SHARE}/${sharingDetails?.sharedId}`;
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(sharedLink).then(() => {
+      setLinkCopied(true);
+    });
+  };
+
   return (
     // Editor Header
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
@@ -114,8 +156,11 @@ const EditorHeaderComponent = (props: HeaderProps) => {
         /> */}
 
         <AButton
-          onClick={() => props.setOpen(true)}
-          className={cn(props.isShared && "hidden! opacity-0!", "aspect-square! p-0!")}
+          onClick={handleClickShare}
+          className={cn(
+            props.isShared && "hidden! opacity-0!",
+            "aspect-square! p-0!"
+          )}
         >
           <IoMdShare size={18} />
         </AButton>
@@ -123,6 +168,24 @@ const EditorHeaderComponent = (props: HeaderProps) => {
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />
       </div>
+
+      {!props.isShared && (
+        <AModal
+          title="Generate Shared Link"
+          centered
+          open={open}
+          onOk={() => setOpen(false)}
+          onCancel={() => setOpen(false)}
+          footer={false}
+          className="overflow-hidden"
+          loading={isSharingLoading}
+        >
+          <div className="flex items-center justify-between gap-x-3">
+            <AInput value={sharedLink} disabled className="h-8.5! opacity-65!" />
+            <CopyButton onClick={copyLink} isCopied={linkCopied} />
+          </div>
+        </AModal>
+      )}
     </div>
   );
 };

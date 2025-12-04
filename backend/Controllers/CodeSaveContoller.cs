@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
-    [Route ("/api/code")]
+    [Route ("api/code")]
     [ApiController]
     public class CodeSaveContoller: ControllerBase
     {

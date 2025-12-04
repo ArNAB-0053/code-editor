@@ -24,6 +24,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddSingleton<AuthServices>();
 builder.Services.AddSingleton<CodeSaveService>();
+builder.Services.AddSingleton<ShareServices>();
 builder.Services.Configure<DockerSettings>(
     builder.Configuration.GetSection("DockerSettings")
 );
