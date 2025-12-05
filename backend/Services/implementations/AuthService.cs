@@ -2,6 +2,7 @@
 using backend.Models;
 using MongoDB.Driver;
 using BCrypt.Net;
+using System.Threading.Tasks;
 
 namespace backend.Services.implementations
 {
@@ -34,21 +35,20 @@ namespace backend.Services.implementations
         // Create / Sign Up
         public async Task<AuthModel> Create(AuthModel auth)
         {
-            auth.Name = auth.Name.ToLower();
-            auth.Email = auth.Email.ToLower();
-            auth.Username = auth.Username.ToLower();
+            //// REDIS checks for email/username exists or not
+            //if (await _redis.Exists($"user:username:{auth.Username}")) throw new Exception("Username already in use");
+            //if (await _redis.Exists($"user:email:{auth.Email}")) throw new Exception("Email already in use");
 
-            // REDIS checks for email/username exists or not
-            if (await _redis.Exists($"user:username:{auth.Username}")) throw new Exception("Username already in use");
-            if (await _redis.Exists($"user:email:{auth.Email}")) throw new Exception("Email already in use");
+            //// FALLBACK: MONGO checks for email/username exists or not
+            //// Will be used when redis return fals - either for NEW USER or REDIS FAILS
+            //if (_auth.Find(x => x.Email == auth.Email).Any())
+            //    throw new Exception("Email already in use");
 
-            // FALLBACK: MONGO checks for email/username exists or not
-            // Will be used when redis return fals - either for NEW USER or REDIS FAILS
-            if (_auth.Find(x => x.Email == auth.Email).Any())
-                throw new Exception("Email already in use");
+            //if (_auth.Find(x => x.Username == auth.Username).Any())
+            //    throw new Exception("Username already in use");
 
-            if (_auth.Find(x => x.Username == auth.Username).Any())
-                throw new Exception("Username already in use");
+            await CheckUsernameExists(auth.Username);
+            await CheckEmailExists(auth.Email);
 
             auth.Password = BCrypt.Net.BCrypt.HashPassword(auth.Password);
 
@@ -64,6 +64,8 @@ namespace backend.Services.implementations
         public List<AuthModel> GetAllUsers() => _auth.Find(x => true).ToList();
 
         public AuthModel GetUserById(string id) => _auth.Find(x => x.Id == id).FirstOrDefault();
+
+
 
         // Sign In
         public AuthModel? SignIn(string identifier, string password)
@@ -81,6 +83,29 @@ namespace backend.Services.implementations
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password)) return null;
 
             return user;
+        }
+
+        public async Task CheckUsernameExists(string username)
+        {
+       
+            username = username.ToLower();
+            if (await _redis.Exists($"user:username:{username}")) throw new Exception("Username already in use");
+            // FALLBACK: MONGO checks for email/username exists or not
+            // Will be used when redis return fals - either for NEW USER or REDIS FAILS
+
+            if (_auth.Find(x => x.Username == username).Any())
+                throw new Exception("Username already in use");
+        }
+
+        public async Task CheckEmailExists(string email)
+        {
+            email = email.ToLower();
+            if (await _redis.Exists($"user:email:{email}")) throw new Exception("Email already in use");
+
+            // FALLBACK: MONGO checks for email/username exists or not
+            // Will be used when redis return fals - either for NEW USER or REDIS FAILS
+            if (_auth.Find(x => x.Email == email).Any())
+                throw new Exception("Email already in use");
         }
     }
 }

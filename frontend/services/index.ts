@@ -3,6 +3,8 @@ export const QUERY_KEYS = {
     ME: "me",
     CODE: "code",
     SHARE: 'share',
+    USERNAME_CHECK: 'username-check',
+    EMAIL_CHECK: 'email-check',
 
     CONNECTION: 'connection',
     NOTIFICATION: 'notification',

@@ -69,6 +69,41 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public AuthModel GetUserById(string id) => _service.GetUserById(id);
 
+        // CHECK username
+        [HttpGet("check-username")]
+        public async Task<IActionResult> CheckUsername([FromQuery] string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return BadRequest(new { available = false, message = "Username required" });
+
+            try
+            {
+                await _service.CheckUsernameExists(username);
+                return Ok(new { available = true });
+            }
+            catch (Exception ex) {
+                return Ok(new { available = false, message = ex.Message });
+            }
+        }
+
+        // CHECK email
+        [HttpGet("check-email")]
+        public async Task<IActionResult> CheckEmail([FromQuery] string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest(new { available = false, message = "Email required" });           
+
+            try
+            {
+                await _service.CheckEmailExists(email);
+                return Ok(new { available = true });
+            }
+
+            catch (Exception ex) {
+                return Ok(new { available = false, message = ex.Message });
+            }
+        }
+
         // SIGN IN
         [HttpPost("signin")]
         public IActionResult SignIn([FromBody] SignInRequest req)

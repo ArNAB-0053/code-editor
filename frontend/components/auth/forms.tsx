@@ -9,7 +9,7 @@ import {
 import { themeConfig } from "@/config/themeConfig";
 import { useTheme } from "@/context/ThemeContext";
 import { zodToFormik } from "@/lib/formik-zod-adapter";
-import { login, register } from "@/services/auth";
+import { login, register, useGetUsernameAvailability } from "@/services/auth";
 import { loginSchema, registerSchema } from "@/zod/sign-up.z";
 import { Formik } from "formik";
 import { FaLock, FaUser } from "react-icons/fa";
@@ -20,14 +20,19 @@ import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import { Checkbox } from "antd";
 import styled, { createGlobalStyle } from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { appUrls } from "@/config/navigation.config";
 import { toast } from "sonner";
 import { ContinueWithGoogle } from "./continue-with-btns";
 import { messagesConfig } from "@/config/messages.config";
 import { useDispatch } from "react-redux";
-import { setUserEmail, setUserId, setUserName, setUserUsername } from "@/redux/slices/userSlice";
+import {
+  setUserEmail,
+  setUserId,
+  setUserName,
+  setUserUsername,
+} from "@/redux/slices/userSlice";
 import { motion, AnimatePresence } from "framer-motion";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
@@ -190,7 +195,6 @@ export const SignUpForm = () => {
   };
 
   const goToStep = (newStep: number, values: any, errors: any) => {
-    // Only allow going forward if current step is valid
     if (newStep > currentStep && !isStepValid(values, errors, currentStep)) {
       return;
     }
@@ -220,6 +224,16 @@ export const SignUpForm = () => {
     password: "",
     confirmPassword: "",
   };
+
+  const [username, setUsername] = useState("");
+
+  // const { data: availability, isLoading } = useGetUsernameAvailability(
+  //   username.current
+  // );
+
+  useEffect(() => {
+    console.log(username);
+  }, [username]);
 
   return (
     <Formik
@@ -314,7 +328,10 @@ export const SignUpForm = () => {
                       <FormItemComponent
                         name="username"
                         value={values.username}
-                        onChange={handleChange("username")}
+                        onChange={(e) => {
+                          setUsername(e.target.value);
+                           handleChange("username")(e);
+                        }}
                         formItemChildren="Username"
                         touched={touched?.username}
                         errorText={errors?.username}
@@ -507,7 +524,7 @@ export const SignInForm = () => {
             dispatch(setUserId(data?.user?.id));
             dispatch(setUserName(data?.user?.name));
             dispatch(setUserEmail(data?.user?.email));
-            dispatch(setUserUsername(data.user?.username))
+            dispatch(setUserUsername(data.user?.username));
 
             toast.success(messagesConfig.LOGIN.SUCCESS, { id: toastId });
             setTimeout(() => {
