@@ -5,14 +5,14 @@ export interface IUserState {
     id: string;
     name: string;
     email: string;
-    password?: string
+    username: string,
 }
 
 const initialState: IUserState = {
     id: "",
     name: "Guest",
     email: "",
-    password: ""
+    username: ""
 }
 
 export const userSlice = createSlice({
@@ -28,17 +28,17 @@ export const userSlice = createSlice({
         setUserEmail: (state, action: PayloadAction<string>) => {
             state.email = action.payload
         },
-        setUserPassword: (state, action: PayloadAction<string>) => {
-            state.password = action.payload
+        setUserUsername: (state, action: PayloadAction<string>) => {
+            state.username = action.payload
         },
     }
 })
 
-export const {setUserId, setUserName, setUserEmail, setUserPassword} = userSlice.actions;
+export const {setUserId, setUserName, setUserEmail, setUserUsername} = userSlice.actions;
 
 export const selectedUserId = (state: RootState) => state.user.id
 export const selectedUserName = (state: RootState) => state.user.name
 export const selectedUserEmail = (state: RootState) => state.user.email
-export const selectedUserPassword = (state: RootState) => state.user.password
+export const selectedUserUsername = (state: RootState) => state.user.username
 
 export default userSlice.reducer

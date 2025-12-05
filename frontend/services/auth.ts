@@ -1,3 +1,4 @@
+import { ISignInReturn } from "@/@types/auth";
 import axiosInstance from "@/lib/axios-instance";
 import { LoginFormType, RegisterFormType } from "@/zod/sign-up.z";
 
@@ -14,7 +15,7 @@ export const register = async (config: RegisterFormType) => {
     return res.data
 };
 
-export const login = async (config: LoginFormType) => {
+export const login = async (config: LoginFormType): Promise<ISignInReturn> => {
     const res = await axiosInstance.post(`${URI}/signin`, config, {
         withCredentials: true
     })
