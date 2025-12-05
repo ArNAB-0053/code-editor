@@ -14,15 +14,16 @@ namespace backend.helper
             var jwtSettings = config.GetSection("JwtSettings");
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            new Claim(ClaimTypes.NameIdentifier, user.Id!);
-            new Claim(ClaimTypes.Email, user.Email); 
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);            
 
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id!),
+                new Claim(ClaimTypes.NameIdentifier, user.Id!),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("name", user.Name)
+                new Claim(ClaimTypes.Email, user.Email),                
+                new Claim("name", user.Name),
+                new Claim("username", user.Username)
             };
 
             var token = new JwtSecurityToken(
@@ -33,7 +34,7 @@ namespace backend.helper
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token ?? null);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

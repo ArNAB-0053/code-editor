@@ -1,31 +1,62 @@
 ﻿using backend.config;
 using backend.Models;
 using MongoDB.Driver;
+using BCrypt.Net;
 
 namespace backend.Services.implementations
 {
     public class AuthServices
     {
         private readonly IMongoCollection<AuthModel> _auth;
-
-        public AuthServices(IConfiguration config)
+        private readonly RedisService _redis;
+        public AuthServices(IConfiguration config, RedisService redis)
         {
+            _redis = redis;
             var settings = config.GetSection("DatabaseSettings").Get<MongoSettings>();
             var client = new MongoClient(settings?.MongoURI);
             var db = client.GetDatabase(settings?.DatabaseName);
+
             _auth = db.GetCollection<AuthModel>(settings?.AuthCollectionName);
+
+            // CREATING INDEXES
+            // Email Index
+            var emailIndex = new CreateIndexModel<AuthModel>(
+                                    Builders<AuthModel>.IndexKeys.Ascending(x => x.Email),
+                                    new CreateIndexOptions { Unique = true}
+                                );
+            _auth.Indexes.CreateOne(emailIndex);
+
+            // Username Index
+            var usernameIndex = new CreateIndexModel<AuthModel>(Builders<AuthModel>.IndexKeys.Ascending(x => x.Username), new CreateIndexOptions { Unique = true });
+            _auth.Indexes.CreateOne(usernameIndex);
         }
 
         // Create / Sign Up
-        public AuthModel create(AuthModel auth)
+        public async Task<AuthModel> Create(AuthModel auth)
         {
             auth.Name = auth.Name.ToLower();
             auth.Email = auth.Email.ToLower();
+            auth.Username = auth.Username.ToLower();
 
-            var exists = _auth.Find(x => x.Email == auth.Email).FirstOrDefault();
-            if (exists != null) return null;
+            // REDIS checks for email/username exists or not
+            if (await _redis.Exists($"user:username:{auth.Username}")) throw new Exception("Username already in use");
+            if (await _redis.Exists($"user:email:{auth.Email}")) throw new Exception("Email already in use");
+
+            // FALLBACK: MONGO checks for email/username exists or not
+            // Will be used when redis return fals - either for NEW USER or REDIS FAILS
+            if (_auth.Find(x => x.Email == auth.Email).Any())
+                throw new Exception("Email already in use");
+
+            if (_auth.Find(x => x.Username == auth.Username).Any())
+                throw new Exception("Username already in use");
+
+            auth.Password = BCrypt.Net.BCrypt.HashPassword(auth.Password);
 
             _auth.InsertOne(auth);
+
+            await _redis.SetString($"user:username:{auth.Username}", auth.Id);
+            await _redis.SetString($"user:email:{auth.Email}", auth.Id);
+
             return auth;
         }
 
@@ -39,20 +70,16 @@ namespace backend.Services.implementations
         {
             identifier = identifier.ToLower();
 
-            //  new MongoDB.Bson.BsonRegularExpression($"^{identifier}$", "i") -> Just for lower case as MongoDB doesn't support ToLower() and that is also for Name and Email, for them to be small cases not Identifier
-            //  Not Possible, needed to Regex
-            //  var filter = Builders<AuthModel>.Filter.Or(
-            //    Builders<AuthModel>.Filter.Eq(x => x.Email.ToLower(), identifier),
-            //    Builders<AuthModel>.Filter.Eq(x => x.Name.ToLower(), identifier)
-            //  );
-
             var filter = Builders<AuthModel>.Filter.Or(
                     Builders<AuthModel>.Filter.Regex(x => x.Email, new MongoDB.Bson.BsonRegularExpression($"^{identifier}$", "i")),
-                    Builders<AuthModel>.Filter.Regex(x => x.Name, new MongoDB.Bson.BsonRegularExpression($"^{identifier}$", "i"))
+                    Builders<AuthModel>.Filter.Regex(x => x.Username, new MongoDB.Bson.BsonRegularExpression($"^{identifier}$", "i"))
                 );
 
             var user = _auth.Find(filter).FirstOrDefault();
-            if (user == null || user.Password != password) return null;
+
+            if (user == null) return null;
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password)) return null;
+
             return user;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using backend.helper;
 using backend.Models;
 using backend.Services.implementations;
@@ -21,37 +22,42 @@ namespace backend.Controllers
             _config = config;
         }
 
+        // SIGN UP
         [HttpPost("register")]
-        public IActionResult Create([FromBody] AuthModel auth)
+        public async Task<IActionResult> Create([FromBody] AuthModel auth)
         {
-            var createdUser = _service.create(auth);
-
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-
-            if (createdUser == null)
             {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var createdUser = await _service.Create(auth);
+
+                return Ok(new
+                {
+                    message = "User registered successfully",
+                    status = "success",
+                    user = new
+                    {
+                        id = createdUser.Id,
+                        name = createdUser.Name,
+                        email = createdUser.Email,
+                        username = createdUser.Username,
+                    }
+                });
+            }
+            catch (Exception ex) {
                 return Conflict(new
                 {
-                    message = "Email already in use",
+                    message = ex.Message,
                     status = "error"
                 });
             }
-
-            return Ok(new
-            {
-                message = "User registered successfully",
-                status = "success",
-                user = new
-                {
-                    id = createdUser.Id,
-                    name = createdUser.Name,
-                    email = createdUser.Email
-                }
-            });
         }
 
+        // GET - ALL USERS
         [HttpGet]
         public IActionResult GetAllUsers()
         {
@@ -59,9 +65,11 @@ namespace backend.Controllers
             return Ok(allUsers);
         }
 
+        // GET - USERS BASED ON ID (UserId)
         [HttpGet("{id}")]
         public AuthModel GetUserById(string id) => _service.GetUserById(id);
 
+        // SIGN IN
         [HttpPost("signin")]
         public IActionResult SignIn([FromBody] SignInRequest req)
         {
@@ -74,13 +82,13 @@ namespace backend.Controllers
             Response.Cookies.Append("jwt", token, new CookieOptions
             {
                 HttpOnly = true,
-#if DEBUG
-                Secure = false,
-                SameSite = SameSiteMode.Lax,
-#else
+                #if DEBUG
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
+                #else
                     Secure = true,
                     SameSite = SameSiteMode.None,
-#endif
+                #endif
                 Expires = DateTime.UtcNow.AddDays(3)
             });
 
@@ -93,11 +101,14 @@ namespace backend.Controllers
                 {
                     id = user?.Id,
                     name = user?.Name,
-                    email = user?.Email
+                    email = user?.Email,
+                    username = user?.Username
                 }
             }
             );
         }
+
+        // GET - USER DETAILS
         [Authorize]
         [HttpGet("me")]
         public IActionResult Me()
@@ -108,11 +119,12 @@ namespace backend.Controllers
             var email1 = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
             var email2 = User.FindFirst(ClaimTypes.Email)?.Value;
 
-            var userName = User.FindFirst("name")?.Value;
+            var name = User.FindFirst("name")?.Value;
+            var username = User.FindFirst("username")?.Value;
             var userId = userId1 ?? userId2;
-            var userEmail = email1 ?? email2;
+            var email = email1 ?? email2;
 
-            return Ok(new { userId, email = userEmail, name = userName });
+            return Ok(new { userId, email, name, username });
         }
 
     }
