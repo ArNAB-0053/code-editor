@@ -21,7 +21,7 @@ const ShareEditor = () => {
 
   useEffect(() => {
     if (!sharedData) return;
-    console.log(sharedData)
+    // console.log(sharedData)
     dispatch(setCodeRedux(sharedData?.code));
     dispatch(setOutputRedux(sharedData?.output));
     dispatch(setLangRedux(sharedData?.lang));
