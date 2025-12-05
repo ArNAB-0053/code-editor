@@ -1,8 +1,11 @@
+import { _VisibilityEnum } from "./_enums";
+
 export interface IShareRequest {
     EditorId: string;
     SharedByUserId: string,
     ShareLimit: number;
     ExpireMinutes: number; 
+    Visibility: _VisibilityEnum;
 }
 
 export interface IShareModel {
@@ -26,4 +29,9 @@ export interface IShareDataModel {
   sharedByUserId: string;
   sharedId: string;
   sharedToUsers: string[];
+}
+
+export interface IGetShareDataRequest {
+  ShareId: string;
+  CurrentUserId: string
 }

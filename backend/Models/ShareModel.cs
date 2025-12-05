@@ -26,6 +26,13 @@ namespace backend.Models
         public int CurrentShareCount { get; set; } = 0;
 
         public DateTime? ExpiresAt { get; set; } 
-        public bool IsRevoked { get; set; } = false; 
+        public bool IsRevoked { get; set; } = false;
+        public ShareVisibility Visibility { get; set; } = ShareVisibility.Private;
+    }
+
+    public enum ShareVisibility
+    {
+        Public,
+        Private
     }
 }

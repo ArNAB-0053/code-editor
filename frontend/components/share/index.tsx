@@ -10,14 +10,25 @@ import {
   setOutputRedux,
 } from "@/redux/slices/editorSlice";
 import { useSharedData } from "@/services/share";
+import { useSelector } from "react-redux";
+import { selectedUserId } from "@/redux/slices/userSlice";
 
 const ShareEditor = () => {
   const params = useParams();
   const shareId = params?.editorId;
+  const userId = useSelector(selectedUserId);
+
+  console.log(shareId, userId);
 
   const dispatch = useDispatch();
 
-  const { data: sharedData, isLoading } = useSharedData(String(shareId));
+  const payload = {
+    ShareId: String(shareId),
+    CurrentUserId: userId,
+  };
+
+  const { data: sharedData, isLoading } = useSharedData(payload);
+  console.log(sharedData);
 
   useEffect(() => {
     if (!sharedData) return;

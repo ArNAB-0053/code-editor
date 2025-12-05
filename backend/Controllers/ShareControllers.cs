@@ -30,12 +30,12 @@ namespace backend.Controllers
             }
         }
 
-        [HttpGet("{shareId}")]
-        public IActionResult GetShareSnapShot(string shareId)
+        [HttpPost("s/data")]
+        public IActionResult GetShareSnapShot([FromBody] GetShareRequest req)
         {
             try
             {
-                var res = _service.GetShare(shareId);
+                var res = _service.GetShare(shareId: req.ShareId, userId: req.CurrentUserId);
                 return Ok(new { status = "success", data = res });
             }
             catch (Exception ex)

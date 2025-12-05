@@ -30,10 +30,12 @@ const StyledAButton = styled(Button)<{
     background: ${$theme.activeColor} !important;
     border-color: ${$theme.activeColor} !important;
     color: white !important;
+    backdrop-filter: blur(10px);
 
     &:hover {
-      background: ${$theme.hoverColor} !important;
-      border-color: ${$theme.hoverColor} !important;
+      background: ${$theme.activeColor}80 !important;
+      border-color: ${$theme.activeColor} !important;
+      backdrop-filter: blur(10px);
     }
   `}
 

@@ -49,9 +49,9 @@ namespace backend.Services.implementations
         }
 
         // GET SHARED DATA
-        public ShareModel GetShare(string sharedId)
+        public ShareModel GetShare(string shareId, string? userId)
         {
-            var share = _share.Find(x => x.SharedId == sharedId).FirstOrDefault();
+            var share = _share.Find(x => x.SharedId == shareId).FirstOrDefault();
 
             if (share == null)
                 throw new Exception("Invalid share link");
@@ -63,6 +63,14 @@ namespace backend.Services.implementations
             // If expired
             if (share.ExpiresAt != null && share.ExpiresAt < DateTime.UtcNow)
                 throw new Exception("Share link expired");
+
+            if (share.Visibility == ShareVisibility.Private)
+            {
+                if (string.IsNullOrEmpty(userId))
+                    throw new Exception("Login required to access this private share");
+
+                // TODO: Increate views count
+            }
 
             return share;
         }

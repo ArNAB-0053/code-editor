@@ -1,5 +1,5 @@
 
-import { IShareModel, IShareRequest } from "@/@types/share";
+import { IGetShareDataRequest, IShareModel, IShareRequest } from "@/@types/share";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from ".";
@@ -25,8 +25,8 @@ export const useCreateShare = () => {
 };
 
 // GET the snapshot data
-export const getSharedData = async (shareId: string) => {
-  const res = await axiosInstance.get(`${URI}/${shareId}`);
+export const getSharedData = async (payload: IGetShareDataRequest) => {
+  const res = await axiosInstance.post(`${URI}/s/data`, payload);
 
   if (!res.data) {
     const txt = await res.statusText;
@@ -36,10 +36,10 @@ export const getSharedData = async (shareId: string) => {
   return res.data.data;
 };
 
-export const useSharedData = (shareId: string) => {
+export const useSharedData = (payload: IGetShareDataRequest) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.SHARE, shareId],
-    queryFn: () => getSharedData(shareId),
-    enabled: !!shareId
+    queryKey: [QUERY_KEYS.SHARE, payload?.ShareId],
+    queryFn: () => getSharedData(payload),
+    enabled: !!payload?.ShareId
   })
 };
