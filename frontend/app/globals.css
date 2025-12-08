@@ -97,3 +97,8 @@ body {
   padding: 0px !important;
 }
 
+/* Antd Popover CSS */
+.ant-popover-inner {
+  background-color: transparent !important;
+}
+

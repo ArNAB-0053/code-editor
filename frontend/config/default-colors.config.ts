@@ -1,14 +1,18 @@
-export const defaultColorConfig = {
-    "SUCCESS": {
-        "BG": "#01663080",
-        "TEXT": "#05df72"
+export const defaultColors = {
+    SUCCESS: {
+        BG: '#00ff6a40',
+        TEXT: '#00ff6a'
     },
-    "ERROR":  {
-        "BG": "#9f071280",
-        "TEXT": "#ff0000"
+    ERROR:  {
+        BG: "#ff000040",
+        TEXT: "#ff0000"
     },
     "LOADING":  {
         "BG": "#2a2a2a80",
         "TEXT": "#e5e5e5"
+    },
+    GREEN: {
+        BG: '#00ff6a40',
+        TEXT: '#00ff6a'
     },
 }

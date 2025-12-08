@@ -74,15 +74,18 @@ namespace backend.Controllers
         public async Task<IActionResult> CheckUsername([FromQuery] string username)
         {
             if (string.IsNullOrWhiteSpace(username))
-                return BadRequest(new { available = false, message = "Username required" });
+                return BadRequest(new { error = true, available = false, message = "Username required" });
+
+            if (!_service.IsValidUsername(username))
+                return BadRequest(new { error = true, available = false, message = "Invalid Username Format" });
 
             try
             {
                 await _service.CheckUsernameExists(username);
-                return Ok(new { available = true });
+                return Ok(new { error = false, available = true, message = "Username Available" });
             }
             catch (Exception ex) {
-                return Ok(new { available = false, message = ex.Message });
+                return Ok(new { error = false, available = false, message = ex.Message });
             }
         }
 
@@ -91,16 +94,19 @@ namespace backend.Controllers
         public async Task<IActionResult> CheckEmail([FromQuery] string email)
         {
             if (string.IsNullOrWhiteSpace(email))
-                return BadRequest(new { available = false, message = "Email required" });           
+                return BadRequest(new { error = true, available = false, message = "Email required" });
+
+            if (!_service.IsValidEmail(email)) 
+                return BadRequest(new { error = true, available = false, message = "Invalid Email Format" });
 
             try
             {
                 await _service.CheckEmailExists(email);
-                return Ok(new { available = true });
+                return Ok(new { error = false, available = true, message = "Email Available" });
             }
 
             catch (Exception ex) {
-                return Ok(new { available = false, message = ex.Message });
+                return Ok(new { error = false,  available = false, message = ex.Message });
             }
         }
 

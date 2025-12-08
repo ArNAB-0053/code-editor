@@ -1,5 +1,4 @@
 import Logo from "@/components/Logo";
-import { SignInForm } from "../forms";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono, spaceGrotesk } from "@/fonts";
 import Link from "next/link";
@@ -7,6 +6,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
 import { appUrls } from "@/config/navigation.config";
 import ReduxPersistProvider from "@/providers/reduxPersistProvider";
+import { SignInForm } from "../forms";
 
 const RightSide = () => {
   const { themeName } = useTheme();

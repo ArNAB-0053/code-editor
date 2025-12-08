@@ -1,16 +1,14 @@
 "use client";
-import {
-  NRAForm,
-  NRAFormItem,
-  NRAInput,
-  NRCButton,
-  NRCFormLabel,
-} from "@/components/ui/no-redux";
+import { NRAForm, NRCButton } from "@/components/ui/no-redux";
 import { themeConfig } from "@/config/themeConfig";
 import { useTheme } from "@/context/ThemeContext";
 import { zodToFormik } from "@/lib/formik-zod-adapter";
-import { login, register, useGetUsernameAvailability } from "@/services/auth";
-import { loginSchema, registerSchema } from "@/zod/sign-up.z";
+import {
+  register,
+  useGetEmailAvailability,
+  useGetUsernameAvailability,
+} from "@/services/auth";
+import { registerSchema } from "@/zod/auth.z";
 import { Formik } from "formik";
 import { FaLock, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -20,20 +18,15 @@ import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import { Checkbox } from "antd";
 import styled, { createGlobalStyle } from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { appUrls } from "@/config/navigation.config";
 import { toast } from "sonner";
-import { ContinueWithGoogle } from "./continue-with-btns";
 import { messagesConfig } from "@/config/messages.config";
-import { useDispatch } from "react-redux";
-import {
-  setUserEmail,
-  setUserId,
-  setUserName,
-  setUserUsername,
-} from "@/redux/slices/userSlice";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDebounce } from "@/hooks/useDebounce";
+import { FormItemComponent } from ".";
+import { ContinueWithGoogle } from "./continue-with-btns";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -64,99 +57,6 @@ const ProgressDotsStyle = createGlobalStyle<{ $theme: ThemeTypes }>`
     background-color: rgba(255, 255, 255, 0.2) !important;
   }
 `;
-
-const GlobalSwiperStyle = createGlobalStyle<{ $theme: ThemeTypes }>`
-.swiper-pagination-bullets {
-  top: 0px !important;
-  pointer-events: none !important;
-}
-
-.swiper-pagination-bullet {
-  width: 8px;
-  height: 8px;
-  background-color: ${({ $theme }) => $theme?.activeColor}80 !important; 
-  border-radius: 10px; 
-  transition: all 0.3s ease-in-out;
-  opacity: 1;
-}
-
-.swiper-pagination-bullet-active {
-  width: 60px !important;
-  height: 6px !important; 
-  border-radius: 10px !important; 
-  background-color: ${({ $theme }) => $theme?.activeColor} !important;
-}
-`;
-
-type FormItemComponentType = {
-  name: string;
-  formItemChildren: React.ReactNode;
-  inputChildren?: React.ReactNode;
-  value: string;
-  onChange: any;
-  errorText?: string;
-  touched?: boolean;
-  placeholder?: string;
-  placeholderIcon?: React.ReactNode;
-};
-
-const FormItemComponent = ({
-  name,
-  formItemChildren,
-  value,
-  onChange,
-  errorText,
-  touched,
-  placeholder,
-  placeholderIcon,
-}: FormItemComponentType) => {
-  const { themeName } = useTheme();
-  const theme = themeConfig(themeName);
-  return (
-    <NRAFormItem
-      layout="vertical"
-      label={
-        <NRCFormLabel className="pl-1! text-white/50!  ">
-          {formItemChildren}
-        </NRCFormLabel>
-      }
-      name={name}
-      className="my-3! w-full!"
-    >
-      <>
-        <div className="relative">
-          <NRAInput
-            key={name}
-            value={value}
-            onChange={onChange}
-            className="hover:border-none! border-none! border-l-2! pl-8! placeholder:text-xs!"
-            placeholder={placeholder}
-          />
-          {/* <div
-            className="h-full w-0.5 absolute left-0 bottom-0 "
-            style={{ background: theme.activeColor }}
-          /> */}
-          <div
-            className="w-5 h-5 absolute left-2 bottom-px "
-            style={{ color: theme.activeColor }}
-          >
-            {placeholderIcon}
-          </div>
-        </div>
-        {touched && errorText && (
-          <div
-            className={cn(
-              "text-[#ff0000] bg-[#ff0000]/25 mt-1 py-1 text-center rounded-sm text-[10px]",
-              jetBrainsMono.className
-            )}
-          >
-            {errorText}
-          </div>
-        )}
-      </>
-    </NRAFormItem>
-  );
-};
 
 interface StepConfig {
   fields: string[];
@@ -226,19 +126,39 @@ export const SignUpForm = () => {
   };
 
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
 
-  // const { data: availability, isLoading } = useGetUsernameAvailability(
-  //   username.current
-  // );
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [blurredFields, setBlurredFields] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    console.log(username);
-  }, [username]);
+  const [initialUsername, setInitialUsername] = useState(true);
+  const [initialEmail, setInitialEmail] = useState(true);
+  const [initialPassword, setInitialPassword] = useState(true);
+  const [initialConfirmPassword, setInitialConfirmPassword] = useState(true);
+
+  const debouncedUsername = useDebounce(username, 1000);
+  const debouncedEmail = useDebounce(email, 1000);
+
+  const { data: usernameAvailability, isLoading: isUsernameChecking } =
+    useGetUsernameAvailability(debouncedUsername);
+  const { data: emailAvailability, isLoading: isEmailChecking } =
+    useGetEmailAvailability(debouncedEmail);
+
+  const shouldShowError = (fieldName: string) => {
+    return focusedField === fieldName || blurredFields.has(fieldName);
+  };
+
+  //   console.log("============== > ", {
+  //     focusedField: focusedField,
+  //     blurredFields: blurredFields,
+  //     shouldShowError: shouldShowError,
+  //   });
 
   return (
     <Formik
       initialValues={initialValues}
       validate={zodToFormik(registerSchema)}
+      validateOnChange
       onSubmit={async (values, { setSubmitting }) => {
         const toastId = toast.loading(messagesConfig.SIGN_UP.LOADING);
         try {
@@ -261,34 +181,17 @@ export const SignUpForm = () => {
       {({
         values,
         errors,
-        touched,
         handleChange,
         handleSubmit,
+        touched,
         isSubmitting,
+        handleBlur,
       }) => {
-        const disabled =
-          !values.name ||
-          !values.email ||
-          !values.password ||
-          !values.confirmPassword ||
-          !values.username ||
-          isSubmitting ||
-          !check ||
-          errors?.name ||
-          errors?.email ||
-          errors?.password ||
-          errors?.confirmPassword ||
-          touched?.name ||
-          touched?.email ||
-          touched?.password ||
-          touched?.confirmPassword;
-
         const currentStepValid = isStepValid(values, errors, currentStep);
         const isLastStep = currentStep === steps.length - 1;
 
         return (
-          <NRAForm name="sign-up-form" className="px-0! w-full! relative ">
-            <GlobalSwiperStyle $theme={theme} />
+          <NRAForm name="sign-up-form" className="px-0! w-full! ">
             <ProgressDotsStyle $theme={theme} />
 
             {/* Progress Dots */}
@@ -311,7 +214,7 @@ export const SignUpForm = () => {
               ))}
             </div>
 
-            <div className="relative overflow-hidden min-h-[180px]">
+            <div className="min-h-[200px]">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={currentStep}
@@ -320,9 +223,13 @@ export const SignUpForm = () => {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  transition={
+                    currentStep === 0
+                      ? { duration: 0, ease: "easeInOut" }
+                      : { duration: 0.3, ease: "easeInOut" }
+                  }
                 >
-                  {/* Step 1: Account Info */}
+                  {/* Step 1: Email/Username */}
                   {currentStep === 0 && (
                     <>
                       <FormItemComponent
@@ -330,10 +237,34 @@ export const SignUpForm = () => {
                         value={values.username}
                         onChange={(e) => {
                           setUsername(e.target.value);
-                           handleChange("username")(e);
+                          setInitialUsername(false);
+                          handleChange("username")(e);
+                        }}
+                        onFocus={() => setFocusedField("username")}
+                        onBlur={(e) => {
+                          setBlurredFields((prev) =>
+                            new Set(prev).add("username")
+                          );
+                          setFocusedField(null);
+                          handleBlur("username")(e);
                         }}
                         formItemChildren="Username"
-                        touched={touched?.username}
+                        enableTouch={false}
+                        showError={
+                          !initialUsername && shouldShowError("username")
+                        }
+                        showAvailabilityCheckMsg={
+                          debouncedUsername.length >= 3 &&
+                          !errors.username &&
+                          shouldShowError("username")
+                        }
+                        isAvailable={usernameAvailability?.available}
+                        availabilityMessage={
+                          usernameAvailability?.available
+                            ? messagesConfig.AVAILABILITY_CHECKS.USERNAME.TRUE
+                            : messagesConfig.AVAILABILITY_CHECKS.USERNAME.FALSE
+                        }
+                        loading={isUsernameChecking}
                         errorText={errors?.username}
                         placeholder="Enter Username"
                         placeholderIcon={<FaUser size={12} />}
@@ -341,10 +272,35 @@ export const SignUpForm = () => {
                       <FormItemComponent
                         name="email"
                         value={values.email}
-                        onChange={handleChange("email")}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          setInitialEmail(false);
+                          handleChange("email")(e);
+                        }}
+                        onFocus={() => setFocusedField("email")}
+                        onBlur={(e) => {
+                          setBlurredFields((prev) =>
+                            new Set(prev).add("email")
+                          );
+                          setFocusedField(null);
+                          handleBlur("email")(e);
+                        }}
                         formItemChildren="Email"
-                        touched={touched?.email}
+                        enableTouch={false}
+                        showError={!initialEmail && shouldShowError("email")}
                         errorText={errors?.email}
+                        showAvailabilityCheckMsg={
+                          debouncedEmail.length >= 1 &&
+                          !errors.email &&
+                          shouldShowError("email")
+                        }
+                        isAvailable={emailAvailability?.available}
+                        availabilityMessage={
+                          emailAvailability?.available
+                            ? messagesConfig.AVAILABILITY_CHECKS.EMAIL.TRUE
+                            : messagesConfig.AVAILABILITY_CHECKS.EMAIL.FALSE
+                        }
+                        loading={isEmailChecking}
                         placeholder="Enter Email"
                         placeholderIcon={<MdEmail size={12} />}
                       />
@@ -360,6 +316,7 @@ export const SignUpForm = () => {
                         onChange={handleChange("name")}
                         formItemChildren="Full Name"
                         touched={touched?.name}
+                        onBlur={handleBlur("name")}
                         errorText={errors?.name}
                         placeholder="Enter Full Name"
                         placeholderIcon={<FaUser size={12} />}
@@ -367,16 +324,30 @@ export const SignUpForm = () => {
                     </>
                   )}
 
-                  {/* Step 3: Security */}
+                  {/* Step 3: Password */}
                   {currentStep === 2 && (
                     <>
                       <FormItemComponent
                         name="password"
                         type="password"
                         value={values.password}
-                        onChange={handleChange("password")}
+                        onChange={(e) => {
+                          setInitialPassword(false);
+                          handleChange("password")(e);
+                        }}
                         formItemChildren="Password"
-                        touched={touched?.password}
+                        enableTouch={false}
+                        onFocus={() => setFocusedField("password")}
+                        onBlur={(e) => {
+                          setBlurredFields((prev) =>
+                            new Set(prev).add("password")
+                          );
+                          setFocusedField(null);
+                          handleBlur("password")(e);
+                        }}
+                        showError={
+                          !initialPassword && shouldShowError("password")
+                        }
                         errorText={errors?.password}
                         placeholder="Enter Password"
                         placeholderIcon={<FaLock size={12} />}
@@ -385,10 +356,25 @@ export const SignUpForm = () => {
                         name="confirmPassword"
                         type="password"
                         value={values.confirmPassword}
-                        onChange={handleChange("confirmPassword")}
+                        onChange={(e) => {
+                          setInitialConfirmPassword(false);
+                          handleChange("confirmPassword")(e);
+                        }}
                         formItemChildren="Confirm Password"
-                        touched={touched?.confirmPassword}
+                        enableTouch={false}
+                        onFocus={() => setFocusedField("confirmPassword")}
+                        onBlur={(e) => {
+                          setBlurredFields((prev) =>
+                            new Set(prev).add("confirmPassword")
+                          );
+                          setFocusedField(null);
+                          handleBlur("confirmPassword")(e);
+                        }}
                         errorText={errors?.confirmPassword}
+                        showError={
+                          !initialConfirmPassword &&
+                          shouldShowError("confirmPassword")
+                        }
                         placeholder="Confirm Password"
                         placeholderIcon={<FaLock size={12} />}
                       />
@@ -427,7 +413,6 @@ export const SignUpForm = () => {
 
               {!isLastStep ? (
                 <NRCButton
-                  type="button"
                   onClick={() => goToStep(currentStep + 1, values, errors)}
                   disabled={!currentStepValid}
                   className={cn(
@@ -452,151 +437,6 @@ export const SignUpForm = () => {
                 </NRCButton>
               )}
             </div>
-
-            {/* <FormItemComponent
-              name="name"
-              value={values.name}
-              onChange={handleChange("name")}
-              formItemChildren="Name"
-              touched={touched?.name}
-              errorText={errors?.name}
-              placeholder="Enter Full Name"
-              placeholderIcon={<FaUser size={12} />}
-            /> */}
-
-            {/* <FormItemComponent
-              name="password"
-              value={values.password}
-              onChange={handleChange("password")}
-              formItemChildren="Password"
-              touched={touched?.password}
-              errorText={errors?.password}
-              placeholder="Enter Password"
-              placeholderIcon={<FaLock size={12} />}
-            />
-
-            <FormItemComponent
-              name="confirm_password"
-              value={values.confirmPassword}
-              onChange={handleChange("confirmPassword")}
-              formItemChildren="Confirm Password"
-              touched={touched?.confirmPassword}
-              errorText={errors?.confirmPassword}
-              placeholder="Confirm Password"
-              placeholderIcon={<FaLock size={12} />}
-            /> */}
-
-            <div className="my-12 text-center flex items-center justify-center relative">
-              <div className="h-px w-full bg-white opacity-30" />
-              <span className="absolute left-1/2 top-1/2 text-white -translate-x-1/2 -translate-y-1/2 bg-black px-5 opacity-90 ">
-                Or
-              </span>
-            </div>
-
-            <ContinueWithGoogle />
-          </NRAForm>
-        );
-      }}
-    </Formik>
-  );
-};
-
-export const SignInForm = () => {
-  const initialValues = {
-    identifier: "",
-    password: "",
-  };
-
-  const router = useRouter();
-
-  const dispatch = useDispatch();
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      validate={zodToFormik(loginSchema)}
-      onSubmit={async (values, { setSubmitting }) => {
-        const toastId = toast.loading(messagesConfig.LOGIN.LOADING);
-        try {
-          const data = await login(values);
-          console.log(data);
-          if (data.status === "success") {
-            dispatch(setUserId(data?.user?.id));
-            dispatch(setUserName(data?.user?.name));
-            dispatch(setUserEmail(data?.user?.email));
-            dispatch(setUserUsername(data.user?.username));
-
-            toast.success(messagesConfig.LOGIN.SUCCESS, { id: toastId });
-            setTimeout(() => {
-              router.push(appUrls.PYTHON);
-            }, 1500);
-          } else {
-            toast.error(messagesConfig.LOGIN.ERROR, { id: toastId });
-          }
-        } catch (e: unknown) {
-          toast.error(messagesConfig.LOGIN.ERROR, { id: toastId });
-        } finally {
-          setSubmitting(false);
-        }
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-      }) => {
-        const disabled = !values.identifier || !values.password || isSubmitting;
-
-        return (
-          <NRAForm name="sign-in-form" className="px-0! w-full! ">
-            <FormItemComponent
-              name="identifier"
-              value={values.identifier}
-              onChange={handleChange("identifier")}
-              formItemChildren="Email"
-              touched={touched?.identifier}
-              errorText={errors?.identifier}
-              placeholder="Enter Email"
-              placeholderIcon={<MdEmail size={12} />}
-            />
-
-            <FormItemComponent
-              name="password"
-              value={values.password}
-              onChange={handleChange("password")}
-              formItemChildren="Password"
-              touched={touched?.password}
-              errorText={errors?.password}
-              placeholder="Enter Password"
-              placeholderIcon={<FaLock size={12} />}
-            />
-
-            {/* <StyledCheckbox
-              $theme={theme}
-              indeterminate={check}
-              onChange={(e) => setCheck(e.target.checked)}
-              className={cn(
-                "text-white/90! mt-3! text-sm!",
-                spaceGrotesk.className
-              )}
-            >
-              I agree with Terms & Conditions
-            </StyledCheckbox> */}
-
-            <NRCButton
-              disabled={disabled}
-              onClick={handleSubmit}
-              className={cn(
-                "w-full! mt-8 flex items-center justify-center gap-x-3 disabled:opacity-40! ",
-                jetBrainsMono.className
-              )}
-            >
-              {isSubmitting ? "Submitting..." : "Login"}
-              <FaArrowRightLong />
-            </NRCButton>
 
             <div className="my-12 text-center flex items-center justify-center relative">
               <div className="h-px w-full bg-white opacity-30" />

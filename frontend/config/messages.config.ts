@@ -25,5 +25,20 @@ export const messagesConfig = {
         SERVER_ERROR: "Something went wrong. Please try again later.",
         UNAUTHORIZED: "You are not authorized to perform this action.",
         LOADING: "Please wait..."
+    },
+    AUTOSAVE: {
+        LOADING : "Saving ...",
+        SUCCESS: "Saved",
+        FAILED: "Autosave failed. Please check your connection."
+    },
+    AVAILABILITY_CHECKS: {
+        USERNAME: {
+            TRUE: "This username is available.",
+            FALSE: "This username is already taken."
+        },
+        EMAIL: {
+            TRUE: "This email address is available.",
+            FALSE: "This email address is already in use."
+        }
     }
 };

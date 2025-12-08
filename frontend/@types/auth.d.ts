@@ -10,3 +10,8 @@ export interface IUserDetails {
     name: string,
     username: string,
 }
+
+export interface IAvailability {
+    available: boolean,
+    message?: string
+}

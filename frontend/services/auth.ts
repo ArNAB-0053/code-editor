@@ -1,9 +1,8 @@
-import { ISignInReturn } from "@/@types/auth";
+import { IAvailability, ISignInReturn } from "@/@types/auth";
 import axiosInstance from "@/lib/axios-instance";
-import { LoginFormType, RegisterFormType } from "@/zod/sign-up.z";
+import { LoginFormType, RegisterFormType } from "@/zod/auth.z";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from ".";
-import { useDebounce } from "@/hooks/useDebounce";
 
 export const URI = "api/user";
 
@@ -55,8 +54,8 @@ export const profile = async (id: string) => {
   return res.data;
 };
 
-// CHECK USERNAME Exits
-export const getUsernameAvailability = async (username: string) => {
+// CHECK USERNAME Exists
+export const getUsernameAvailability = async (username: string): Promise<IAvailability> => {
   const res = await axiosInstance.get(`${URI}/check-username`, {
     params: { username },
   });
@@ -65,10 +64,26 @@ export const getUsernameAvailability = async (username: string) => {
 };
 
 export const useGetUsernameAvailability = (username: string) => {
-  const deboucedUsername = useDebounce(username, 1000);
   return useQuery({
-    queryKey: [QUERY_KEYS.USERNAME_CHECK, deboucedUsername],
-    queryFn: () => getUsernameAvailability(deboucedUsername),
-    enabled: !!deboucedUsername,
+    queryKey: [QUERY_KEYS.USERNAME_CHECK, username],
+    queryFn: () => getUsernameAvailability(username),
+    enabled: !!username,
+  });
+}
+
+// CHECK EMAIL Exists
+export const getEmailAvailability = async (email: string): Promise<IAvailability> => {
+  const res = await axiosInstance.get(`${URI}/check-email`, {
+    params: { email },
+  });
+
+  return res.data;
+};
+
+export const useGetEmailAvailability = (email: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.USERNAME_CHECK, email],
+    queryFn: () => getEmailAvailability(email),
+    enabled: !!email,
   });
 };
