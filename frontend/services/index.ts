@@ -15,3 +15,8 @@ export const QUERY_KEYS = {
         FORWARDED: 'message-forwarded',
     },
 };
+
+export const SHARE_CONFIG = {
+    DEFAULT_EXPIRE_MIN: 60,
+    MAX_SHARE: 5
+} 

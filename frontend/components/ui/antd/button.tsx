@@ -1,10 +1,13 @@
 "use client";
 import { themeConfig } from "@/config/themeConfig";
-import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
+import { selectEditorTheme, selectWebsiteFont } from "@/redux/slices/preferenceSlice";
 import { ThemeTypes } from "@/@types/theme";
 import { Button, ButtonProps } from "antd";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { websiteFonts } from "@/fonts";
+import { WebsiteFontsKey } from "@/@types/font";
+import { cn } from "@/lib/utils";
 
 export type BtnType = "run" | "copy" | "sameBg" | "";
 
@@ -27,10 +30,12 @@ const StyledAButton = styled(Button)<{
     background: ${$theme.activeColor} !important;
     border-color: ${$theme.activeColor} !important;
     color: white !important;
+    backdrop-filter: blur(10px);
 
     &:hover {
-      background: ${$theme.hoverColor} !important;
-      border-color: ${$theme.hoverColor} !important;
+      background: ${$theme.activeColor}80 !important;
+      border-color: ${$theme.activeColor} !important;
+      backdrop-filter: blur(10px);
     }
   `}
 
@@ -106,10 +111,13 @@ export const AButton = ({
   children,
   btntype = "",
   type = "default",
+  className,
   ...rest
 }: AButtonType) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
+  const websiteFont = useSelector(selectWebsiteFont)
+  const font = websiteFonts[websiteFont as WebsiteFontsKey]
 
   return (
     <StyledAButton
@@ -118,6 +126,7 @@ export const AButton = ({
       $type={type}
       type={type}
       {...rest}
+      className={cn(font?.className, className, 'font-normal!')}
     >
       {children}
     </StyledAButton>

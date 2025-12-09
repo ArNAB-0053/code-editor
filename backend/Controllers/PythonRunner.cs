@@ -5,7 +5,7 @@ using PythonEditor.Services.interfaces;
 namespace PythonEditor.Controllers
 {
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("api/[controller]")]
     public class PythonRunner: ControllerBase
     {
         private readonly IPythonRunner _pythonRunner;

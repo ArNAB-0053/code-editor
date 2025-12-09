@@ -6,19 +6,33 @@ import { HeaderProps } from "@/@types";
 import {
   selectedCode,
   selectedEditorId,
-  setCodeRedux,
   setOutputRedux,
 } from "@/redux/slices/editorSlice";
 import { useDispatch } from "react-redux";
-import { useRef } from "react";
-import { IoMdCloudDone, IoMdShare } from "react-icons/io";
+import { useRef, useState } from "react";
+import { IoMdShare } from "react-icons/io";
 import { AButton } from "../ui/antd";
-import { FaShare } from "react-icons/fa";
 import { cn } from "@/lib/utils";
+import { createGlobalStyle } from "styled-components";
+import { ThemeTypes } from "@/@types/theme";
+import ShareModal from "../modals/share";
+
+const GlobalStyles = createGlobalStyle<{ $theme: ThemeTypes }>`
+  .ant-switch {
+    background: ${({ $theme }) => $theme?.border20} !important;
+  }
+  .ant-switch-checked {
+    background: ${({ $theme }) => $theme?.activeColor} !important;
+  }
+  .ant-switch-handle::before {
+    background: rgba(255,255,255,0.50) !important;
+  }
+`;
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
 
+  const [open, setOpen] = useState(false);
   const currentCode = useSelector(selectedCode);
 
   // console.log("Curr Code", currentCode);
@@ -94,6 +108,7 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   return (
     // Editor Header
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
+      <GlobalStyles $theme={theme} />
       <span className="font-medium text-center flex items-center justify-center gap-x-2 w-[100px]">
         main.py
         {/* <IoMdCloudDone className="opacity-40 size-3.5" /> */}
@@ -114,8 +129,11 @@ const EditorHeaderComponent = (props: HeaderProps) => {
         /> */}
 
         <AButton
-          onClick={() => props.setOpen(true)}
-          className={cn(props.isShared && "hidden! opacity-0!", "aspect-square! p-0!")}
+          onClick={() => setOpen(true)}
+          className={cn(
+            props.isShared && "hidden! opacity-0!",
+            "aspect-square! p-0!"
+          )}
         >
           <IoMdShare size={18} />
         </AButton>
@@ -123,6 +141,10 @@ const EditorHeaderComponent = (props: HeaderProps) => {
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />
       </div>
+
+      {!props.isShared && (
+        <ShareModal theme={theme} setOpen={setOpen} open={open} />
+      )}
     </div>
   );
 };

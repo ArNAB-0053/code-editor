@@ -4,7 +4,6 @@ import { NRCAvatar, NRCButton } from "../ui/no-redux";
 import { useMyProfile } from "@/services/profile";
 import { LuLoader } from "react-icons/lu";
 import { Dropdown } from "antd";
-import { useState } from "react";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { FaUserCircle } from "react-icons/fa";
