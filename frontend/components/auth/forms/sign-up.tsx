@@ -4,13 +4,12 @@ import { themeConfig } from "@/config/themeConfig";
 import { useTheme } from "@/context/ThemeContext";
 import { zodToFormik } from "@/lib/formik-zod-adapter";
 import {
-  register,
   useGetEmailAvailability,
   useGetUsernameAvailability,
 } from "@/services/auth";
 import { registerSchema } from "@/zod/auth.z";
 import { Formik } from "formik";
-import { FaLock, FaUser } from "react-icons/fa";
+import { FaExternalLinkAlt, FaLock, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono, spaceGrotesk } from "@/fonts";
@@ -19,14 +18,14 @@ import { Checkbox } from "antd";
 import styled, { createGlobalStyle } from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { appUrls } from "@/config/navigation.config";
-import { toast } from "sonner";
 import { messagesConfig } from "@/config/messages.config";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import { FormItemComponent } from ".";
 import { ContinueWithGoogle } from "./continue-with-btns";
+import { useAuth } from "@/hooks/useAuth";
+import Link from "next/link";
+import { appUrls } from "@/config/navigation.config";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -85,7 +84,8 @@ export const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [check, setCheck] = useState(false);
-  const router = useRouter();
+
+  const { registerUser } = useAuth();
 
   const isStepValid = (values: any, errors: any, step: number) => {
     const stepFields = steps[step].fields;
@@ -160,22 +160,8 @@ export const SignUpForm = () => {
       validate={zodToFormik(registerSchema)}
       validateOnChange
       onSubmit={async (values, { setSubmitting }) => {
-        const toastId = toast.loading(messagesConfig.SIGN_UP.LOADING);
-        try {
-          const data = await register(values);
-          if (data.status === "success") {
-            toast.success(messagesConfig.SIGN_UP.SUCCESS, { id: toastId });
-            setTimeout(() => {
-              router.push(appUrls.PYTHON);
-            }, 1500);
-          } else {
-            toast.error(messagesConfig.SIGN_UP.ERROR, { id: toastId });
-          }
-        } catch (e: unknown) {
-          toast.success(messagesConfig.SIGN_UP.ERROR, { id: toastId });
-        } finally {
-          setSubmitting(false);
-        }
+        await registerUser(values);
+        setSubmitting(false);
       }}
     >
       {({
@@ -191,7 +177,10 @@ export const SignUpForm = () => {
         const isLastStep = currentStep === steps.length - 1;
 
         return (
-          <NRAForm name="sign-up-form" className="px-0! w-full! ">
+          <NRAForm
+            name="sign-up-form"
+            className="px-0! w-full! overflow-hidden! "
+          >
             <ProgressDotsStyle $theme={theme} />
 
             {/* Progress Dots */}
@@ -384,11 +373,26 @@ export const SignUpForm = () => {
                         indeterminate={check}
                         onChange={(e) => setCheck(e.target.checked)}
                         className={cn(
-                          "text-white/90! mt-3! text-sm!",
+                          "text-white/90! mt-3! text-sm! w-full!",
                           spaceGrotesk.className
                         )}
                       >
-                        I agree with Terms & Conditions
+                        <div className="w-full flex items-center gap-x-1">
+                          I agree with
+                          <Link
+                            href={`${appUrls.TERMS_AND_CONDOTIONS}`}
+                            target="_blank"
+                            className={cn(
+                              "underline! underline-offset-2 tracking-tighter font-medium flex items-center justify-center gap-x-1 "
+                            )}
+                            style={{
+                              color: theme.activeColor,
+                            }}
+                          >
+                            Terms & Conditions
+                            <FaExternalLinkAlt />
+                          </Link>
+                        </div>
                       </StyledCheckbox>
                     </>
                   )}

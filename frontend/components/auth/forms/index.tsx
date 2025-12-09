@@ -4,25 +4,15 @@ import { themeConfig } from "@/config/themeConfig";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono } from "@/fonts";
-import { createGlobalStyle } from "styled-components";
-import { ThemeTypes } from "@/@types/theme";
 import { LuLoader } from "react-icons/lu";
 import { PasswordTooltip, UsernameTooltip } from "../validation-tooltip";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaCheck, FaCross } from "react-icons/fa";
+import { FaCheck, FaEye } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
-import { Popover } from "antd";
-
-export const GlobalPopoverStyle = createGlobalStyle<{ $theme: ThemeTypes }>`
-    .ant-popover-arrow::before {
-        background: ${({ $theme }) => $theme?.border} !important;
-    }
-    .ant-popover-inner {
-        top: 10px;
-        padding: 6px !important;
-    }
-`;
+import { APopover } from "@/components/ui/antd";
+import { FaEyeLowVision } from "react-icons/fa6";
+import { IoEye } from "react-icons/io5";
 
 type FormItemComponentType = {
   name: string;
@@ -38,6 +28,7 @@ type FormItemComponentType = {
   type?: string;
   onBlur?: any;
   onFocus?: any;
+
   showError?: boolean;
 
   showAvailabilityCheckMsg?: boolean;
@@ -59,7 +50,7 @@ export const FormItemComponent = ({
   enableTouch = true,
   placeholder,
   placeholderIcon,
-  type = "",
+  type = "text",
   isAvailable = false,
   showAvailabilityCheckMsg = false,
   loading = false,
@@ -72,6 +63,8 @@ export const FormItemComponent = ({
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
 
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const showError =
     showErrorProp !== undefined
       ? showErrorProp && errorText
@@ -79,6 +72,8 @@ export const FormItemComponent = ({
 
   const showAvailability =
     !showError && showAvailabilityCheckMsg && availabilityMessage;
+
+  const showTooltip = name === "username" || name === "password";
 
   return (
     <NRAFormItem
@@ -92,11 +87,16 @@ export const FormItemComponent = ({
       className="my-3! w-full!"
     >
       <>
-        <GlobalPopoverStyle $theme={theme} />
         <div className="relative">
           <NRAInput
             value={value}
-            type={type}
+            type={
+              name === "password" || name === "confirmPassword"
+                ? passwordVisible
+                  ? "text"
+                  : "password"
+                : type
+            }
             onChange={onChange}
             onFocus={onFocus}
             className="hover:border-none! border-none! border-l-2! pl-8! placeholder:text-xs!"
@@ -108,6 +108,8 @@ export const FormItemComponent = ({
             className="h-full w-0.5 absolute left-0 bottom-0 "
             style={{ background: theme.activeColor }}
           /> */}
+
+          {/* PLACEHOLDER */}
           <div
             className="w-5 h-5 absolute left-2 bottom-px "
             style={{ color: theme.activeColor }}
@@ -115,6 +117,7 @@ export const FormItemComponent = ({
             {placeholderIcon}
           </div>
 
+          {/* LOADER */}
           {loading && (
             <LuLoader
               className="size-4 absolute right-2 top-2 animate-spin "
@@ -122,6 +125,7 @@ export const FormItemComponent = ({
             />
           )}
 
+          {/* AVAILABILITY (CHECK / CROSS) */}
           {showAvailability && (
             <motion.div
               key={`availability-${isAvailable}`}
@@ -145,6 +149,40 @@ export const FormItemComponent = ({
               )}
             </motion.div>
           )}
+
+          {/* EYE (CLOSE / OPEN) for PASSWORD */}
+          {(name === "password" || name === "confirmPassword") && (
+            <button
+              type="button"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer brightness-110"
+              style={{ color: `${theme.activeColor}95` }}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {passwordVisible ? (
+                  <motion.span
+                    key="hidden"
+                    initial={{ opacity: 0.5, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0.5, scale: 0.8 }}
+                    transition={{ duration: 0.1 }}
+                  >
+                    <FaEyeLowVision size={17} />
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="visible"
+                    initial={{ opacity: 0.5, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0.5, scale: 0.8 }}
+                    transition={{ duration: 0.1 }}
+                  >
+                    <IoEye size={18} />
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          )}
         </div>
 
         <div className="relative h-3 w-full">
@@ -162,45 +200,41 @@ export const FormItemComponent = ({
                   jetBrainsMono.className
                 )}
               >
-                <Popover
-                  placement="leftTop"
-                  //   title="Title"
-                  trigger="click"
-                  styles={{
-                    root: {
-                      background: `${theme.activeColor}50`,
-                      backdropFilter: "blur(20px)",
-                      borderRadius: "12px",
-                      padding: "0px",
-                    },
-                  }}
-                  classNames={{
-                    root: "-mt-4!"
-                  }}
+                <APopover
+                  placement="bottom"
                   content={
-                    <>
-                      {name === "username" && (
-                        <div
-                          style={{
-                            backgroundColor: `${theme.activeColor}20`,
-                            borderRadius: "12px",
-                          }}
-                          className="w-64"
-                        >
-                          <UsernameTooltip username={value} />
-                        </div>
-                      )}
+                    showTooltip && (
+                      <>
+                        {name === "username" && (
+                          <div
+                            style={{
+                              backgroundColor: ``,
+                              // borderLeftTopRadius: "1px",
 
-                      {name === "password" && (
-                        <div className=" transition-opacity duration-200 relative">
-                          <PasswordTooltip password={value} />
-                        </div>
-                      )}
-                    </>
+                            }}
+                            className="w-64 relative overflow-hidden rounded-l-[10px] rounded-tr-[10px] "
+                          >
+                            <UsernameTooltip username={value} />
+                            {/* <div
+                              className="backdrop-blur-3xl! absolute -right-20 top-20 w-full h-full -z-10 blur-2xl"
+                              style={{
+                                backgroundColor: theme.activeColor,
+                              }}
+                            ></div> */}
+                          </div>
+                        )}
+
+                        {name === "password" && (
+                          <div className=" transition-opacity duration-200 relative">
+                            <PasswordTooltip password={value} />
+                          </div>
+                        )}
+                      </>
+                    )
                   }
                 >
                   <p className="truncate text-center">{errorText}</p>
-                </Popover>
+                </APopover>
               </motion.div>
             ) : showAvailability ? (
               <motion.div
@@ -224,9 +258,9 @@ export const FormItemComponent = ({
               <motion.div
                 key="footer"
                 layout
-                initial={{ y: -10, opacity: 0, height: 0 }}
+                initial={{ y: -10, opacity: 0.5, height: 0 }}
                 animate={{ y: 0, opacity: 1, height: "auto" }}
-                exit={{ y: -10, opacity: 0, height: 0 }}
+                exit={{ y: -10, opacity: 0.5, height: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="overflow-hidden absolute left-0 top-0 w-full"
               >

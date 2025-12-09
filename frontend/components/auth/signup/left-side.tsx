@@ -11,7 +11,7 @@ const LeftSide = () => {
   const { font } = useFont();
   return (
     <div
-      className={`h-svh max-md:hidden overflow-hidden  py-16 px-8 xl:px-16 flex flex-col ${font?.className}`}
+      className={`h-svh max-md:hidden overflow-hidden relative  py-16 px-8 xl:px-16 flex flex-col ${font?.className}`}
       style={{
         background: theme.editorBackground,
       }}
@@ -79,6 +79,13 @@ const LeftSide = () => {
         alt="Editor Image"
         className="w-fit mt-10 border-2"
       /> */}
+
+      <div
+        className=" absolute -left-[20%] -bottom-[30%] w-full aspect-square -z-10 blur-[4rem] rounded-full"
+        style={{
+          backgroundColor: theme.activeColor,
+        }}
+      ></div>
     </div>
   );
 };

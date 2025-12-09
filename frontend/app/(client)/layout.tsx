@@ -17,7 +17,9 @@ export default function ClientLayout({
         {/* <CookieProviderToSetPreferrenceToCookie /> */}
         <main className="px-6 pt-4 ">
           <PageHeader />
-          <section className="w-full mt-4">{children}</section>
+          <section className="w-full mt-4">
+            {children}
+          </section>
         </main>
       </CookieProviderForLocalStorage>
     </ReduxPersistProvider>

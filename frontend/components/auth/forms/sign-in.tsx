@@ -1,12 +1,6 @@
 "use client";
-import {
-  NRAForm,
-  NRCButton,
-} from "@/components/ui/no-redux";
+import { NRAForm, NRCButton } from "@/components/ui/no-redux";
 import { zodToFormik } from "@/lib/formik-zod-adapter";
-import {
-  login,
-} from "@/services/auth";
 import { loginSchema } from "@/zod/auth.z";
 import { Formik } from "formik";
 import { FaLock } from "react-icons/fa";
@@ -14,20 +8,9 @@ import { MdEmail } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono } from "@/fonts";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { useRouter } from "next/navigation";
-import { appUrls } from "@/config/navigation.config";
-import { toast } from "sonner";
 import { ContinueWithGoogle } from "./continue-with-btns";
-import { messagesConfig } from "@/config/messages.config";
-import { useDispatch } from "react-redux";
-import {
-  setUserEmail,
-  setUserId,
-  setUserName,
-  setUserUsername,
-} from "@/redux/slices/userSlice";
 import { FormItemComponent } from ".";
-
+import { useAuth } from "@/hooks/useAuth";
 
 export const SignInForm = () => {
   const initialValues = {
@@ -35,37 +18,15 @@ export const SignInForm = () => {
     password: "",
   };
 
-  const router = useRouter();
-
-  const dispatch = useDispatch();
+  const { loginUser } = useAuth();
 
   return (
     <Formik
       initialValues={initialValues}
       validate={zodToFormik(loginSchema)}
       onSubmit={async (values, { setSubmitting }) => {
-        const toastId = toast.loading(messagesConfig.LOGIN.LOADING);
-        try {
-          const data = await login(values);
-          console.log(data);
-          if (data.status === "success") {
-            dispatch(setUserId(data?.user?.id));
-            dispatch(setUserName(data?.user?.name));
-            dispatch(setUserEmail(data?.user?.email));
-            dispatch(setUserUsername(data.user?.username));
-
-            toast.success(messagesConfig.LOGIN.SUCCESS, { id: toastId });
-            setTimeout(() => {
-              router.push(appUrls.PYTHON);
-            }, 1500);
-          } else {
-            toast.error(messagesConfig.LOGIN.ERROR, { id: toastId });
-          }
-        } catch (e: unknown) {
-          toast.error(messagesConfig.LOGIN.ERROR, { id: toastId });
-        } finally {
-          setSubmitting(false);
-        }
+        await loginUser(values);
+        setSubmitting(false);
       }}
     >
       {({
@@ -75,7 +36,7 @@ export const SignInForm = () => {
         handleChange,
         handleSubmit,
         isSubmitting,
-        handleBlur
+        handleBlur,
       }) => {
         const disabled = !values.identifier || !values.password || isSubmitting;
 

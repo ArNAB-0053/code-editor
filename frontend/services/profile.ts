@@ -1,10 +1,11 @@
 "use client";
 
-import axiosInstance, { BACKEND_URI } from "@/lib/axios-instance";
+import axiosInstance from "@/lib/axios-instance";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from ".";
 import { IProfileDetails } from "@/@types/_base";
 
+// PROFILE DETAILS from '/me' API
 export const getMyProfile = async (): Promise<IProfileDetails> => {
   const res = await axiosInstance.get(`api/user/me`);
   return res.data;
@@ -15,6 +16,8 @@ export const useMyProfile = () => {
     queryFn: () => getMyProfile(),
   });
 };
+
+// GET PROFILE DETAILS based on USERID
 export const getProfileDetailsByUserId = async (userId: string) => {
   const res = await axiosInstance.get(`api/user/${userId}`);
   return res.data;
