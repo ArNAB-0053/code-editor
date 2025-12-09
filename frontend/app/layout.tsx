@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { spaceGrotesk } from "@/fonts";
 import CQueryClientProvider from "@/providers/queryClientProvider";
+import BackgroundProvider from "@/providers/bgProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,18 +51,20 @@ export default async function RootLayout({
         <CQueryClientProvider>
           <ThemeProvider initialTheme={theme!}>
             <FontProvider initialFont={font!}>
-              <CookieProvider>
-                {children}
-                <Toaster
-                  position="top-right"
-                  toastOptions={{
-                    className: cn(
-                      "px-4! py-2! text-[12px]! backdrop-blur-[4px] max-w-[400px]! w-fit! ",
-                      spaceGrotesk.className
-                    ),
-                  }}
-                />
-              </CookieProvider>
+              <BackgroundProvider>
+                <CookieProvider>
+                  {children}
+                  <Toaster
+                    position="top-right"
+                    toastOptions={{
+                      className: cn(
+                        "px-4! py-2! text-[12px]! backdrop-blur-[4px] max-w-[400px]! w-fit! ",
+                        spaceGrotesk.className
+                      ),
+                    }}
+                  />
+                </CookieProvider>
+              </BackgroundProvider>
             </FontProvider>
           </ThemeProvider>
         </CQueryClientProvider>

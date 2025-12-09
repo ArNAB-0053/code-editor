@@ -21,8 +21,13 @@ namespace backend.helper
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id!),
                 new Claim(ClaimTypes.NameIdentifier, user.Id!),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(ClaimTypes.Email, user.Email),                
-                new Claim("name", user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
+
+                new Claim("name", $"{user.Name.FirstName} {user.Name.MiddleName} {user.Name.LastName}".Trim()),
+                new Claim("firstname", user.Name.FirstName),
+                new Claim("middlename", user.Name.MiddleName ?? ""),
+                new Claim("lastname", user.Name.LastName),
+
                 new Claim("username", user.Username)
             };
 

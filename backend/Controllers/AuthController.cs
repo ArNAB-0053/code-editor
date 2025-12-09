@@ -161,11 +161,26 @@ namespace backend.Controllers
             var email2 = User.FindFirst(ClaimTypes.Email)?.Value;
 
             var name = User.FindFirst("name")?.Value;
+            var firstname = User.FindFirst("firstname")?.Value;
+            var middlename = User.FindFirst("middlename")?.Value;
+            var lastname = User.FindFirst("lastname")?.Value;
+
             var username = User.FindFirst("username")?.Value;
             var userId = userId1 ?? userId2;
             var email = email1 ?? email2;
 
-            return Ok(new { userId, email, name, username });
+            return Ok(
+                new {
+                    userId, 
+                    email, 
+                    name,
+                    username, 
+                    nameObj = new { 
+                        firstname, 
+                        middlename, 
+                        lastname 
+                    } 
+                });
         }
 
     }

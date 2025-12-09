@@ -11,11 +11,16 @@ import { FaSlidersH } from "react-icons/fa";
 import { AButton } from "../ui/antd";
 import Logo from "../Logo";
 import PreferenceModal from "../modals/preference";
+import { selectedUserName } from "@/redux/slices/userSlice";
 
 const PageHeader = () => {
   const [open, setOpen] = useState(false);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
+
+  const user = useSelector(selectedUserName)
+  console.log("__EDITOR__ USER: ", user)
+
   const theme = themeConfig(editorTheme);
   return (
     <>

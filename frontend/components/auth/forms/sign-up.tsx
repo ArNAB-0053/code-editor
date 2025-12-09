@@ -7,7 +7,7 @@ import {
   useGetEmailAvailability,
   useGetUsernameAvailability,
 } from "@/services/auth";
-import { registerSchema } from "@/zod/auth.z";
+import { RegisterFormType, registerSchema } from "@/zod/auth.z";
 import { Formik } from "formik";
 import { FaExternalLinkAlt, FaLock, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -26,6 +26,7 @@ import { ContinueWithGoogle } from "./continue-with-btns";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
+import { IRegister } from "@/@types/auth";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -68,7 +69,7 @@ const steps: StepConfig[] = [
     title: "Account Information",
   },
   {
-    fields: ["name"],
+    fields: ["name.firstname", "name.middlename", "name.lastname"],
     title: "Personal Details",
   },
   {
@@ -87,10 +88,13 @@ export const SignUpForm = () => {
 
   const { registerUser } = useAuth();
 
+  const get = (obj: any, path: string) =>
+    path.split(".").reduce((o, i) => (o ? o[i] : undefined), obj);
+
   const isStepValid = (values: any, errors: any, step: number) => {
-    const stepFields = steps[step].fields;
-    const hasValues = stepFields.every((field) => values[field]);
-    const hasNoErrors = stepFields.every((field) => !errors[field]);
+    const fields = steps[step].fields;
+    const hasValues = fields.every((path) => get(values, path));
+    const hasNoErrors = fields.every((path) => !get(errors, path));
     return hasValues && hasNoErrors;
   };
 
@@ -118,7 +122,11 @@ export const SignUpForm = () => {
   };
 
   const initialValues = {
-    name: "",
+    name: {
+      firstname: "",
+      middlename: "",
+      lastname: "",
+    },
     email: "",
     username: "",
     password: "",
@@ -174,6 +182,7 @@ export const SignUpForm = () => {
         handleBlur,
       }) => {
         const currentStepValid = isStepValid(values, errors, currentStep);
+
         const isLastStep = currentStep === steps.length - 1;
 
         return (
@@ -300,14 +309,36 @@ export const SignUpForm = () => {
                   {currentStep === 1 && (
                     <>
                       <FormItemComponent
-                        name="name"
-                        value={values.name}
-                        onChange={handleChange("name")}
-                        formItemChildren="Full Name"
-                        touched={touched?.name}
-                        onBlur={handleBlur("name")}
-                        errorText={errors?.name}
-                        placeholder="Enter Full Name"
+                        name="firstname"
+                        value={values.name.firstname}
+                        onChange={handleChange("name.firstname")}
+                        formItemChildren="First Name"
+                        touched={touched?.name?.firstname}
+                        onBlur={handleBlur("name.firstname")}
+                        errorText={errors?.name?.firstname}
+                        placeholder="Enter First Name"
+                        placeholderIcon={<FaUser size={12} />}
+                      />
+                      <FormItemComponent
+                        name="middlename"
+                        value={values?.name?.middlename}
+                        onChange={handleChange("name.middlename")}
+                        formItemChildren="Middle Name"
+                        touched={touched?.name?.middlename}
+                        onBlur={handleBlur("name.middlename")}
+                        errorText={errors?.name?.middlename}
+                        placeholder="Enter Middle Name"
+                        placeholderIcon={<FaUser size={12} />}
+                      />
+                      <FormItemComponent
+                        name="lastname"
+                        value={values.name?.lastname}
+                        onChange={handleChange("name.lastname")}
+                        formItemChildren="Last Name"
+                        touched={touched?.name?.lastname}
+                        onBlur={handleBlur("name.lastname")}
+                        errorText={errors?.name?.lastname}
+                        placeholder="Enter Last Name"
                         placeholderIcon={<FaUser size={12} />}
                       />
                     </>
@@ -403,7 +434,7 @@ export const SignUpForm = () => {
             <div className="flex gap-3 mt-8">
               {currentStep > 0 && (
                 <NRCButton
-                  // type="button"
+                  type="button"
                   onClick={() => goToStep(currentStep - 1, values, errors)}
                   className={cn(
                     "flex items-center justify-center gap-x-2 px-6",

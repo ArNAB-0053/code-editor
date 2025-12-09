@@ -22,6 +22,8 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+
+        background:"#2b066080",
         
         editorSelectionBackground: "#44475a",
         editorLineNumberForeground: "#6272a4",
@@ -54,6 +56,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#011627",
         
         editorSelectionBackground: "#1d3b53",
         editorLineNumberForeground: "#4b6479",
@@ -86,6 +89,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#011627",
         
         editorSelectionBackground: "#1d3b53",
         editorLineNumberForeground: "#5f7e97",
@@ -118,6 +122,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#282c34",
         
         editorSelectionBackground: "#3e4451",
         editorLineNumberForeground: "#636d83",
@@ -150,6 +155,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#2b2b2b",
         
         editorSelectionBackground: "#214283",
         editorLineNumberForeground: "#606366",
@@ -182,6 +188,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#22272e",
         
         editorSelectionBackground: "#3d444d",
         editorLineNumberForeground: "#768390",
@@ -214,6 +221,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#11243d",
         
         editorSelectionBackground: "rgba(255,255,255,0.15)",
         editorLineNumberForeground: "#8cb4ff",
@@ -246,6 +254,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#262626",
         
         editorSelectionBackground: "rgba(255,255,255,0.12)",
         editorLineNumberForeground: "#6f6f6f",
@@ -278,6 +287,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#27272a",
         
         editorSelectionBackground: "rgba(255,255,255,0.12)",
         editorLineNumberForeground: "#a1a1aa",
@@ -311,6 +321,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         textColor: '#e5e5e5',
         disabledTextColor: '#dadada',
         hoverTextColor: '#cccccc',
+        background: "#0f172ace",
         
         editorSelectionBackground: "#ffffff1a",
         editorLineNumberForeground: "#ffffff73",

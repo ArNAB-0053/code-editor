@@ -25,7 +25,7 @@ export const SignInForm = () => {
       initialValues={initialValues}
       validate={zodToFormik(loginSchema)}
       onSubmit={async (values, { setSubmitting }) => {
-        await loginUser(values);
+        await loginUser({ values });
         setSubmitting(false);
       }}
     >

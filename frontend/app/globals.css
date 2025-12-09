@@ -91,6 +91,7 @@ body {
 /* Antd Dropdown CSS */
 .ant-dropdown-menu {
   background: transparent !important;
+  padding: 0px !important;
 }
 
 .ant-dropdown-menu-item {
