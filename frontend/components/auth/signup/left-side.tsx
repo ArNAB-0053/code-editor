@@ -81,11 +81,11 @@ const LeftSide = () => {
       /> */}
 
       <div
-        className=" absolute -left-[20%] -bottom-[30%] w-full aspect-square -z-10 blur-[4rem] rounded-full"
+        className=" absolute -left-[20%] -bottom-[30%] w-full aspect-square -z-10 blur-3xl rounded-full"
         style={{
           backgroundColor: theme.activeColor,
         }}
-      ></div>
+      />
     </div>
   );
 };

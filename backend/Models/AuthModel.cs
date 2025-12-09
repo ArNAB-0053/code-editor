@@ -9,11 +9,18 @@ namespace backend.Models
         [BsonRepresentation(BsonType.ObjectId)]
 
         public string? Id { get; set; }
-        public string Name { get; set; }
+        public NameDto Name { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
         public string Username { get; set; } = string.Empty;
         public string? MobileNo { get; set; }
+    }
+
+    public class NameDto
+    {
+        public string FirstName { get; set; }
+        public string? MiddleName { get; set; } = string.Empty;
+        public string LastName { get; set; }
     }
 
     public class SignInRequest

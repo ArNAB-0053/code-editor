@@ -1,63 +1,68 @@
 name: "Docker Compose CI"
 
 permissions:
-    contents: read
-    checks: write
-    statuses: write
+  contents: read
+  checks: write
+  statuses: write
 
 on:
-    push: 
-        branches: ["main"]
-    pull_request:
-        branches: ["main"]
-    
+  push:
+    branches-ignore: ["main"]
+  pull_request:
+    branches: ["main", "stable"]
+
 jobs:
-    compose-test:
-        name: Docker Compose CI
-        runs-on: ubuntu-latest
-    
-        steps:
-          - name: Checkout Code
-            uses: actions/checkout@v3
+  compose-test:
+    name: Docker Compose CI
+    runs-on: ubuntu-latest
 
-          - name: Setup Docker Buildx
-            uses: docker/setup-buildx-action@v3 
+    steps:
+      - name: Prevent merging non-stable → main
+        if: github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref != 'stable'
+        run: |
+          echo "Only 'stable' can merge into 'main'"
+          exit 1
 
-          # - name: Clean Docker Cache
-          #   run: docker builder prune -a -f
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-          - name: Build Frontend
-            run: docker compose build --no-cache frontend
-          
-          - name: Build Backend
-            run: docker compose build --no-cache backend
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-        #   - name: Docker Run
-        #     run: docker compose up frontend backend --abort-on-container-exit
+      # - name: Clean Docker Cache
+      #   run: docker builder prune -a -f
 
-          - name: Test Backend Build
-            run: docker compose run --rm --entrypoint "dotnet" backend --info
-        
-          - name: Test Frontend Build
-            run: docker compose run --rm --entrypoint "node" frontend --version
+      - name: Build Frontend
+        run: docker compose build --no-cache frontend
 
-          # - name: Check Backend Health
-          #   run: |
-          #     curl -f http://localhost:5000 || exit 1
+      - name: Build Backend
+        run: docker compose build --no-cache backend
 
-          # - name: Check Frontend Health
-          #   run: |
-          #     curl -f http://localhost:3000 || exit 1
+      #   - name: Docker Run
+      #     run: docker compose up frontend backend --abort-on-container-exit
 
-          - name: Success Message
-            if: success()
-            run: echo "Docker Compose ran successfully!"
-        
-          - name: Docker Compose Logs - if fails
-            if: failure()
-            run: docker compose logs
-        
-          - name: Stop Container
-            if: always()
-            run: docker compose down -v
-        
+      - name: Test Backend Build
+        run: docker compose run --rm --entrypoint "dotnet" backend --info
+
+      - name: Test Frontend Build
+        run: docker compose run --rm --entrypoint "node" frontend --version
+
+      # - name: Check Backend Health
+      #   run: |
+      #     curl -f http://localhost:5000 || exit 1
+
+      # - name: Check Frontend Health
+      #   run: |
+      #     curl -f http://localhost:3000 || exit 1
+
+      - name: Success Message
+        if: success()
+        run: echo "Docker Compose ran successfully!"
+
+      - name: Docker Compose Logs - if fails
+        if: failure()
+        run: docker compose logs
+
+      - name: Stop Container
+        if: always()
+        run: docker compose down -v

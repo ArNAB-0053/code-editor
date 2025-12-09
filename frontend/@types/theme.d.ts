@@ -28,6 +28,7 @@ export interface WebsiteThemeTypes {
   textColor: string;
   disabledTextColor: string;
   hoverTextColor: string,
+  background: string,
 }
 
 export interface ThemeTypes extends EditorThemeTypes, WebsiteThemeTypes {}

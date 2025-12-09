@@ -14,6 +14,7 @@ import { spaceGrotesk } from "@/fonts";
 import { useFont } from "@/context/FontProvider";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
+import { fallbackAvatar } from "@/constants/base.const";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
@@ -32,13 +33,24 @@ const Avatar = () => {
   const { font } = useFont();
 
   const dropdownElement = () => (
-    <div className=" px-1 pt-1">
+    <div
+      className=" px-1 pt-1 rounded-xl relative"
+      style={{
+        background: `linear-gradient(
+                        to bottom,
+                        ${theme.activeColor}30 0%,
+                        ${theme.activeColor}10 30%,
+                        rgba(255,255,255,0) 47%,
+                        rgba(255,255,255,0) 100%
+                      )`,
+      }}
+    >
       <div
         className=" flex flex-col items-center gap-x-3 w-[16rem] rounded-xl px-2 pt-5 pb-2"
         style={{
           background: `linear-gradient(
                         to bottom,
-                        #00000 0%,
+                        ${theme.background} 0%,
                         ${theme.activeColor}10 30%,
                         rgba(255,255,255,0) 47%,
                         rgba(255,255,255,0) 100%
@@ -46,7 +58,7 @@ const Avatar = () => {
         }}
       >
         <NRCAvatar
-          name={profileDetails?.name || "Guest"}
+          name={profileDetails?.nameObj || fallbackAvatar}
           variant="default"
           className="border-2 w-18 h-18 text-2xl"
           style={{
@@ -119,9 +131,7 @@ const Avatar = () => {
           Change Password
         </StyledDiv>
 
-        <div
-          className="text-white mt-6 w-full flex items-center justify-end"
-        >
+        <div className="text-white mt-6 w-full flex items-center justify-end">
           <NRCButton
             type="none"
             className={cn(
@@ -137,6 +147,19 @@ const Avatar = () => {
           </NRCButton>
         </div>
       </div>
+
+      <div
+        className="h-0.5 w-1/2 mt-4 place-self-center rounded-l-2xl rounded-r-2xl opacity-90"
+        style={{
+          backgroundColor: `${theme.activeColor}`,
+        }}
+      />
+       <div
+        className="h-1 w-full place-self-center rounded-l-2xl rounded-r-2xl blur-[14px] opacity-90"
+        style={{
+          backgroundColor: `${theme.activeColor}`,
+        }}
+      />
     </div>
   );
 
@@ -153,15 +176,15 @@ const Avatar = () => {
           ],
         }}
         className="cursor-pointer "
-        rootClassName="my-dropdown backdrop-blur-xl rounded-xl"
+        rootClassName="my-dropdown backdrop-blur-xl rounded-xl p-0! "
         overlayStyle={{
           backgroundColor: `${theme.activeColor}20`,
         }}
       >
         <a onClick={(e) => e.preventDefault()}>
-          {!profileDetails?.name && !isLoading ? (
+          {!profileDetails?.nameObj && !isLoading ? (
             <NRCAvatar
-              name="Guest"
+              name={fallbackAvatar}
               className="border-1.5!"
               style={{
                 borderColor: theme.activeColor,
@@ -174,9 +197,10 @@ const Avatar = () => {
             </div>
           ) : (
             <NRCAvatar
-              name={profileDetails?.name || "Guest"}
+              name={profileDetails?.nameObj || fallbackAvatar}
               // variant="transparent"
-              className="border-1.5!"
+              characters={1}
+              className="border-1.5! "
               style={{
                 borderColor: theme.activeColor,
                 background: `${theme.activeColor}50`,

@@ -100,7 +100,7 @@ export const FontPalette = () => {
     font: websiteFonts[key as WebsiteFontsKey],
   }));
 
-  console.log(fontOptions);
+  // console.log(fontOptions);
 
   return (
     <NRDrawer

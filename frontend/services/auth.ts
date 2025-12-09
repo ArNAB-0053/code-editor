@@ -1,4 +1,4 @@
-import { IAvailability, ISignInReturn } from "@/@types/auth";
+import { IAvailability, IAuthReturn, IRegister } from "@/@types/auth";
 import axiosInstance from "@/lib/axios-instance";
 import { LoginFormType, RegisterFormType } from "@/zod/auth.z";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -10,7 +10,7 @@ export const URI = "api/user";
 //                          AUTH 
 // ----------------------------------------------------
 // SIGN UP
-export const register = async (config: RegisterFormType) => {
+export const register = async (config: RegisterFormType): Promise<IAuthReturn> => {
   const res = await axiosInstance.post(`${URI}/register`, config);
 
   if (!res.data) {
@@ -23,12 +23,12 @@ export const register = async (config: RegisterFormType) => {
 
 export const useRegister = () => {
   return useMutation({
-    mutationFn: (payload: any) => register(payload),
+    mutationFn: (payload: RegisterFormType) => register(payload),
   });
 };
 
 // SIGN IN
-export const login = async (config: LoginFormType): Promise<ISignInReturn> => {
+export const login = async (config: LoginFormType): Promise<IAuthReturn> => {
   const res = await axiosInstance.post(`${URI}/signin`, config, {
     withCredentials: true,
   });
@@ -43,7 +43,7 @@ export const login = async (config: LoginFormType): Promise<ISignInReturn> => {
 
 export const useLogin = () => {
   return useMutation({
-    mutationFn: (payload: any) => login(payload),
+    mutationFn: (payload: LoginFormType) => login(payload),
   });
 };
 

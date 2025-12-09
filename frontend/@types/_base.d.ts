@@ -45,6 +45,14 @@ export interface IBaseStylingProps {
 }
 
 export interface IProfileDetails
-  extends Pick<RegisterFormType, "name"|"password"|"email"> {
+  extends Pick<RegisterFormType, "password" | "email"> {
+  name: string;
   userId: string;
+  nameObj: NameObjType;
 }
+
+export type NameObjType = {
+  firstname: string;
+  middlename?: string;
+  lastname: string;
+};
