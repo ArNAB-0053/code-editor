@@ -35,6 +35,7 @@ import { LuLoader } from "react-icons/lu";
 import { AModal } from "../ui/antd";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
+import { messagesConfig } from "@/config/messages.config";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -101,7 +102,7 @@ export default function EditorComponent({
       return;
     }
 
-    toast.loading("Saving…", { id: "autoSave" });
+    toast.loading(messagesConfig.AUTOSAVE.LOADING, { id: "autoSave" });
 
     autoSaveCode.mutate(
       {
@@ -116,11 +117,11 @@ export default function EditorComponent({
           dispatch(setLangRedux(res?.lang));
           dispatch(setEditorId(res?.id));
           // isAutoSaving.current = false;
-          toast.success("Saved!", { id: "autoSave" });
+          toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
         },
         onError: (e) => {
           // isAutoSaving.current = false;
-          toast.error("Failed to save", { id: "autoSave" });
+          toast.error(messagesConfig.AUTOSAVE.FAILED, { id: "autoSave" });
         },
       }
     );

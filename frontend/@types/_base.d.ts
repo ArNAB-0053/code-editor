@@ -2,7 +2,8 @@ import { FormProps } from "antd";
 import { ThemeTypes } from "./theme";
 import { WebsiteFontsKey } from "./font";
 import React, { ReactNode } from "react";
-import { RegisterFormType } from "@/zod/sign-up.z";
+import { RegisterFormType } from "@/zod/auth.z";
+import { NextFont } from "next/dist/compiled/@next/font";
 
 export interface IBaseAFormProps extends Omit<FormProps, "children"> {
   children?: ReactNode;
@@ -15,7 +16,8 @@ export interface IExtraAFormProps {
 
 export interface IExtraProps {
   theme: ThemeTypes;
-  font: WebsiteFontsKey;
+  font?: WebsiteFontsKey;
+  fontClass: NextFont;
 }
 
 export type SetterFunctionTypesBool = React.Dispatch<

@@ -25,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<AuthServices>();
 builder.Services.AddSingleton<CodeSaveService>();
 builder.Services.AddSingleton<ShareServices>();
+builder.Services.AddSingleton<RedisService>();
 builder.Services.Configure<DockerSettings>(
     builder.Configuration.GetSection("DockerSettings")
 );

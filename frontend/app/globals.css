@@ -96,3 +96,9 @@ body {
 .ant-dropdown-menu-item {
   padding: 0px !important;
 }
+
+/* Antd Popover CSS */
+.ant-popover-inner {
+  background-color: transparent !important;
+}
+
