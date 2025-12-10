@@ -12,7 +12,7 @@ const RightSide = () => {
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
   return (
-    <div className="flex flex-col h-svh items-center justify-center gap-y-5 px-6 max-[460px]:w-full w-[26rem] md:w-full lg:w-[26rem] place-self-center relative">
+    <div className="flex flex-col h-svh items-center justify-center gap-y-5 px-6 max-[460px]:w-full w-[26rem] md:w-full lg:w-[26rem] place-self-center relative overflow-hidden! ">
       <div className="mb-5 w-full flex items-center justify-between">
         <Logo />
         <span

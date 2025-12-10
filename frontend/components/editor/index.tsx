@@ -10,23 +10,38 @@ import {
 } from "@/redux/slices/editorSlice";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useSelector } from "react-redux";
+import { getDefaultCode } from "@/helper/defaultCode";
 
 const MainEditor = ({ p_lang }: { p_lang: string }) => {
   const dispatch = useDispatch();
-  
+  const defaultCode = getDefaultCode(p_lang);
+
   const userId = useSelector(selectedUserId);
-  const { data: codeData } = useGetCode({
+  const { data: codeData, isLoading } = useGetCode({
     userId: userId,
     lang: p_lang,
   });
 
   useEffect(() => {
-    if (!codeData) return;
-    dispatch(setEditorId(codeData?.id));
-    dispatch(setCodeRedux(codeData?.code));
-    dispatch(setOutputRedux(codeData?.output));
-    dispatch(setLangRedux(codeData?.lang));
-  }, [codeData, dispatch]);
+    dispatch(setLangRedux(p_lang));
+  }, [p_lang, dispatch]);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (!codeData) {
+      dispatch(setCodeRedux(defaultCode));
+      return;
+    }
+
+    if (codeData.lang === p_lang) {
+      dispatch(setCodeRedux(codeData.code));
+      dispatch(setEditorId(codeData.id));
+      dispatch(setOutputRedux(codeData.output));
+    }
+  }, [codeData, isLoading, p_lang, defaultCode, dispatch]);
+
+  if (isLoading) return <p>Loading ...</p>;
 
   return (
     <div>

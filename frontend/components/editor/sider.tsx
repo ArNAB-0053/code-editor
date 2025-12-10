@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { appUrls } from "@/config/navigation.config";
+import { useDispatch } from "react-redux";
+import { setLangRedux } from "@/redux/slices/editorSlice";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   &:hover {
@@ -16,9 +18,11 @@ const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   }
 `;
 
-const Sider = ({p_lang}: {p_lang: string}) => {
-  const editorTheme = useSelector(selectEditorTheme)
+const Sider = ({ p_lang }: { p_lang: string }) => {
+  const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
+
+  const dispatch = useDispatch();
 
   const languageLogo = (lang: string) => {
     const uri = getDataUrls(lang);
@@ -63,6 +67,9 @@ const Sider = ({p_lang}: {p_lang: string}) => {
               backgroundColor:
                 p_lang === x.link ? theme.activeColor : theme.border10,
               borderColor: theme.border20,
+            }}
+            onClick={() => {
+              dispatch(setLangRedux(x.link));
             }}
           >
             {x.logo}

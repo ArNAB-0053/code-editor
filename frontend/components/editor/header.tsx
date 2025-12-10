@@ -68,6 +68,9 @@ const EditorHeaderComponent = (props: HeaderProps) => {
     props.setLoading(true);
     props.setError("");
 
+    console.log(currentCode)
+    console.log(props.p_lang)
+
     try {
       const res = await runCode({
         code: currentCode,

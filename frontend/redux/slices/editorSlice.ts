@@ -1,44 +1,78 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { RootState } from "../store"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+
+export interface ILangContent {
+  code: string;
+  output: string;
+  editorId: string;
+}
 
 export interface IEditorState {
-    code: string,
-    lang: string,
-    output: string,
-    editorId: string,
+  content: Record<string, ILangContent>;
+  currentLang: string;
 }
 
 const initialState: IEditorState = {
-    code : "",
-    lang : "",
-    output : "",
-    editorId : "",
-}
+  content: {},
+  currentLang: "",
+};
 
 export const editorCodeSlice = createSlice({
-    name: "editorCode",
-    initialState,
-    reducers: {
-        setCodeRedux: (state, action: PayloadAction<string>) => {
-            state.code = action.payload
-        },
-        setLangRedux: (state, action: PayloadAction<string>) => {
-            state.lang = action.payload
-        },
-        setOutputRedux: (state, action: PayloadAction<string>) => {
-            state.output = action.payload
-        },
-        setEditorId: (state, action: PayloadAction<string>) => {
-            state.editorId = action.payload
-        },
-    }
-})
+  name: "editorCode",
+  initialState,
+  reducers: {
+    setLangRedux: (state, action: PayloadAction<string>) => {
+      state.currentLang = action.payload;
+      if (!state.content[action.payload]) {
+        state.content[action.payload] = {
+          code: "", 
+          output: "",
+          editorId: "",
+        };
+      }
+    },
 
-export const {setCodeRedux, setLangRedux, setOutputRedux, setEditorId} = editorCodeSlice.actions
+    setCodeRedux: (state, action: PayloadAction<string>) => {
+      const lang = state.currentLang;
+      if (!lang) return;
 
-export const selectedCode = (state: RootState) => state.editorCode.code
-export const selectedLang = (state: RootState) => state.editorCode.lang
-export const selectedOutput = (state: RootState) => state.editorCode.output
-export const selectedEditorId = (state: RootState) => state.editorCode.editorId
+      state.content[lang].code = action.payload;
+    },
 
-export default editorCodeSlice.reducer
+    setOutputRedux: (state, action: PayloadAction<string>) => {
+      const lang = state.currentLang;
+      if (!lang) return;
+
+      state.content[lang].output = action.payload;
+    },
+
+    setEditorId: (state, action: PayloadAction<string>) => {
+      const lang = state.currentLang;
+      if (!lang) return;
+
+      state.content[lang].editorId = action.payload;
+    },
+  },
+});
+
+export const { setCodeRedux, setLangRedux, setOutputRedux, setEditorId } =
+  editorCodeSlice.actions;
+
+export const selectedLang = (state: RootState) => state.editorCode.currentLang;
+
+export const selectedCode = (state: RootState) => {
+  const lang = state.editorCode.currentLang;
+  return state.editorCode.content[lang]?.code || "";
+};
+
+export const selectedOutput = (state: RootState) => {
+  const lang = state.editorCode.currentLang;
+  return state.editorCode.content[lang]?.output || "";
+};
+
+export const selectedEditorId = (state: RootState) => {
+  const lang = state.editorCode.currentLang;
+  return state.editorCode.content[lang]?.editorId || "";
+};
+
+export default editorCodeSlice.reducer;
