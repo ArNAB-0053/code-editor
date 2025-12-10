@@ -188,7 +188,7 @@ export const SignUpForm = () => {
         return (
           <NRAForm
             name="sign-up-form"
-            className="px-0! w-full! overflow-hidden! "
+            className="px-0! w-full! "
           >
             <ProgressDotsStyle $theme={theme} />
 
