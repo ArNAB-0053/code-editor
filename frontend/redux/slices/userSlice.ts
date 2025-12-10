@@ -12,9 +12,9 @@ export interface IUserState {
 const initialState: IUserState = {
   id: "",
   name: {
-    firstname: "Guest",
-    middlename: "",
-    lastname: "",
+    firstName: "Guest",
+    middleName: "",
+    lastName: "",
   },
   email: "",
   username: "",

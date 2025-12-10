@@ -161,9 +161,9 @@ namespace backend.Controllers
             var email2 = User.FindFirst(ClaimTypes.Email)?.Value;
 
             var name = User.FindFirst("name")?.Value;
-            var firstname = User.FindFirst("firstname")?.Value;
-            var middlename = User.FindFirst("middlename")?.Value;
-            var lastname = User.FindFirst("lastname")?.Value;
+            var firstName = User.FindFirst("firstname")?.Value;
+            var middleName = User.FindFirst("middlename")?.Value;
+            var lastName = User.FindFirst("lastname")?.Value;
 
             var username = User.FindFirst("username")?.Value;
             var userId = userId1 ?? userId2;
@@ -176,9 +176,9 @@ namespace backend.Controllers
                     name,
                     username, 
                     nameObj = new { 
-                        firstname, 
-                        middlename, 
-                        lastname 
+                        firstName, 
+                        middleName, 
+                        lastName 
                     } 
                 });
         }

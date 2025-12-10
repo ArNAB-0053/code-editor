@@ -1,7 +1,7 @@
 import Logo from "../Logo";
 import { FontPalette, ThemePalette } from "../palette";
-import Avatar from "../profile/avatar";
-import NRCDivider from "../ui/no-redux/divider";
+import { NRAvatarDropdown } from "../profile/avatar";
+import { NRCDivider } from "../ui/no-redux";
 
 const Header = () => {
   return (
@@ -12,7 +12,7 @@ const Header = () => {
         <NRCDivider direction="horizontal" className="bg-white! h-4! mx-2!" />
         <ThemePalette />
         <NRCDivider direction="horizontal" className="bg-white! h-4! mx-2!" />
-        <Avatar />
+        <NRAvatarDropdown />
       </div>
     </div>
   );

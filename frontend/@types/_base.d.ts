@@ -17,7 +17,7 @@ export interface IExtraAFormProps {
 export interface IExtraProps {
   theme: ThemeTypes;
   font?: WebsiteFontsKey;
-  fontClass: NextFont;
+  fontClass?: NextFont;
 }
 
 export type SetterFunctionTypesBool = React.Dispatch<
@@ -52,7 +52,7 @@ export interface IProfileDetails
 }
 
 export type NameObjType = {
-  firstname: string;
-  middlename?: string;
-  lastname: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
 };

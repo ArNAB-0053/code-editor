@@ -1,20 +1,16 @@
 "use client";
-import { useTheme } from "@/context/ThemeContext";
-import { NRCAvatar, NRCButton } from "../ui/no-redux";
-import { useMyProfile } from "@/services/profile";
-import { LuLoader } from "react-icons/lu";
 import { Dropdown } from "antd";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { FaUserCircle } from "react-icons/fa";
 import { MdOutlineLockReset } from "react-icons/md";
-import { FiLogOut } from "react-icons/fi";
 import { cn } from "@/lib/utils";
 import { spaceGrotesk } from "@/fonts";
-import { useFont } from "@/context/FontProvider";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
-import { fallbackAvatar } from "@/constants/base.const";
+import { ReactNode } from "react";
+import { NextFont } from "next/dist/compiled/@next/font";
+import { fallbackProfileDetails } from "@/constants/base.const";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
@@ -27,11 +23,23 @@ const StyledDiv = styled.div<{ $theme: ThemeTypes }>`
   }
 `;
 
-const Avatar = () => {
-  const { data: profileDetails, isLoading } = useMyProfile();
-  const { theme } = useTheme();
-  const { font } = useFont();
-
+export const AvatarTemplate = ({
+  dropdownContent,
+  avatar,
+  logoutButton,
+  name,
+  email,
+  theme,
+  font
+}: {
+  dropdownContent: ReactNode;
+  avatar: ReactNode;
+  logoutButton: ReactNode;
+  name: string,
+  email: string,
+  theme: ThemeTypes,
+  font: NextFont,
+}) => {
   const dropdownElement = () => (
     <div
       className=" px-1 pt-1 rounded-xl relative"
@@ -57,15 +65,7 @@ const Avatar = () => {
                       )`,
         }}
       >
-        <NRCAvatar
-          name={profileDetails?.nameObj || fallbackAvatar}
-          variant="default"
-          className="border-2 w-18 h-18 text-2xl"
-          style={{
-            borderColor: theme.activeColor,
-            background: `${theme.activeColor}50`,
-          }}
-        />
+        {avatar}
 
         <span
           className={cn(
@@ -75,7 +75,7 @@ const Avatar = () => {
           style={{ color: theme.textColor }}
         >
           <h3 className="font-semibold text-base">
-            {profileDetails?.name || "Guest"}
+            {name || fallbackProfileDetails?.name}
           </h3>
           <p
             className="text-xs px-4 pb-0.5 rounded-full"
@@ -84,7 +84,7 @@ const Avatar = () => {
               color: theme.textColor,
             }}
           >
-            {profileDetails?.email || "guest@example.com"}
+            {email || fallbackProfileDetails?.email}
           </p>
         </span>
 
@@ -132,19 +132,7 @@ const Avatar = () => {
         </StyledDiv>
 
         <div className="text-white mt-6 w-full flex items-center justify-end">
-          <NRCButton
-            type="none"
-            className={cn(
-              "flex! items-center justify-center gap-x-2 text-[#ff4d4f]! bg-[#ff4d4f]/20! hover:opacity-70 transition-all ease-linear duration-100 font-semibold",
-              spaceGrotesk.className
-            )}
-            // style={{
-            //   background: `${theme.activeColor}20`,
-            // }}
-          >
-            <FiLogOut />
-            Log out
-          </NRCButton>
+          {logoutButton}
         </div>
       </div>
 
@@ -154,7 +142,7 @@ const Avatar = () => {
           backgroundColor: `${theme.activeColor}`,
         }}
       />
-       <div
+      <div
         className="h-1 w-full place-self-center rounded-l-2xl rounded-r-2xl blur-[14px] opacity-90"
         style={{
           backgroundColor: `${theme.activeColor}`,
@@ -181,36 +169,8 @@ const Avatar = () => {
           backgroundColor: `${theme.activeColor}20`,
         }}
       >
-        <a onClick={(e) => e.preventDefault()}>
-          {!profileDetails?.nameObj && !isLoading ? (
-            <NRCAvatar
-              name={fallbackAvatar}
-              className="border-1.5!"
-              style={{
-                borderColor: theme.activeColor,
-                background: `${theme.activeColor}50`,
-              }}
-            />
-          ) : profileDetails?.name && isLoading ? (
-            <div className="w-9 aspect-square rounded-full flex items-center justify-center">
-              <LuLoader className="animate-spin" color={theme.activeColor} />
-            </div>
-          ) : (
-            <NRCAvatar
-              name={profileDetails?.nameObj || fallbackAvatar}
-              // variant="transparent"
-              characters={1}
-              className="border-1.5! "
-              style={{
-                borderColor: theme.activeColor,
-                background: `${theme.activeColor}50`,
-              }}
-            />
-          )}
-        </a>
+        {dropdownContent}
       </Dropdown>
     </>
   );
 };
-
-export default Avatar;

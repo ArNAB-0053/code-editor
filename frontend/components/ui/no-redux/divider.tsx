@@ -10,7 +10,7 @@ interface CDividerType {
   direction?: "horizontal" | "vertical";
 }
 
-const NRCDivider = ({
+export const NRCDivider = ({
   style,
   direction = "vertical",
   className = "",
@@ -26,5 +26,3 @@ const NRCDivider = ({
     />
   );
 };
-
-export default NRCDivider;

@@ -12,6 +12,7 @@ import { AButton } from "../ui/antd";
 import Logo from "../Logo";
 import PreferenceModal from "../modals/preference";
 import { selectedUserName } from "@/redux/slices/userSlice";
+import { AvatarDropdown } from "../profile/avatar";
 
 const PageHeader = () => {
   const [open, setOpen] = useState(false);
@@ -49,16 +50,7 @@ const PageHeader = () => {
             </div>
             Preference
           </AButton>
-          <AButton
-            type="primary"
-            shape="circle"
-            style={{
-              backgroundColor: theme.activeColor,
-            }}
-            className="flex! items-center! justify-center! rounded-full! h-[30px]! aspect-square!"
-          >
-            A
-          </AButton>
+          <AvatarDropdown/>
         </div>
       </div>
 

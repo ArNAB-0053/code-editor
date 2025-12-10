@@ -1,5 +1,13 @@
 export const fallbackAvatar = {
-  firstname: "Guest",
-  middlename: "",
-  lastname: "",
+  firstName: "Guest",
+  middleName: "",
+  lastName: "",
 };
+
+export const fallbackProfileDetails = {
+  name: "Guest",
+  email: "guest@example.com",
+  nameObj: fallbackAvatar,
+  userId: "",
+  password: ""
+}

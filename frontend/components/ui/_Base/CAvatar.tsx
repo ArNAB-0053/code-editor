@@ -24,9 +24,10 @@ const BaseCAvatar = ({
       nameValue !== null &&
       !Array.isArray(nameValue)
     ) {
-      const fn = nameValue?.firstname;
-      const mn = nameValue?.middlename;
-      const ln = nameValue?.lastname;
+      console.log(nameValue)
+      const fn = nameValue?.firstName?? " ";
+      const mn = nameValue?.middleName?? " ";
+      const ln = nameValue?.lastName?? " ";
 
       if (characters === 3 && mn) return fn[0] + mn[0] + ln[0];
       else if (characters === 3 && !mn || characters === 2) return fn[0] + ln[0];
