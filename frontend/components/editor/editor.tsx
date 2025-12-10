@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import {
   selectedCode,
   selectedEditorId,
+  selectedLang,
   selectedOutput,
   setCodeRedux,
   setEditorId,
@@ -55,14 +56,14 @@ export default function EditorComponent({
   p_lang: string;
   isShared?: boolean;
 }) {
-  const defaultCode = getDefaultCode(p_lang);
+  // const defaultCode = getDefaultCode(p_lang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const [sharingDetails, setSharingDetails] = useState(null);
+  const lang = useSelector(selectedLang);
+  // const [sharingDetails, setSharingDetails] = useState(null);
 
-  // Share
-  
+  // console.log("___Editor___ (defaultCode)", defaultCode)
 
   const currentCode = useSelector(selectedCode);
   const currentOutput = useSelector(selectedOutput);
@@ -107,14 +108,14 @@ export default function EditorComponent({
     autoSaveCode.mutate(
       {
         userId: userId,
-        lang: p_lang,
+        lang,
         code: debouncedCode,
       },
       {
         onSuccess: (res) => {
           lastSaveRef.current = debouncedCode;
-          dispatch(setCodeRedux(res?.code));
           dispatch(setLangRedux(res?.lang));
+          dispatch(setCodeRedux(res?.code));
           dispatch(setEditorId(res?.id));
           // isAutoSaving.current = false;
           toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
@@ -125,7 +126,7 @@ export default function EditorComponent({
         },
       }
     );
-  }, [isShared, debouncedCode, userId, p_lang, dispatch]);
+  }, [isShared, debouncedCode, userId, lang, dispatch]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -183,8 +184,7 @@ export default function EditorComponent({
 
   // Generate Shared Link
 
-
-  console.log(sharingDetails)
+  // console.log(sharingDetails)
 
   return (
     <div
@@ -229,13 +229,16 @@ export default function EditorComponent({
               />
               <div className="pt-2">
                 <Editor
+                  key={lang}
                   value={currentCode}
-                  onChange={(value) => dispatch(setCodeRedux(value ?? ""))}
+                  onChange={(value) => {
+                    dispatch(setCodeRedux(value ?? ""));
+                  }}
                   width="100%"
                   height="calc(95vh - 95px)"
                   defaultLanguage={p_lang}
-                  language={p_lang}
-                  defaultValue={defaultCode}
+                  language={lang}
+                  // defaultValue={defaultCode}
                   theme="app-dark"
                   onMount={handleOnMount}
                   beforeMount={handleBeforeMount}
@@ -290,7 +293,7 @@ export default function EditorComponent({
             </div>
           </Splitter.Panel>
         </StyledSplitter>
-      </div>      
+      </div>
     </div>
   );
 }

@@ -16,9 +16,16 @@ const persistUserConfig = {
   storage
 }
 
+// const persistEditorConfig_temp = {
+//   key: "editor",
+//   storage
+// }
+
 const persistedPreference = persistReducer(persistPreferenceConfig, preferencesReducer)
 
 const persistedUserDetails = persistReducer(persistUserConfig, userReducer)
+
+// const persistedEditor_temp =  persistReducer(persistEditorConfig_temp, editorCodeReducer)
 
 export const store = configureStore({
     reducer: {
