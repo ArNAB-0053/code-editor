@@ -1,0 +1,31 @@
+"use client";
+
+import axiosInstance from "@/lib/axios-instance";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from ".";
+import { IProfileDetails } from "@/@types/_base";
+
+// PROFILE DETAILS from '/me' API
+export const getMyProfile = async (): Promise<IProfileDetails> => {
+  const res = await axiosInstance.get(`api/user/me`);
+  return res.data;
+};
+export const useMyProfile = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.ME],
+    queryFn: () => getMyProfile(),
+  });
+};
+
+// GET PROFILE DETAILS based on USERID
+export const getProfileDetailsByUserId = async (userId: string) => {
+  const res = await axiosInstance.get(`api/user/${userId}`);
+  return res.data;
+};
+export const useGetProfileDetailsByUserId = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.PROFILE, userId],
+    queryFn: () => getProfileDetailsByUserId(userId),
+    enabled: !!userId,
+  });
+};

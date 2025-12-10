@@ -43,6 +43,7 @@ The frontend provides a responsive and modern code editor built using:
 - React (component system)
 - Tailwind + Styled Components (styling)
 - Ant Design (UI elements)
+- monaco editor (for VS Code like editor)
 
 The user selects a language and hits **Run**.
 

@@ -4,8 +4,6 @@ import { RxArrowRight } from "react-icons/rx";
 import { NRCButton } from "../ui/no-redux";
 import {
   jetBrainsMono,
-  play_cu,
-  play_us_modern,
   prompt,
   spaceGrotesk,
 } from "@/fonts";
@@ -13,10 +11,9 @@ import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
 import { useFont } from "@/context/FontProvider";
 import Link from "next/link";
-import { FaPlay } from "react-icons/fa";
 import { RotatingLanguageHero } from "./RotatingLanguageHero";
-
-const langs = ["Python", "JavaScript", "Java", "Cpp", "C", "Go"];
+import { Tooltip } from "antd";
+import { appUrls } from "@/config/navigation.config";
 
 const Hero = () => {
   const { themeName } = useTheme();
@@ -26,7 +23,7 @@ const Hero = () => {
 
   return (
     <section
-      className={`${font?.className} pt-[20vh] lg:pt-48 xl:pt-60 min-h-svh  w-full flex flex-col items-center text-center`}
+      className={`${font?.className} pt-[20vh] lg:pt-48 xl:pt-60 min-h-svh  flex flex-col items-center text-center`}
       style={{
         // background: theme?.editorBackground,
         color: theme?.textColor,
@@ -59,18 +56,44 @@ const Hero = () => {
           className={`text-4xl md:text-5xl xl:text-[62px] ${prompt.className} `}
         >
           Write, Run &
-          <span
-            className={`font-normal mx-5 opacity-90 relative ${jetBrainsMono.className}`}
-            style={{ color: theme.activeColor }}
+          <Tooltip
+            align={{
+              offset: [0, 5],
+            }}
+            placement="top"
+            title={
+              <p
+                style={{ color: theme.textColor }}
+                className={`${spaceGrotesk.className} text-center text-base leading-5 py-2`}
+              >
+                For share you need to create an account
+              </p>
+            }
+            color={`${theme.activeColor}40`}
+            // style={{
+            //   filter: 'back'
+            // }}
+            className="backdrop-blur-2xl!"
           >
-            Share
             <span
-              className="h-[3px] md:h-1 xl:h-[5px] w-28 md:w-[9.2rem] xl:w-48 absolute bottom-5 md:bottom-7 lg:bottom-6 xl:bottom-9 backdrop-blur-2xl -left-1 -rotate-2"
-              style={{
-                background: theme.activeColor,
-              }}
-            />
-          </span>
+              className={`font-normal mx-5 opacity-90 group relative cursor-pointer ${jetBrainsMono.className}`}
+              style={{ color: theme.activeColor }}
+            >
+              Share
+              <span
+                className="h-[3px] md:h-1 xl:h-[5px] w-28 md:w-[9.2rem] xl:w-48 absolute bottom-5 md:bottom-7 lg:bottom-6 xl:bottom-9 backdrop-blur-2xl -left-1 -rotate-2"
+                style={{
+                  background: theme.activeColor,
+                }}
+              />
+              <span
+                className="absolute h-8 w-28 md:h-12 md:w-36 lg:h-12 lg:w-36 xl:h-16 xl:w-48 -z-1 rounded-xl -left-1 top-2 group-hover:opacity-100 opacity-0 transition-all duration-150 ease-linear"
+                style={{
+                  background: `${theme.activeColor}40`,
+                }}
+              />
+            </span>
+          </Tooltip>
           Code
         </div>
         <strong>Instantly</strong>
@@ -99,7 +122,7 @@ const Hero = () => {
 
       <div className="flex items-center max-sm:flex-col gap-4 mt-10">
         {/* GUEST */}
-        <Link href="/python" className="rounded-xl">
+        <Link href={appUrls.LANG} className="rounded-xl">
           <NRCButton
             // type="primary"
             // variant="default"
@@ -112,7 +135,7 @@ const Hero = () => {
           </NRCButton>
         </Link>
 
-        <Link href="/auth" className="rounded-xl">
+        <Link href={appUrls.REGISTER} className="rounded-xl">
           <NRCButton
             type="none"
             variant="sameBg"

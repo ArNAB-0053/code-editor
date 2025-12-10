@@ -1,30 +1,34 @@
 "use client";
-import Header from "@/components/header";
-import { Provider } from "react-redux";
-import { persistor, store } from "@/redux/store";
-import { PersistGate } from "redux-persist/integration/react";
 import {
   CookieProviderForLocalStorage,
   // CookieProviderToSetPreferrenceToCookie,
 } from "@/providers/cookie";
+import PageHeader from "@/components/editor/page-header";
+import ReduxPersistProvider from "@/providers/reduxPersistProvider";
+import FontWrapperRedux from "@/providers/fontWrapperRedux";
+import { usePathname } from "next/navigation";
+import { appUrls } from "@/config/navigation.config";
+import { cn } from "@/lib/utils";
 
-export default function RootLayout({
+export default function ClientLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+  const pathname = usePathname();
+  const isOnlyLang = pathname === appUrls.LANG.toLowerCase();
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <CookieProviderForLocalStorage>
-          {/* <CookieProviderToSetPreferrenceToCookie /> */}
-          <main className="px-6">
-            <Header />
-            {children}
+    <ReduxPersistProvider>
+      <CookieProviderForLocalStorage>
+        {/* <CookieProviderToSetPreferrenceToCookie /> */}
+        <FontWrapperRedux>
+          <main className={cn("px-6 pt-4", isOnlyLang ? "h-svh overflow-y-auto custom-scrollbar": "")}>
+            <PageHeader />
+            <section className="w-full mt-4">{children}</section>
           </main>
-        </CookieProviderForLocalStorage>
-      </PersistGate>
-    </Provider>
+        </FontWrapperRedux>
+      </CookieProviderForLocalStorage>
+    </ReduxPersistProvider>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import { NRCButton, NRDrawer } from "../ui/no-redux";
 import { RiPaintFill } from "react-icons/ri";
 import { editorThemes } from "@/constants/preference-constants";
@@ -14,6 +14,7 @@ import { getFontLabel } from "@/helper/font-style";
 import { WebsiteFontsKey } from "@/@types/font";
 import { useTheme } from "@/context/ThemeContext";
 import { useFont } from "@/context/FontProvider";
+import { cn } from "@/lib/utils";
 
 export type ThemeOptions = {
   value: string;
@@ -43,7 +44,7 @@ export const ThemePalette = () => {
           variant="transparent"
           hoverColor={theme.activeColor}
           hoverBgColor={`${theme.activeColor}20`}
-          className="aspect-square! rounded-full!"
+          className="aspect-square! rounded-full! p-2!"
         >
           <RiPaintFill size={17} />
         </NRCButton>
@@ -68,7 +69,7 @@ export const ThemePalette = () => {
             // hoverBgColor={`${x.activeColor}20`}
             hoverColor={`${x.activeColor}`}
             style={{
-              background:
+              backgroundColor:
                 themeName === x.value
                   ? `${x.activeColor}80`
                   : `${x.activeColor}40`,
@@ -99,6 +100,8 @@ export const FontPalette = () => {
     font: websiteFonts[key as WebsiteFontsKey],
   }));
 
+  // console.log(fontOptions);
+
   return (
     <NRDrawer
       title="Font Palette"
@@ -108,7 +111,7 @@ export const FontPalette = () => {
           variant="transparent"
           hoverColor={theme.activeColor}
           hoverBgColor={`${theme.activeColor}20`}
-          className="aspect-square! rounded-full! group"
+          className="aspect-square! rounded-full! group p-2!"
         >
           <p className="text-base underline underline-offset-6 italic">Aa</p>
         </NRCButton>
@@ -133,7 +136,8 @@ export const FontPalette = () => {
             // hoverBgColor={`${x.activeColor}20`}
             // hoverColor={`${x.activeColor}`}
             style={{
-              background: fontName === x.value ? `${theme.activeColor}30` : "",
+              backgroundColor:
+                fontName === x.value ? `${theme.activeColor}30` : "",
               // borderColor:
               //   cookieTheme === x.value ? `${x.activeColor}80` : "transparent",
               lineHeight: "16px",
@@ -141,10 +145,15 @@ export const FontPalette = () => {
             }}
             onClick={() => updateFont(x.value)}
           >
-            <span className="absolute -left-2 top-2 text-[7rem] tracking-tighter rotate-15 opacity-10 group-hover:opacity-30 transition-all duration-200 ease-linear">
+            <span
+              className={cn(
+                "absolute -left-2 top-2 text-[7rem] tracking-tighter rotate-15 opacity-10 group-hover:opacity-30 transition-all duration-200 ease-linear",
+                x?.font?.className
+              )}
+            >
               Aa
             </span>
-            {x.label}
+            <span className={x?.font?.className}>{x.label}</span>
           </NRCButton>
         ))}
       </div>

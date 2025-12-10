@@ -9,7 +9,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN yarn build  # This will catch build errors
+RUN yarn build  
 
 # Development stage
 FROM node:20-slim AS development

@@ -78,3 +78,28 @@ body {
     backdrop-filter: blur(25px) !important;
     overflow: hidden;
 }
+
+.ant-tooltip {
+  backdrop-filter: blur(20px);
+}
+
+/* Line Height reducing from Toast */
+[data-title] {
+  line-height: 0.9rem !important;
+}
+
+/* Antd Dropdown CSS */
+.ant-dropdown-menu {
+  background: transparent !important;
+  padding: 0px !important;
+}
+
+.ant-dropdown-menu-item {
+  padding: 0px !important;
+}
+
+/* Antd Popover CSS */
+.ant-popover-inner {
+  background-color: transparent !important;
+}
+
