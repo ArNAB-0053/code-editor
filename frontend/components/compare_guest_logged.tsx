@@ -62,7 +62,7 @@ const Compare = () => {
           ))}
         </div>
 
-        <Link href={appUrls.PYTHON} className="mt-8 flex items-center justify-center">
+        <Link href={appUrls.LANG} className="mt-8 flex items-center justify-center">
           <NRCButton
             variant="default"
             // hoverColor={theme.activeColor}

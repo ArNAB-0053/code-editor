@@ -122,7 +122,7 @@ const Hero = () => {
 
       <div className="flex items-center max-sm:flex-col gap-4 mt-10">
         {/* GUEST */}
-        <Link href={appUrls.PYTHON} className="rounded-xl">
+        <Link href={appUrls.LANG} className="rounded-xl">
           <NRCButton
             // type="primary"
             // variant="default"

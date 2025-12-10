@@ -49,6 +49,7 @@ export interface IProfileDetails
   name: string;
   userId: string;
   nameObj: NameObjType;
+  username: string;
 }
 
 export type NameObjType = {

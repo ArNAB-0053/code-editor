@@ -1,7 +1,4 @@
 "use client";
-import { NRCAvatar, NRCButton } from "../../ui/no-redux";
-import { useMyProfile } from "@/services/profile";
-import { LuLoader } from "react-icons/lu";
 import { fallbackAvatar, fallbackProfileDetails } from "@/constants/base.const";
 import { AvatarTemplate } from "./avatar-template";
 import { spaceGrotesk, websiteFonts } from "@/fonts";
@@ -14,8 +11,9 @@ import {
 } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
-import { selectedUserEmail, selectedUserName } from "@/redux/slices/userSlice";
+import { selectedUserEmail, selectedUserName, selectedUserUsername } from "@/redux/slices/userSlice";
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
+import { CAvatar, CButton } from "@/components/ui/custom";
 
 export const AvatarDropdown = () => {
   // const { data: profileDetails, isLoading } = useMyProfile();
@@ -23,9 +21,10 @@ export const AvatarDropdown = () => {
   const websiteFont = useSelector(selectWebsiteFont);
   const nameObj = useSelector(selectedUserName);
   const email = useSelector(selectedUserEmail);
+  const username = useSelector(selectedUserUsername)
 
   const fullname = getFullnameFromNameObj(nameObj);
-  console.log("nameObj", fullname);
+  // console.log("nameObj", fullname);
 
   const theme = themeConfig(editorTheme);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
@@ -35,7 +34,7 @@ export const AvatarDropdown = () => {
       <AvatarTemplate
         dropdownContent={
           <a onClick={(e) => e.preventDefault()}>
-            <NRCAvatar
+            <CAvatar
               name={nameObj || fallbackAvatar}
               className="border-1.5!"
               characters={1}
@@ -47,7 +46,7 @@ export const AvatarDropdown = () => {
           </a>
         }
         avatar={
-          <NRCAvatar
+          <CAvatar
             name={nameObj || fallbackAvatar}
             variant="default"
             characters={1}
@@ -59,7 +58,7 @@ export const AvatarDropdown = () => {
           />
         }
         logoutButton={
-          <NRCButton
+          <CButton
             type="none"
             className={cn(
               "flex! items-center justify-center gap-x-2 text-[#ff4d4f]! bg-[#ff4d4f]/20! hover:opacity-70 transition-all ease-linear duration-100 font-semibold",
@@ -71,10 +70,11 @@ export const AvatarDropdown = () => {
           >
             <FiLogOut />
             Log out
-          </NRCButton>
+          </CButton>
         }
         name={fullname || fallbackProfileDetails?.name}
         email={email || fallbackProfileDetails.email}
+        username={username || fallbackProfileDetails?.username}
         theme={theme}
         font={font}
       />

@@ -24,7 +24,6 @@ const BaseCAvatar = ({
       nameValue !== null &&
       !Array.isArray(nameValue)
     ) {
-      console.log(nameValue)
       const fn = nameValue?.firstName?? " ";
       const mn = nameValue?.middleName?? " ";
       const ln = nameValue?.lastName?? " ";
@@ -43,7 +42,7 @@ const BaseCAvatar = ({
     <div
       className={cn(
         "border-2 rounded-full flex items-center justify-center w-9 h-9 text-xl font-semibold uppercase",
-        websiteFonts[font as WebsiteFontsKey].className,
+        websiteFonts[font as WebsiteFontsKey]?.className,
         className
       )}
       style={{

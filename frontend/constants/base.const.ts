@@ -9,5 +9,6 @@ export const fallbackProfileDetails = {
   email: "guest@example.com",
   nameObj: fallbackAvatar,
   userId: "",
-  password: ""
+  password: "",
+  username: "guest",
 }

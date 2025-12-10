@@ -75,6 +75,7 @@ export const NRAvatarDropdown = () => {
         }
         name={profileDetails?.name || fallbackProfileDetails?.name}
         email={profileDetails?.email || fallbackProfileDetails.email}
+        username={profileDetails?.username || fallbackProfileDetails.username}
         theme={theme}
         font={font}
       />

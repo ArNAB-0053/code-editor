@@ -1,9 +1,12 @@
-import React from 'react'
+import Lang from "@/components/lang";
+import React from "react";
 
 const page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div className="pb-20 mt-10">
+      <Lang />
+    </div>
+  );
+};
 
-export default page
+export default page;

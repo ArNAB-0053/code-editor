@@ -9,6 +9,7 @@ const BackgroundProvider = ({ children }: { children: React.ReactNode }) => {
       style={{
         backgroundColor: theme.background,
       }}
+      className="min-h-svh"
     >
       {children}
     </div>

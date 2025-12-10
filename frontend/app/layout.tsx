@@ -9,9 +9,10 @@ import { FontProvider } from "@/context/FontProvider";
 import { defaultColorConfig } from "@/config/default-colors.config";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
-import { spaceGrotesk } from "@/fonts";
+import { spaceGrotesk, websiteFonts } from "@/fonts";
 import CQueryClientProvider from "@/providers/queryClientProvider";
 import BackgroundProvider from "@/providers/bgProvider";
+import { WebsiteFontsKey } from "@/@types/font";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,22 +41,25 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const theme = await getCookiesServer("theme");
-  const font = await getCookiesServer("font");
+  const fontName = await getCookiesServer("font");
   // console.log(" SERVER ---> ", theme, font);
+
+  const fontClass = websiteFonts[fontName as WebsiteFontsKey]
+
   return (
     <html lang="en" data-theme={theme} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden h-screen`}
+        className={`${fontClass?.className} ${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden h-screen`}
         style={{ background: "black" }}
       >
         <CQueryClientProvider>
           <ThemeProvider initialTheme={theme!}>
-            <FontProvider initialFont={font!}>
+            <FontProvider initialFont={fontName!}>
               <BackgroundProvider>
                 <CookieProvider>
                   {children}
                   <Toaster
-                    position="top-right"
+                    position="bottom-right"
                     toastOptions={{
                       className: cn(
                         "px-4! py-2! text-[12px]! backdrop-blur-[4px] max-w-[400px]! w-fit! ",

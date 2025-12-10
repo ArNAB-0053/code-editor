@@ -5,12 +5,13 @@ import { appUrls } from "@/config/navigation.config";
 import { FaUserCircle } from "react-icons/fa";
 import { MdOutlineLockReset } from "react-icons/md";
 import { cn } from "@/lib/utils";
-import { spaceGrotesk } from "@/fonts";
+import { jetBrainsMono, spaceGrotesk } from "@/fonts";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
 import { ReactNode } from "react";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { fallbackProfileDetails } from "@/constants/base.const";
+import { PiUserFocusBold, PiUserFocusLight } from "react-icons/pi";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
@@ -30,15 +31,17 @@ export const AvatarTemplate = ({
   name,
   email,
   theme,
-  font
+  font,
+  username,
 }: {
   dropdownContent: ReactNode;
   avatar: ReactNode;
   logoutButton: ReactNode;
-  name: string,
-  email: string,
-  theme: ThemeTypes,
-  font: NextFont,
+  name: string;
+  email: string;
+  username: string;
+  theme: ThemeTypes;
+  font: NextFont;
 }) => {
   const dropdownElement = () => (
     <div
@@ -70,10 +73,32 @@ export const AvatarTemplate = ({
         <span
           className={cn(
             "flex flex-col justify-center items-center mt-3 ",
-            font.className
+            font?.className
           )}
           style={{ color: theme.textColor }}
         >
+          <p
+            className={cn(
+              "text-xs px-2 pt-0 relative flex items-center justify-start gap-x-1 rounded-full",
+              jetBrainsMono.className
+            )}
+            style={{
+              background: `${theme.activeColor}50`,
+              color: theme.textColor,
+            }}
+          >
+            {/* <PiUserFocusLight size={16} color={theme?.activeColor} /> */}
+            {username || fallbackProfileDetails?.username}
+            {/* <div
+              className="absolute left-0 bottom-0 w-full h-0.5 "
+              style={{
+                background: `${theme.activeColor}50`,
+                // background: `linear-gradient(to right, ${theme.activeColor}80 20%, ${theme.activeColor}30 40%, transparent 100%  )`,
+                // borderLeftColor: theme.activeColor,
+                // borderRightColor: theme.activeColor
+              }}
+            /> */}
+          </p>
           <h3 className="font-semibold text-base">
             {name || fallbackProfileDetails?.name}
           </h3>

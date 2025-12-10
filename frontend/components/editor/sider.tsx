@@ -1,15 +1,13 @@
 import { themeConfig } from "@/config/themeConfig";
-import { getDataUrls } from "@/helper/dataUrls";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { ThemeTypes } from "@/@types/theme";
 import { Tooltip } from "antd";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { appUrls } from "@/config/navigation.config";
 import { useDispatch } from "react-redux";
 import { setLangRedux } from "@/redux/slices/editorSlice";
+import { langs } from "@/constants/lang";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   &:hover {
@@ -23,24 +21,6 @@ const Sider = ({ p_lang }: { p_lang: string }) => {
   const theme = themeConfig(editorTheme);
 
   const dispatch = useDispatch();
-
-  const languageLogo = (lang: string) => {
-    const uri = getDataUrls(lang);
-    return (
-      <img
-        src={uri}
-        alt={lang}
-        width={110}
-        height={110}
-        className="rounded-sm grayscale-100 brightness-[400]"
-      />
-    );
-  };
-
-  const langs = [
-    { link: "python", label: "Python", logo: languageLogo("python") },
-    { link: "javascript", label: "JavaScript", logo: languageLogo("js") },
-  ];
 
   return (
     <div
