@@ -7,10 +7,13 @@ import {
   ReactNode,
 } from "react";
 import { setCookies } from "@/helper/cookies";
+import { themeConfig } from "@/config/themeConfig";
+import { ThemeTypes } from "@/@types/theme";
 
 interface ThemeContextType {
   themeName: string;
   updateTheme: (newTheme: string) => void;
+  theme: ThemeTypes;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -43,8 +46,10 @@ export function ThemeProvider({
     setCookies("theme", 365, "lax", newTheme);
   };
 
+  const theme = themeConfig(themeName)
+
   return (
-    <ThemeContext.Provider value={{ themeName, updateTheme }}>
+    <ThemeContext.Provider value={{ themeName, updateTheme, theme }}>
       {children}
     </ThemeContext.Provider>
   );

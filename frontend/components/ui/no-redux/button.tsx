@@ -15,6 +15,7 @@ type CButtonProps = {
   variant?: "transparent" | "sameBg" | "bordered" | "default";
   hoverColor?: string | null;
   hoverBgColor?: string | null;
+  disabled?: boolean;
 };
 
 const NRCButton = ({
@@ -27,13 +28,14 @@ const NRCButton = ({
   hoverColor = null,
   hoverBgColor = null,
   variant = "default",
+  disabled = false
 }: CButtonProps) => {
   const { themeName } = useTheme();
   const theme = themeConfig(themeName)
 
   const {font} = useFont()
 
-  console.log("Theme from btn => ", theme);
+  // console.log("Theme from btn => ", theme);
   return (
     <BaseCButton
       theme={theme}
@@ -45,6 +47,7 @@ const NRCButton = ({
       type={type}
       variant={variant}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </BaseCButton>

@@ -1,9 +1,51 @@
 import { themeConfig } from "@/config/themeConfig";
-import { CopyButton, RunButton, TransparentButton } from "../header-buttons";
-import { HeaderProps } from "@/@types/_base";
+import { CopyButton, RunButton, TransparentButton } from "./header-buttons";
+import { useRunCode, useUpdateOutput } from "@/services/code";
+import { useSelector } from "react-redux";
+import { HeaderProps } from "@/@types";
+import {
+  selectedCode,
+  selectedEditorId,
+  setOutputRedux,
+} from "@/redux/slices/editorSlice";
+import { useDispatch } from "react-redux";
+import { useRef, useState } from "react";
+import { IoMdShare } from "react-icons/io";
+import { AButton } from "../ui/antd";
+import { cn } from "@/lib/utils";
+import { createGlobalStyle } from "styled-components";
+import { ThemeTypes } from "@/@types/theme";
+import ShareModal from "../modals/share";
+
+const GlobalStyles = createGlobalStyle<{ $theme: ThemeTypes }>`
+  .ant-switch {
+    background: ${({ $theme }) => $theme?.border20} !important;
+  }
+  .ant-switch-checked {
+    background: ${({ $theme }) => $theme?.activeColor} !important;
+  }
+  .ant-switch-handle::before {
+    background: rgba(255,255,255,0.50) !important;
+  }
+`;
 
 const EditorHeaderComponent = (props: HeaderProps) => {
+  const dispatch = useDispatch();
+
+  const [open, setOpen] = useState(false);
+  const currentCode = useSelector(selectedCode);
+
+  // console.log("Curr Code", currentCode);
+
   const theme = themeConfig(props.editorTheme);
+
+  const { mutateAsync: runCode } = useRunCode();
+  const { mutateAsync: updateOutput } = useUpdateOutput();
+
+  const editorId = useSelector(selectedEditorId);
+  const lastOpt = useRef("");
+
+  // console.log(editorId)
 
   // Ouput Header
   if (props.isOutput) {
@@ -22,20 +64,32 @@ const EditorHeaderComponent = (props: HeaderProps) => {
     );
   }
 
-  const runCode = async () => {
+  const handleRunCode = async () => {
     props.setLoading(true);
-    props.setOutput("");
     props.setError("");
 
-    try {
-      const res = await fetch("http://localhost:5000/api/CodeRunner", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: props.code, lang: props.p_lang }),
-      });
+    console.log(currentCode)
+    console.log(props.p_lang)
 
-      const json = await res.json();
-      props.setOutput(json.output ?? "");
+    try {
+      const res = await runCode({
+        code: currentCode,
+        lang: props.p_lang,
+      });
+      // console.log(res);
+      const output = res.output ?? "";
+      if (lastOpt.current !== output) {
+        updateOutput(
+          { editorId, output },
+          {
+            onSuccess: (res) => {
+              // console.log("Updated", res);
+              lastOpt.current = output;
+              dispatch(setOutputRedux(output));
+            },
+          }
+        );
+      }
     } catch (err: any) {
       props.setError(err.message ?? String(err));
     } finally {
@@ -44,12 +98,12 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   };
 
   function clearOutput() {
-    props.setOutput("");
     props.setError("");
+    dispatch(setOutputRedux(""));
   }
 
   const copyCode = () => {
-    navigator.clipboard.writeText(props.code).then(() => {
+    navigator.clipboard.writeText(currentCode).then(() => {
       props.setIsCopied(true);
     });
   };
@@ -57,8 +111,10 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   return (
     // Editor Header
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
-      <span className="font-medium text-center flex items-center justify-center w-[100px]">
+      <GlobalStyles $theme={theme} />
+      <span className="font-medium text-center flex items-center justify-center gap-x-2 w-[100px]">
         main.py
+        {/* <IoMdCloudDone className="opacity-40 size-3.5" /> */}
       </span>
 
       <div
@@ -69,15 +125,29 @@ const EditorHeaderComponent = (props: HeaderProps) => {
           borderLeft: theme?.border10,
         }}
       >
-        <TransparentButton
+        {/* <TransparentButton
           onClick={() => {
-            props.setCode("");
+            dispatch(setCodeRedux(""));
           }}
-        />
+        /> */}
+
+        <AButton
+          onClick={() => setOpen(true)}
+          className={cn(
+            props.isShared && "hidden! opacity-0!",
+            "aspect-square! p-0!"
+          )}
+        >
+          <IoMdShare size={18} />
+        </AButton>
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
-        <RunButton onClick={runCode} loading={props.loading} />
+        <RunButton onClick={handleRunCode} loading={props.loading} />
       </div>
+
+      {!props.isShared && (
+        <ShareModal theme={theme} setOpen={setOpen} open={open} />
+      )}
     </div>
   );
 };

@@ -9,7 +9,6 @@ export interface preferenceState {
   editorFont: EditorFontKey;
   editorFontSize: number;
   webSiteFont: string;
-  guest: boolean;
 }
 
 const initialConfig: preferenceState = {
@@ -17,7 +16,6 @@ const initialConfig: preferenceState = {
   editorFont: "cascadia" as EditorFontKey,
   editorFontSize: 14,
   webSiteFont: Cookies.get("font") || "prompt",
-  guest: true,
 };
 
 export const prefercenceSlice = createSlice({
@@ -38,9 +36,6 @@ export const prefercenceSlice = createSlice({
       state.webSiteFont = action.payload;
       setCookies("font", 365, "lax", action.payload);
     },
-    setGuest: (state, action: PayloadAction<boolean>) => {
-      state.guest = action.payload;
-    },
   },
 });
 
@@ -49,7 +44,6 @@ export const {
   setEditorFontSize,
   setEditorTheme,
   setWebsiteFont,
-  setGuest,
 } = prefercenceSlice.actions;
 
 export const selectEditorFont = (state: RootState) =>
@@ -60,6 +54,5 @@ export const selectEditorTheme = (state: RootState) =>
   state.preferences.editorTheme;
 export const selectWebsiteFont = (state: RootState) =>
   state.preferences.webSiteFont;
-export const selectGuest = (state: RootState) => state.preferences.guest;
 
 export default prefercenceSlice.reducer;

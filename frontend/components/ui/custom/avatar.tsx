@@ -1,10 +1,37 @@
-import { BaseCAvatar } from '../_Base'
-import { IBaseCAvatarProps } from '@/@types/_base'
+"use client";
+import { BaseCAvatar } from "../_Base";
+import { themeConfig } from "@/config/themeConfig";
+import { IBaseStylingProps, NameObjType } from "@/@types/_base";
+import { WebsiteFontsKey } from "@/@types/font";
+import { selectEditorTheme, selectWebsiteFont } from "@/redux/slices/preferenceSlice";
+import { useSelector } from "react-redux";
 
-const CAvatar = ({name = "Guest", theme}: IBaseCAvatarProps) => {
-  return (
-    <BaseCAvatar name={name} theme={theme} />
-  )
+export interface CAvatarProps extends IBaseStylingProps {
+  variant?: "transparent" | "default" | "noBorder" | "none";
+  name: NameObjType;
+  characters?: number;
 }
 
-export default CAvatar
+export const CAvatar = ({
+  name,
+  className,
+  style,
+  variant = "default",
+  characters,
+}: CAvatarProps) => {
+   const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
+  const websiteFont = useSelector(selectWebsiteFont);
+  
+  return (
+    <BaseCAvatar
+      font={websiteFont as WebsiteFontsKey}
+      name={name}
+      theme={theme}
+      className={className}
+      style={style}
+      variant={variant}
+      characters={characters}
+    />
+  );
+};

@@ -13,11 +13,30 @@ import {
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import EditorHeaderComponent from "./header";
-import Sider from "../sider";
+import Sider from "./sider";
 import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
+import { useAutoSaveCode } from "@/services/code";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useDispatch } from "react-redux";
+import {
+  selectedCode,
+  selectedEditorId,
+  selectedLang,
+  selectedOutput,
+  setCodeRedux,
+  setEditorId,
+  setLangRedux,
+} from "@/redux/slices/editorSlice";
+import { toast } from "sonner";
+import { LuLoader } from "react-icons/lu";
+import { AModal } from "../ui/antd";
+import Link from "next/link";
+import { appUrls } from "@/config/navigation.config";
+import { messagesConfig } from "@/config/messages.config";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -30,24 +49,84 @@ const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   }
 `;
 
-export default function EditorComponent({ p_lang }: { p_lang: string }) {
-  const defaultCode = getDefaultCode(p_lang);
-  const [code, setCode] = useState(defaultCode);
-  const [output, setOutput] = useState("");
+export default function EditorComponent({
+  p_lang,
+  isShared = false,
+}: {
+  p_lang: string;
+  isShared?: boolean;
+}) {
+  // const defaultCode = getDefaultCode(p_lang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const lang = useSelector(selectedLang);
+  // const [sharingDetails, setSharingDetails] = useState(null);
+
+  // console.log("___Editor___ (defaultCode)", defaultCode)
+
+  const currentCode = useSelector(selectedCode);
+  const currentOutput = useSelector(selectedOutput);
+
+  const dispatch = useDispatch();
 
   const editorFont = useSelector(selectEditorFont);
   const editorFontSize = useSelector(selectEditorFontSize);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
+  const userId = useSelector(selectedUserId);
+  const editorId = useSelector(selectedEditorId);
+
+  const autoSaveCode = useAutoSaveCode();
 
   const theme = themeConfig(editorTheme);
 
   // refs for monaco editor
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
+
+  const debouncedCode = useDebounce(currentCode, 1000);
+  const lastSaveRef = useRef("");
+  // const isAutoSaving = useRef(false);
+
+  // useEffect(() => {
+  //   if (currentCode !== debouncedCode) {
+  //     isAutoSaving.current = true;
+  //     toast.loading("Saving…", { id: "autoSave" });
+  //   }
+  // }, [currentCode, debouncedCode]);
+
+  useEffect(() => {
+    if (isShared || !userId) return;
+    if (debouncedCode.trim() === lastSaveRef.current.trim()) {
+      // toast.dismiss("autoSave");
+      return;
+    }
+
+    toast.loading(messagesConfig.AUTOSAVE.LOADING, { id: "autoSave" });
+
+    autoSaveCode.mutate(
+      {
+        userId: userId,
+        lang,
+        code: debouncedCode,
+      },
+      {
+        onSuccess: (res) => {
+          lastSaveRef.current = debouncedCode;
+          dispatch(setLangRedux(res?.lang));
+          dispatch(setCodeRedux(res?.code));
+          dispatch(setEditorId(res?.id));
+          // isAutoSaving.current = false;
+          toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
+        },
+        onError: (e) => {
+          // isAutoSaving.current = false;
+          toast.error(messagesConfig.AUTOSAVE.FAILED, { id: "autoSave" });
+        },
+      }
+    );
+  }, [isShared, debouncedCode, userId, lang, dispatch]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -72,8 +151,6 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
       },
     });
   };
-
-  useEffect(() => {}, [editorTheme]);
 
   const handleOnMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
@@ -105,17 +182,20 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
     }
   }, [editorTheme]);
 
+  // Generate Shared Link
+
+  // console.log(sharingDetails)
+
   return (
     <div
       style={{
         fontFamily: "Inter, Roboto, system-ui",
         height: "calc(100vh - 25px)",
       }}
-      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0"
+      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
-      <Sider />
+      <Sider p_lang={p_lang} />
 
-      {/* {JSON.stringify(editorFonts[editorFont])} */}
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
@@ -139,24 +219,26 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
               <EditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={false}
-                code={code}
-                setCode={setCode}
                 p_lang={p_lang}
                 isCopied={isCopied}
                 setIsCopied={setIsCopied}
-                setOutput={setOutput}
                 loading={loading}
                 setLoading={setLoading}
                 setError={setError}
+                isShared={isShared}
               />
               <div className="pt-2">
                 <Editor
-                  value={code}
-                  onChange={(value) => setCode(value ?? "")}
+                  key={lang}
+                  value={currentCode}
+                  onChange={(value) => {
+                    dispatch(setCodeRedux(value ?? ""));
+                  }}
                   width="100%"
                   height="calc(95vh - 95px)"
                   defaultLanguage={p_lang}
-                  defaultValue={defaultCode}
+                  language={lang}
+                  // defaultValue={defaultCode}
                   theme="app-dark"
                   onMount={handleOnMount}
                   beforeMount={handleBeforeMount}
@@ -172,7 +254,7 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
           </Splitter.Panel>
           <Splitter.Panel defaultSize="40%" min="20%">
             <div
-              className={`min-h-[95vh] overflow-y-auto border-r ${
+              className={`min-h-[95vh] overflow-y-auto border-r relative ${
                 websiteFonts[websiteFont as WebsiteFontsKey]?.className
               }`}
               style={{
@@ -185,7 +267,6 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
               <EditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={true}
-                setOutput={setOutput}
                 loading={loading}
                 setError={setError}
               />
@@ -193,9 +274,17 @@ export default function EditorComponent({ p_lang }: { p_lang: string }) {
                 {error ? (
                   <span style={{ color: "#ffb4b4" }}>{error}</span>
                 ) : (
-                  output ||
+                  currentOutput ||
                   (loading ? (
-                    "Running..."
+                    <div
+                      className="absolute top-0 left-0 w-full h-full flex items-center justify-center backdrop-blur-[2px]"
+                      style={{
+                        backgroundColor: theme.border10,
+                        color: theme.textColor,
+                      }}
+                    >
+                      <LuLoader className="animate-spin" size={24} />
+                    </div>
                   ) : (
                     <p className="opacity-60">No output</p>
                   ))

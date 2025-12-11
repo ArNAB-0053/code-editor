@@ -1,19 +1,32 @@
 import { EditorFontsMap, WebsiteFontsMap } from "@/@types/font";
 import {
+  Amarante,
+  Asimovian,
   Cascadia_Code,
+  Cookie,
   Fira_Code,
+  Geo,
   Inconsolata,
   Inter,
   JetBrains_Mono,
+  Karla,
   Lato,
   Lexend,
   Montserrat,
   Mulish,
   Nunito,
   Open_Sans,
+  Oswald,
   Outfit,
+  Play,
+  Playwrite_CU,
+  Playwrite_IN,
+  Playwrite_US_Modern,
+  Playwrite_US_Trad,
   Poppins,
   Prompt,
+  Quicksand,
+  Raleway,
   Roboto,
   Roboto_Mono,
   Rubik,
@@ -25,11 +38,11 @@ import {
 } from "next/font/google";
 
 // Editor fonts -> used inside editor like fontFamily: editorFonts[editorfont]
-export const openSans = Open_Sans({ subsets: ["latin"] });
-export const cascadiaCode = Cascadia_Code({ subsets: ["latin"] });
+export const openSans = Open_Sans({ subsets: ["latin"], });
+export const cascadia = Cascadia_Code({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 export const firaCode = Fira_Code({ subsets: ["latin"] });
 export const inconsolata = Inconsolata({ subsets: ["latin"] });
-export const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
+export const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 export const sourceCodePro = Source_Code_Pro({ subsets: ["latin"] });
 export const robotoMono = Roboto_Mono({ subsets: ["latin"] });
 
@@ -58,8 +71,13 @@ export const mulish = Mulish({ subsets: ["latin"],  weight: ["400", "500", "600"
 export const outfit = Outfit({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
 export const lexend = Lexend({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
 export const urbanist = Urbanist({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
-export const spaceGrotesk = Space_Grotesk({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
-export const yanone = Yanone_Kaffeesatz({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+export const raleway = Raleway({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const quicksand = Quicksand({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const karla = Karla({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const play = Play({ subsets: ["latin"], weight: ["400", "700"] });
+export const amarante = Amarante({weight: ["400"] });
+export const geo = Geo({weight: ["400"] });
+export const asimovian = Asimovian({weight: ["400"] });
 
 export const websiteFonts: WebsiteFontsMap = {
   prompt,
@@ -76,4 +94,19 @@ export const websiteFonts: WebsiteFontsMap = {
   outfit,
   lexend,
   urbanist,
+  raleway,
+  quicksand,
+  play,
+  karla,
+  // amarante,
+  // geo,
+  // asimovian,
 };
+
+// Font for styling only
+export const spaceGrotesk = Space_Grotesk({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
+export const yanone = Yanone_Kaffeesatz({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+export const oswald = Oswald({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+export const play_cu = Playwrite_CU({ weight: ["400"] });
+export const play_us_modern = Playwrite_US_Modern({ weight: ["400"] });
+export const cookie = Cookie({weight: ["400"] });
