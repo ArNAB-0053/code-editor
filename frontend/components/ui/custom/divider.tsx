@@ -1,5 +1,8 @@
 "use client";
+import BaseCDivider from "../_Base/CDivider";
+import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
+import { useSelector } from "react-redux";
 export interface CDividerType {
   style?: any;
   className?: string;
@@ -11,28 +14,10 @@ const CDivider = ({
   direction = "vertical",
   className = "",
 }: CDividerType) => {
-  const theme = themeConfig();
-  if (direction === "horizontal") {
-    return (
-      <div
-        className={`w-px mx-3 ${className}`}
-        style={{
-          background: theme.border10,
-          height: "100%",
-          ...style,
-        }}
-      />
-    );
-  }
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
   return (
-    <div
-      style={{
-        background: theme.border10,
-        width: "100%",
-        ...style,
-      }}
-      className={`h-px my-3 place-self-center ${className}`}
-    />
+    <BaseCDivider style={style} className={className} direction={direction} theme={theme} />
   );
 };
 

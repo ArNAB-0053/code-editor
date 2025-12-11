@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { ThemeTypes } from "@/@types/theme";
+import { cn } from "@/lib/utils";
 
 export type BaseCButtonProps = {
   theme: ThemeTypes;
@@ -13,6 +14,7 @@ export type BaseCButtonProps = {
   variant?: "transparent" | "sameBg" | "bordered" | "default";
   hoverColor?: string | null;
   hoverBgColor?: string | null;
+  disabled: boolean;
 };
 
 const BaseCButton = ({
@@ -26,6 +28,7 @@ const BaseCButton = ({
   hoverColor = null,
   hoverBgColor = null,
   variant = "default",
+  disabled = false,
 }: BaseCButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -53,8 +56,9 @@ const BaseCButton = ({
       break;
 
     case "danger":
-      color = "#ff4d4f";
+      color = "#fff";
       borderColor = "#ff4d4f";
+      backgroundColor = "#ff4d4f";
       break;
 
     case "text":
@@ -80,16 +84,21 @@ const BaseCButton = ({
     color = theme.activeColor;
   }
 
+  const userBg = style.backgroundColor ?? null;
+  const finalBaseBg = userBg ?? backgroundColor;
+
   const buttonStyles: React.CSSProperties = {
-    backgroundColor: isHovered && hoverBgColor ? hoverBgColor : backgroundColor,
+    ...style,
+    backgroundColor: isHovered && hoverBgColor ? hoverBgColor : finalBaseBg,
     color: isHovered && hoverColor ? hoverColor : color,
-    border: `1px solid ${borderColor}`,
+    borderColor: borderColor,
+    borderWidth: '1px',
+    borderStyle: "solid",
     padding: "6px 14px",
     borderRadius: "8px",
     cursor: "pointer",
     fontSize: "14px",
     transition: "all 0.15s ease-linear",
-    ...style,
   };
 
   const Component = useDiv ? "div" : "button";
@@ -100,7 +109,8 @@ const BaseCButton = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={buttonStyles}
-      className={type === "link" ? "underline " + className : className}
+      className={cn(type === "link" ? "underline " + className : className, "disabled:cursor-not-allowed!")}
+      disabled={disabled}
     >
       {children}
     </Component>

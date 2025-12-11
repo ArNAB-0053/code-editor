@@ -159,7 +159,7 @@ const PreferenceModal = ({
       className="overflow-hidden"
     >
       <div
-        className="w-full flex mt-7  items-center justify-between "
+        className=" flex mt-7  items-center justify-between "
         style={{ height: MODAL_HEIGHT, width: 'calc(100% + 20px)' }}
       >
         <ADirectoryTree

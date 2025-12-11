@@ -5,7 +5,7 @@ export const settingsData = [
     title: "Appearance",
     key: "appearance",
     children: [
-      { title: "Theme Mode", key: "appearance-theme", parentKey: "appearance" },
+      // { title: "Theme Mode", key: "appearance-theme", parentKey: "appearance" },
       { title: "Font Family", key: "appearance-font", parentKey: "appearance" },
     ],
   },

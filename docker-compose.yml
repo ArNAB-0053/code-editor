@@ -1,15 +1,17 @@
 services:
   backend:
     build:
-      context: ./PythonEditor
+      context: ./backend
       dockerfile: Dockerfile
     container_name: python-editor
     ports:
       - "5000:5000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./PythonEditor/temp:/temp
+      - ./backend/temp:/temp
     depends_on:
+      - mongo
+      - redis
       - python_image_puller
       - node_image_puller
     environment:
@@ -31,6 +33,26 @@ services:
       - NODE_ENV=development
     depends_on:
       - backend
+  
+  mongo:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: always
+    # environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
 
 
   python_image_puller:
@@ -42,3 +64,5 @@ services:
       image: node:20-slim
       container_name: node_image_puller
       entrypoint: ["true"]
+volumes:
+  mongo_data:

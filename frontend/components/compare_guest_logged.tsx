@@ -1,13 +1,12 @@
 "use client";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { websiteFonts } from "@/fonts";
-import { WebsiteFontsKey } from "@/@types/font";
 import NRACard from "./ui/no-redux/card";
 import { NRCButton } from "./ui/no-redux";
 import Link from "next/link";
 import { useFont } from "@/context/FontProvider";
 import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
+import { appUrls } from "@/config/navigation.config";
 
 const Compare = () => {
   const { font } = useFont();
@@ -39,7 +38,7 @@ const Compare = () => {
 
   return (
     <div
-      className="flex justify-center max-md:flex-col gap-8 p-10"
+      className="flex justify-center max-md:flex-col gap-8 mt-10"
       //   style={{ background: theme.outputBackground }}
     >
       {/* Guest Card */}
@@ -63,7 +62,7 @@ const Compare = () => {
           ))}
         </div>
 
-        <Link href="/python" className="mt-8 flex items-center justify-center">
+        <Link href={appUrls.LANG} className="mt-8 flex items-center justify-center">
           <NRCButton
             variant="default"
             // hoverColor={theme.activeColor}
@@ -93,7 +92,7 @@ const Compare = () => {
           ))}
         </div>
 
-        <Link href="/python" className="mt-8 flex items-center justify-center">
+        <Link href={appUrls.REGISTER} className="mt-8 flex items-center justify-center">
           <NRCButton
             type="none"
             variant="bordered"
