@@ -11,6 +11,10 @@ namespace backend.Services.implementations
     {
         private readonly IMongoCollection<AuthModel> _auth;
         private readonly RedisService _redis;
+
+        // -------------------------------
+        //             CONSTRUCTOR
+        // -------------------------------
         public AuthServices(IConfiguration config, RedisService redis)
         {
             _redis = redis;
@@ -32,6 +36,10 @@ namespace backend.Services.implementations
             var usernameIndex = new CreateIndexModel<AuthModel>(Builders<AuthModel>.IndexKeys.Ascending(x => x.Username), new CreateIndexOptions { Unique = true });
             _auth.Indexes.CreateOne(usernameIndex);
         }
+
+        // -------------------------------
+        //             CRUD
+        // -------------------------------
 
         // Create / Sign Up
         public async Task<AuthModel> Create(AuthModel auth)
@@ -67,8 +75,6 @@ namespace backend.Services.implementations
         public List<AuthModel> GetAllUsers() => _auth.Find(x => true).ToList();
 
         public AuthModel GetUserById(string id) => _auth.Find(x => x.Id == id).FirstOrDefault();
-
-
 
         // Sign In
         public AuthModel? SignIn(string identifier, string password)
@@ -119,9 +125,47 @@ namespace backend.Services.implementations
                 throw new Exception("Email already in use");
         }
 
+
+        // -------------------------------
+        //             SEARCH
+        // -------------------------------
+
+        public async Task<List<string>> SearchByUsernameAsync(string prefix)
+        {
+            if(string.IsNullOrWhiteSpace(prefix)) return new List<string>();
+
+            prefix = prefix.ToLower().Trim();
+
+            string cacheKey = $"search:usernames:{prefix}";
+            var cached = await _redis.GetString(cacheKey);
+
+            if (!string.IsNullOrEmpty(cached))
+            {
+                return System.Text.Json.JsonSerializer
+                        .Deserialize<List<string>>(cached)
+                        ?? new List<string>();
+            }
+
+            var filter = Builders<AuthModel>.Filter.Regex(
+                x => x.Username,
+                new MongoDB.Bson.BsonRegularExpression($"^{prefix}", "i")
+            );
+
+            var users = await _auth.Find(filter)
+                                   .Limit(10)
+                                   .Project(x => x.Username)
+                                   .ToListAsync();
+
+            var json = System.Text.Json.JsonSerializer.Serialize(users);
+            await _redis.SetString(cacheKey, json, expirySeconds: 20);
+
+            return users;
+        }
+
         // -------------------------------
         //        VALIDATION CHECK
         // -------------------------------
+
         // Email Regex
         public bool IsValidEmail(string email)
         {

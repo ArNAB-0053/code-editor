@@ -5,9 +5,10 @@ import { ThemeTypes } from "@/@types/theme";
 import { Select, SelectProps } from "antd";
 import styled, { createGlobalStyle } from "styled-components";
 import { IExtraProps } from "@/@types/_base";
+import { cn } from "@/lib/utils";
 
 interface BaseASelectProps extends SelectProps, IExtraProps {
-    themeName?: string;
+  themeName?: string;
 }
 
 const StyledBaseASelect = styled(Select)<{ $theme: ThemeTypes }>`
@@ -64,7 +65,13 @@ const DropdownGlobal = createGlobalStyle<{
   }
 `;
 
-const BaseASelect = ({ children, theme, font, themeName, ...rest }: BaseASelectProps) => {
+const BaseASelect = ({
+  children,
+  theme,
+  font,
+  themeName,
+  ...rest
+}: BaseASelectProps) => {
   const dropdownClass = `a-select-dropdown-${themeName?.replace(
     /[^a-z0-9\-]/gi,
     ""
@@ -91,16 +98,18 @@ const BaseASelect = ({ children, theme, font, themeName, ...rest }: BaseASelectP
               fontWeight: "normal",
               background: theme.editorBackground,
               backdropFilter: "blur(10px)",
-              paddingLeft: "8px"
+              paddingLeft: "8px",
             },
           },
         }}
         classNames={{
           popup: {
-            root: `${dropdownClass} ${websiteFonts[font as WebsiteFontsKey]?.className}`,
+            root: `${dropdownClass} ${
+              websiteFonts[font as WebsiteFontsKey]?.className
+            }`,
           },
         }}
-        className={websiteFonts[font as WebsiteFontsKey]?.className}
+        className={cn(websiteFonts[font as WebsiteFontsKey]?.className)}
         // dropdownStyle={{
         //   fontFamily: websiteFont,
         //   fontWeight: "normal",

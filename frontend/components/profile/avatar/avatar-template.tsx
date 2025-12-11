@@ -189,7 +189,7 @@ export const AvatarTemplate = ({
           ],
         }}
         className="cursor-pointer "
-        rootClassName="my-dropdown backdrop-blur-xl rounded-xl p-0! "
+        rootClassName=" backdrop-blur-xl rounded-xl p-0! "
         overlayStyle={{
           backgroundColor: `${theme.activeColor}20`,
         }}

@@ -2,9 +2,7 @@ import { _VisibilityEnum } from "./_enums";
 
 export interface IShareRequest {
     EditorId: string;
-    SharedByUserId: string,
-    ShareLimit: number;
-    ExpireMinutes: number; 
+    AllowedUsers: string[] | [];
     Visibility: _VisibilityEnum;
 }
 

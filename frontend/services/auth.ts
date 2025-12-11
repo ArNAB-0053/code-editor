@@ -83,3 +83,21 @@ export const useGetEmailAvailability = (email: string) => {
     enabled: !!email,
   });
 };
+
+// ----------------------------------------------------
+//                        SEARCH
+// ----------------------------------------------------
+export const searchByUsername = async (prefix: string) => {
+  const res = await axiosInstance.get(`${URI}/search`, {
+    params: { username: prefix },
+  });
+  return res.data;
+};
+
+export const useSearchByUsername = (prefix: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SEARCH, prefix],
+    queryFn: () => searchByUsername(prefix),
+    enabled: !!prefix,
+  });
+};

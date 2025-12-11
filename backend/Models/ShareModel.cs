@@ -13,7 +13,7 @@ namespace backend.Models
         public string EditorId { get; set; }  
         public string OwnerId { get; set; }   
         public string SharedByUserId { get; set; } 
-        public List<string> SharedToUsers { get; set; } = new();
+        public List<string> AllowedUsers { get; set; } = new();
 
         public string Code { get; set; }
         public string Lang { get; set; }
@@ -21,9 +21,6 @@ namespace backend.Models
         public string Output { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public int ShareLimit { get; set; } = 5; 
-        public int CurrentShareCount { get; set; } = 0;
 
         public DateTime? ExpiresAt { get; set; } 
         public bool IsRevoked { get; set; } = false;
