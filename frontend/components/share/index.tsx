@@ -1,8 +1,7 @@
 "use client";
-import { usesharedData } from "@/services/code";
 import { useParams } from "next/navigation";
 import EditorComponent from "../editor/editor";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   setCodeRedux,
@@ -11,12 +10,13 @@ import {
 } from "@/redux/slices/editorSlice";
 import { useSharedData } from "@/services/share";
 import { useSelector } from "react-redux";
-import { selectedUserId } from "@/redux/slices/userSlice";
+import { selectedUserId, selectedUserUsername } from "@/redux/slices/userSlice";
 
 const ShareEditor = () => {
   const params = useParams();
   const shareId = params?.editorId;
   const userId = useSelector(selectedUserId);
+  const username = useSelector(selectedUserUsername);
 
   console.log(shareId, userId);
 
@@ -24,19 +24,18 @@ const ShareEditor = () => {
 
   const payload = {
     ShareId: String(shareId),
-    CurrentUserId: userId,
+    CurrentUserId: username,
   };
 
   const { data: sharedData, isLoading } = useSharedData(payload);
   console.log(sharedData);
 
   useEffect(() => {
-    if (!sharedData) return;
-    // console.log(sharedData)
+    if (!sharedData || isLoading) return;
+    dispatch(setLangRedux(sharedData?.lang));
     dispatch(setCodeRedux(sharedData?.code));
     dispatch(setOutputRedux(sharedData?.output));
-    dispatch(setLangRedux(sharedData?.lang));
-  }, [sharedData, dispatch]);
+  }, [sharedData, dispatch, isLoading]);
 
   if (isLoading) {
     return <p>Loading</p>;

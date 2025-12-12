@@ -68,6 +68,8 @@ export default function EditorComponent({
   const currentCode = useSelector(selectedCode);
   const currentOutput = useSelector(selectedOutput);
 
+  console.log("currentCode", currentCode)
+
   const dispatch = useDispatch();
 
   const editorFont = useSelector(selectEditorFont);

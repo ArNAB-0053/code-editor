@@ -1,4 +1,4 @@
-import { IAvailability, IAuthReturn, IRegister } from "@/@types/auth";
+import { IAvailability, IAuthReturn, IRegister, ISearchResult } from "@/@types/auth";
 import axiosInstance from "@/lib/axios-instance";
 import { LoginFormType, RegisterFormType } from "@/zod/auth.z";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -87,7 +87,7 @@ export const useGetEmailAvailability = (email: string) => {
 // ----------------------------------------------------
 //                        SEARCH
 // ----------------------------------------------------
-export const searchByUsername = async (prefix: string) => {
+export const searchByUsername = async (prefix: string): Promise<ISearchResult> => {
   const res = await axiosInstance.get(`${URI}/search`, {
     params: { username: prefix },
   });

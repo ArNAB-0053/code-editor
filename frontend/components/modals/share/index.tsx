@@ -100,7 +100,7 @@ const ShareModal = ({
         open={open}
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
-        footer={false}
+        footer={null}
         className="overflow-hidden "
         confirmLoading={isSharingLoading}
       >
@@ -109,7 +109,12 @@ const ShareModal = ({
           className="overflow-y-auto custom-scrollbar pr-5 mt-7"
         >
           {/* LIVE SHARE SECTION */}
-          <div className="mb-4 pb-4 border-b border-gray-300/30">
+          <div
+            className="mb-4 pb-4 border-b "
+            style={{
+              borderColor: theme.border10,
+            }}
+          >
             <h3 className="font-semibold text-base mb-1">Live Share</h3>
             <p className="text-xs opacity-70 mb-3">
               Anyone with this link will always see the latest version of your
@@ -137,13 +142,13 @@ const ShareModal = ({
               current code only, and does NOT update if you make changes later.
             </p>
 
-            <div className={cn(" flex flex-col relative group ")}>
-              <div className={cn("flex justify-center flex-col mb-2")}>
+            <div className=" flex flex-col relative group mt-5 ">
+              <div className="flex justify-center flex-col mb-2">
                 <h3
-                  className="text-xs ml-0.5 mb-1 font-semibold"
+                  className="text-xs  ml-0.5 mb-1 font-semibold"
                   style={{ color: `${theme.disabledTextColor}` }}
                 >
-                  Share to user
+                  Share your code to another
                 </h3>
                 <SearchUsername setSearchItems={setSearchItems} />
               </div>

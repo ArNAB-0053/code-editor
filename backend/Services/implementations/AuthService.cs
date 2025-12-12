@@ -1,9 +1,10 @@
-﻿using backend.config;
-using backend.Models;
-using MongoDB.Driver;
-using BCrypt.Net;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
+using backend.config;
+using backend.Models;
+using BCrypt.Net;
+using MongoDB.Driver;
+using static backend.DTO.Auth;
 
 namespace backend.Services.implementations
 {
@@ -130,9 +131,9 @@ namespace backend.Services.implementations
         //             SEARCH
         // -------------------------------
 
-        public async Task<List<string>> SearchByUsernameAsync(string prefix)
+        public async Task<List<UserSearchResult>> SearchByUsernameAsync(string prefix)
         {
-            if(string.IsNullOrWhiteSpace(prefix)) return new List<string>();
+            if(string.IsNullOrWhiteSpace(prefix)) return new List<UserSearchResult>();
 
             prefix = prefix.ToLower().Trim();
 
@@ -142,8 +143,8 @@ namespace backend.Services.implementations
             if (!string.IsNullOrEmpty(cached))
             {
                 return System.Text.Json.JsonSerializer
-                        .Deserialize<List<string>>(cached)
-                        ?? new List<string>();
+                        .Deserialize<List<UserSearchResult>>(cached)
+                        ?? new List<UserSearchResult>();
             }
 
             var filter = Builders<AuthModel>.Filter.Regex(
@@ -153,7 +154,13 @@ namespace backend.Services.implementations
 
             var users = await _auth.Find(filter)
                                    .Limit(10)
-                                   .Project(x => x.Username)
+                                   .Project(x => new UserSearchResult
+                                   {
+                                       Username = x.Username,
+                                       Email = x.Email,
+                                       Name = x.Name,
+                                       UserId = x.Id!,
+                                   })
                                    .ToListAsync();
 
             var json = System.Text.Json.JsonSerializer.Serialize(users);

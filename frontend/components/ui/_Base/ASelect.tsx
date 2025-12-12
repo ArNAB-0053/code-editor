@@ -33,25 +33,28 @@ const DropdownGlobal = createGlobalStyle<{
   outputColor: string;
   border10: string;
   selectionBg: string;
+  border5: string
 }>`
   .${(p) => p.cls} .ant-select-dropdown {
-    background: ${(p) => p.editorBackground} !important;
+    background: ${(p) => p.outputColor} !important;
     color: ${(p) => p.outputColor} !important;
     border: 1px solid ${(p) => p.border10} !important;
     box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    
   }
 
   .${(p) => p.cls} .ant-select-item-option {
     background: transparent;
     color: ${(p) => p.outputColor} !important;
-    margin-bottom: 4px !important;
-    width: 98%;
+    margin-bottom: 6px !important;
+    width: 100%;
+    border-radius: 12px !important;
   }
 
   .${(p) => p.cls} .ant-select-item-option-active,
   .${(p) => p.cls} .ant-select-item-option-selected {
-    background: ${(p) => p.selectionBg} !important;
-    width: 98%;
+    background: ${(p) => p.border10} !important;
+    width: 100%;
   }
 
   .${(p) => p.cls} .ant-select-item-option-content {
@@ -60,8 +63,8 @@ const DropdownGlobal = createGlobalStyle<{
 
   /* optional: hovered option */
   .${(p) => p.cls} .ant-select-item-option:hover {
-    background: ${(p) => p.selectionBg} !important;
-    width: 98%;
+    background: ${(p) => p.border10} !important;
+    width: 100%;
   }
 `;
 
@@ -85,6 +88,7 @@ const BaseASelect = ({
         outputColor={theme.textColor}
         border10={theme.border10 ?? theme.border15 ?? theme.border}
         selectionBg={theme.editorSelectionBackground}
+        border5={theme.border5}
       />
 
       <StyledBaseASelect
@@ -96,17 +100,19 @@ const BaseASelect = ({
           popup: {
             root: {
               fontWeight: "normal",
-              background: theme.editorBackground,
-              backdropFilter: "blur(10px)",
-              paddingLeft: "8px",
+              background: theme.border5,
+              backdropFilter: "blur(25px)",
+              padding: "8px 8px 4px 8px",
+              borderRadius: '14px',
             },
           },
         }}
         classNames={{
           popup: {
-            root: `${dropdownClass} ${
-              websiteFonts[font as WebsiteFontsKey]?.className
-            }`,
+            root: cn(
+              dropdownClass,
+              websiteFonts[font as WebsiteFontsKey]?.className,
+            ),
           },
         }}
         className={cn(websiteFonts[font as WebsiteFontsKey]?.className)}

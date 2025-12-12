@@ -38,6 +38,7 @@ namespace backend.Services.implementations
                 Code = editorData.Code,
                 Lang = editorData.Lang,
                 Output = editorData.Output,
+                AllowedUsers = req.AllowedUsers
             };
 
             _share.InsertOne(share);
