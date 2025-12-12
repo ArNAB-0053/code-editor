@@ -7,6 +7,9 @@ export const QUERY_KEYS = {
     EMAIL_CHECK: 'email-check',
     SEARCH: 'search',
 
+    SHARE_TO_ME: 'share-to-me',
+    SHARE_BY_ME: 'share-by-me',
+
     CONNECTION: 'connection',
     NOTIFICATION: 'notification',
     CHAT: 'chat',

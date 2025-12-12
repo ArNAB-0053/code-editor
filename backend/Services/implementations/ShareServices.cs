@@ -69,5 +69,11 @@ namespace backend.Services.implementations
 
             return share;
         }
+
+        // GET - all the codes share by UserId
+        public List<ShareModel> GetAllShareByUser(string userId) => _share.Find(x => x.OwnerDetails.UserId == userId).ToList();
+
+        // GET - all the codes share to UserId
+        public List<ShareModel> GetAllShareToUser(string userId) => _share.Find(x => x.AllowedUsers.Contains(userId)).ToList();
     }
 }

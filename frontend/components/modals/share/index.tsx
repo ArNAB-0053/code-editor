@@ -18,7 +18,7 @@ import { SetterFunctionTypesBool } from "@/@types/_base";
 import { IShareDataModel, IShareRequest } from "@/@types/share";
 import { _VisibilityEnum } from "@/@types/_enums";
 import SearchUsername from "./search";
-import { GlobalStyles } from "@/style/customStyledCss";
+import { GlobalStyles } from "@/styles/customStyledCss";
 import DropdownMenu, { ISPUBLIC_CONFIG } from "./dropdown-menu";
 import { IoChevronDownOutline } from "react-icons/io5";
 import {

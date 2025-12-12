@@ -15,6 +15,11 @@ namespace backend.DTO
         public string? CurrentUserId { get; set; }
     }
 
+    public class UserIdRequest
+    {
+        public string UserId { get; set; }
+    }
+
     public class OwnerDetails
     {        
         public string UserId { get; set; }
