@@ -34,14 +34,12 @@ namespace backend.Services.implementations
             {
                 SharedId = Guid.NewGuid().ToString("N").Substring(0, 12), 
                 EditorId = editorData.Id,
-                OwnerId = editorData.UserId,
-                SharedByUserId = req.SharedByUserId,
+                OwnerDetails = req.OwnerDetails,
                 Code = editorData.Code,
                 Lang = editorData.Lang,
                 Output = editorData.Output,
-                ShareLimit = req.ShareLimit,
-                CurrentShareCount = 0,
-                ExpiresAt = req.ExpireMinutes > 0 ? DateTime.UtcNow.AddMinutes(req.ExpireMinutes) : null
+                AllowedUsers = req.AllowedUsers,
+                Visibility = req.Visibility
             };
 
             _share.InsertOne(share);
@@ -60,19 +58,22 @@ namespace backend.Services.implementations
             if (share.IsRevoked)
                 throw new Exception("This share link has been revoked");
 
-            // If expired
-            if (share.ExpiresAt != null && share.ExpiresAt < DateTime.UtcNow)
-                throw new Exception("Share link expired");
-
             if (share.Visibility == ShareVisibility.Private)
             {
                 if (string.IsNullOrEmpty(userId))
                     throw new Exception("Login required to access this private share");
 
-                // TODO: Increate views count
+                if (!share.AllowedUsers.Contains(userId))
+                    throw new Exception("You don't have permission to view this private share");
             }
 
             return share;
         }
+
+        // GET - all the codes share by UserId
+        public List<ShareModel> GetAllShareByUser(string userId) => _share.Find(x => x.OwnerDetails.UserId == userId).ToList();
+
+        // GET - all the codes share to UserId
+        public List<ShareModel> GetAllShareToUser(string userId) => _share.Find(x => x.AllowedUsers.Contains(userId)).ToList();
     }
 }

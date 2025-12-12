@@ -1,4 +1,4 @@
 export enum _VisibilityEnum {
-  Private,
-  Public
+  Public,
+  Private
 }

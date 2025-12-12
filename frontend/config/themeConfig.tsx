@@ -20,7 +20,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#ff79c6",
         modalBg: "#21222c",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
 
         background:"#2b066080",
@@ -54,7 +54,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#c792ea",
         modalBg: "#0b2942",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#011627",
         
@@ -87,7 +87,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#7fdbca",
         modalBg: "#0b2942",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#011627",
         
@@ -120,7 +120,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#56b6c2",
         modalBg: "#282c34",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#282c34",
         
@@ -153,7 +153,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#b589d6",
         modalBg: "#3c3f41",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#2b2b2b",
         
@@ -186,7 +186,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#6cb6ff",
         modalBg: "#1c2128",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#22272e",
         
@@ -219,7 +219,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#4095ef",
         modalBg: "#152337",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#11243d",
         
@@ -252,7 +252,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#0353e9",
         modalBg: "#262626",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#262626",
         
@@ -285,7 +285,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#6366f1",
         modalBg: "#18181b",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#27272a",
         
@@ -319,7 +319,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         hoverColor: "#1591ea",
         modalBg: "#1b294b",
         textColor: '#e5e5e5',
-        disabledTextColor: '#dadada',
+        disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
         background: "#0f172ace",
         

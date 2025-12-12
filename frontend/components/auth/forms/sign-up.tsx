@@ -9,7 +9,7 @@ import {
 } from "@/services/auth";
 import { RegisterFormType, registerSchema } from "@/zod/auth.z";
 import { Formik } from "formik";
-import { FaExternalLinkAlt, FaLock, FaUser } from "react-icons/fa";
+import { FaExternalLinkAlt, FaLock, FaPhone, FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono, spaceGrotesk } from "@/fonts";
@@ -27,6 +27,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { IRegister } from "@/@types/auth";
+import { CAvatar } from "@/components/ui/custom";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -69,14 +70,33 @@ const steps: StepConfig[] = [
     title: "Account Information",
   },
   {
-    fields: ["name.firstname", "name.middlename", "name.lastname"],
+    fields: ["name.firstName", "name.middleName", "name.lastName"],
     title: "Personal Details",
   },
+  // {
+  //   fields: ["initial", "mobile"],
+  //   title: "Personal Details",
+  // },
   {
     fields: ["password", "confirmPassword"],
     title: "Security",
   },
 ];
+
+const OPTIONAL_FIELDS = ["name.middleName"];
+
+const get = (obj: any, path: string) =>
+  path.split(".").reduce((o, i) => (o ? o[i] : undefined), obj);
+
+const isStepValid = (values: any, errors: any, step: number) => {
+  const fields = steps[step].fields;
+  const hasValues = fields.every((path) => {
+    if (OPTIONAL_FIELDS.includes(path)) return true;
+    return Boolean(get(values, path));
+  });
+  const hasNoErrors = fields.every((path) => !get(errors, path));
+  return hasValues && hasNoErrors;
+};
 
 export const SignUpForm = () => {
   const { themeName } = useTheme();
@@ -87,16 +107,6 @@ export const SignUpForm = () => {
   const [check, setCheck] = useState(false);
 
   const { registerUser } = useAuth();
-
-  const get = (obj: any, path: string) =>
-    path.split(".").reduce((o, i) => (o ? o[i] : undefined), obj);
-
-  const isStepValid = (values: any, errors: any, step: number) => {
-    const fields = steps[step].fields;
-    const hasValues = fields.every((path) => get(values, path));
-    const hasNoErrors = fields.every((path) => !get(errors, path));
-    return hasValues && hasNoErrors;
-  };
 
   const goToStep = (newStep: number, values: any, errors: any) => {
     if (newStep > currentStep && !isStepValid(values, errors, currentStep)) {
@@ -123,10 +133,12 @@ export const SignUpForm = () => {
 
   const initialValues = {
     name: {
-      firstname: "",
-      middlename: "",
-      lastname: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
     },
+    // initial: "",
+    // mobile: "",
     email: "",
     username: "",
     password: "",
@@ -186,10 +198,7 @@ export const SignUpForm = () => {
         const isLastStep = currentStep === steps.length - 1;
 
         return (
-          <NRAForm
-            name="sign-up-form"
-            className="px-0! w-full! "
-          >
+          <NRAForm name="sign-up-form" className="px-0! w-full! ">
             <ProgressDotsStyle $theme={theme} />
 
             {/* Progress Dots */}
@@ -310,39 +319,76 @@ export const SignUpForm = () => {
                     <>
                       <FormItemComponent
                         name="firstname"
-                        value={values.name.firstname}
-                        onChange={handleChange("name.firstname")}
+                        value={values.name?.firstName}
+                        onChange={handleChange("name.firstName")}
                         formItemChildren="First Name"
-                        touched={touched?.name?.firstname}
-                        onBlur={handleBlur("name.firstname")}
-                        errorText={errors?.name?.firstname}
+                        touched={touched?.name?.firstName}
+                        onBlur={handleBlur("name.firstName")}
+                        errorText={errors?.name?.firstName}
                         placeholder="Enter First Name"
                         placeholderIcon={<FaUser size={12} />}
                       />
                       <FormItemComponent
                         name="middlename"
-                        value={values?.name?.middlename}
-                        onChange={handleChange("name.middlename")}
+                        value={values?.name?.middleName}
+                        onChange={handleChange("name.middleName")}
                         formItemChildren="Middle Name"
-                        touched={touched?.name?.middlename}
-                        onBlur={handleBlur("name.middlename")}
-                        errorText={errors?.name?.middlename}
+                        touched={touched?.name?.middleName}
+                        onBlur={handleBlur("name.middleName")}
+                        errorText={errors?.name?.middleName}
                         placeholder="Enter Middle Name"
                         placeholderIcon={<FaUser size={12} />}
                       />
                       <FormItemComponent
                         name="lastname"
-                        value={values.name?.lastname}
-                        onChange={handleChange("name.lastname")}
+                        value={values.name?.lastName}
+                        onChange={handleChange("name.lastName")}
                         formItemChildren="Last Name"
-                        touched={touched?.name?.lastname}
-                        onBlur={handleBlur("name.lastname")}
-                        errorText={errors?.name?.lastname}
+                        touched={touched?.name?.lastName}
+                        onBlur={handleBlur("name.lastName")}
+                        errorText={errors?.name?.lastName}
                         placeholder="Enter Last Name"
                         placeholderIcon={<FaUser size={12} />}
                       />
                     </>
                   )}
+
+                  {/* INITIALS: NEXT FEATURE (As no storage is there for Profile Images) */}
+                  {/* {currentStep === 2 && (
+                    <>
+                      <div className="w-full flex items-center gap-x-2">
+                        <div className="w-16 h-16 aspect-square flex items-center justify-center">
+                          <CAvatar
+                            type="string"
+                            initials={values?.initial as "string"}
+                            className="w-full h-full rounded-full "
+                          />
+                        </div>
+                        <FormItemComponent
+                          name="initial"
+                          value={values.initial}
+                          onChange={handleChange("initial")}
+                          formItemChildren="initial"
+                          touched={touched?.initial}
+                          onBlur={handleBlur("initial")}
+                          errorText={errors?.initial}
+                          placeholder="Enter Initial"
+                          placeholderIcon={<FaUser size={12} />}
+                        />
+                      </div>
+                      <FormItemComponent
+                        name="mobile"
+                        value={values?.mobile}
+                        onChange={handleChange("mobile")}
+                        formItemChildren="Middle Name"
+                        touched={touched?.mobile}
+                        onBlur={handleBlur("mobile")}
+                        errorText={errors?.mobile}
+                        placeholder="Enter Middle Name"
+                        placeholderIcon={<FaPhone size={12} />}
+                      />
+                    </>
+                  )} */}
 
                   {/* Step 3: Password */}
                   {currentStep === 2 && (

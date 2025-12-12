@@ -31,7 +31,7 @@ const Lang = () => {
 
   const dispatch = useDispatch();
   return (
-    <div className="lg:p-8 ">
+    <>
       <h3 className="mb-4 font-semibold relative pl-4">
         Select programming language
         <div
@@ -70,7 +70,7 @@ const Lang = () => {
           </StyledLink>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
