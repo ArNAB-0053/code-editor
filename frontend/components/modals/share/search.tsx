@@ -2,7 +2,7 @@ import { SetterFunctionTypesArray } from "@/@types/_base";
 import { ISearchResultEach } from "@/@types/auth";
 import { WebsiteFontsKey } from "@/@types/font";
 import { ThemeTypes } from "@/@types/theme";
-import EmptyBox from "@/components/empty";
+import { EmptyBox } from "@/components/empty";
 import { ASelect } from "@/components/ui/antd";
 import { CAvatar } from "@/components/ui/custom";
 import { themeConfig } from "@/config/themeConfig";
@@ -16,7 +16,7 @@ import {
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import { useSearchByUsername } from "@/services/auth";
-import { Tag} from "antd";
+import { Tag } from "antd";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -68,16 +68,22 @@ const StyledASelect = styled(ASelect)<{ $theme: ThemeTypes }>`
   //   }
 `;
 
-
 const createTagRender = (theme: ThemeTypes, font: NextFont) => {
-  const Component = (props: any) => {
+  const Component = (props) => {
     const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
       event.preventDefault();
       event.stopPropagation();
     };
 
-    const parsedValue = value && JSON?.parse(value);
+    // const parsedLabel =
+    //   label && typeof label === "string" && JSON?.parse(label ?? "");
+
+    // let parsedLabel = ""
+
+    // if(label && typeof label === "string") parsedLabel = JSON?.parse(label)
+
+    console.log("___label___", label);
 
     return (
       <Tag
@@ -96,10 +102,11 @@ const createTagRender = (theme: ThemeTypes, font: NextFont) => {
         }}
       >
         <CAvatar
-          name={parsedValue?.name || fallbackAvatar}
+          type="string"
+          initials={label && label[0]}
           variant="default"
           characters={1}
-          className="border-2 w-5 h-5 text-xs "
+          className="border-[2.2px]! w-6 h-6 text-xs "
           style={{
             borderColor: theme?.border20,
             background: `${theme?.border10}`,
@@ -133,18 +140,15 @@ const SearchUsername = ({
   const { data: searchResults, isLoading } =
     useSearchByUsername(debouncedSearchItem);
 
-  console.log(searchResults);
-
   const options = searchResults?.map((searchResult: ISearchResultEach) => ({
-    label: searchResult?.username,
-    value: JSON.stringify(searchResult ?? ""),
+    label: getFullnameFromNameObj(searchResult?.name),
+    value: searchResult?.userId,
     name: searchResult.name,
     email: searchResult.email,
     userId: searchResult.userId,
     username: searchResult.username,
+    data: searchResult,
   }));
-
-  console.log(options);
 
   return (
     <StyledASelect
@@ -155,7 +159,9 @@ const SearchUsername = ({
       className="mt-0!"
       placeholder="Search people to share your code"
       //   defaultValue={[]}
-      onSearch={(value) => setSearchItem(value)}
+      onSearch={(value) => {
+        setSearchItem(value);
+      }}
       options={options}
       optionRender={(option: any) => {
         const data: ISearchResultEach = option.data;
@@ -208,7 +214,9 @@ const SearchUsername = ({
           )}
         </div>
       }
-      onChange={(value) => setSearchItems(value)}
+      onChange={(value) => {
+        setSearchItems(value);
+      }}
     />
   );
 };

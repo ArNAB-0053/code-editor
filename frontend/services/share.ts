@@ -1,5 +1,5 @@
 
-import { IGetShareDataRequest, IShareModel, IShareRequest } from "@/@types/share";
+import { IGetShareDataRequest, IShareDataModel, IShareModel, IShareRequest } from "@/@types/share";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from ".";
@@ -25,7 +25,7 @@ export const useCreateShare = () => {
 };
 
 // GET the snapshot data
-export const getSharedData = async (payload: IGetShareDataRequest) => {
+export const getSharedData = async (payload: IGetShareDataRequest): Promise<IShareDataModel> => {
   const res = await axiosInstance.post(`${URI}/s/data`, payload);
 
   if (!res.data) {

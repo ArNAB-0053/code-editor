@@ -7,6 +7,7 @@ namespace backend.DTO
         public string EditorId { get; set; }
         public List<string>? AllowedUsers { get; set; } = new();
         public ShareVisibility Visibility { get; set; }
+        public OwnerDetails OwnerDetails { get; set; }
     }
     public class GetShareRequest
     {
@@ -14,12 +15,13 @@ namespace backend.DTO
         public string? CurrentUserId { get; set; }
     }
 
-    public class UserSearchResult
-    {
-        public string Id { get; set; }
+    public class OwnerDetails
+    {        
+        public string UserId { get; set; }
+        public NameDto Name { get; set; }
+        public string Email { get; set; }
         public string Username { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; } 
+        //public string Initials { get; set; }
+        public string? MobileNo { get; set; }
     }
-
 }

@@ -21,6 +21,12 @@ import SearchUsername from "./search";
 import { GlobalStyles } from "@/style/customStyledCss";
 import DropdownMenu, { ISPUBLIC_CONFIG } from "./dropdown-menu";
 import { IoChevronDownOutline } from "react-icons/io5";
+import {
+  selectedUserEmail,
+  selectedUserId,
+  selectedUserName,
+  selectedUserUsername,
+} from "@/redux/slices/userSlice";
 
 const ShareModal = ({
   theme,
@@ -40,7 +46,11 @@ const ShareModal = ({
 
   const websiteFont = useSelector(selectWebsiteFont);
   const editorId = useSelector(selectedEditorId);
-  // const userId = useSelector(selectedUserId);
+  const userId = useSelector(selectedUserId);
+  const nameObj = useSelector(selectedUserName);
+  const email = useSelector(selectedUserEmail);
+  const username = useSelector(selectedUserUsername);
+
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   const { mutateAsync: createShare } = useCreateShare();
@@ -53,22 +63,30 @@ const ShareModal = ({
     }, 1000);
   }, [linkCopied]);
 
+  const OwnerDetails = {
+    UserId: userId,
+    Username: username,
+    Name: nameObj,
+    Email: email,
+  };
+
   const payload: IShareRequest = {
     EditorId: editorId,
     AllowedUsers: searchItems ?? [],
     Visibility: isPublic ? _VisibilityEnum.Public : _VisibilityEnum.Private,
+    OwnerDetails: OwnerDetails,
   };
 
-  // useEffect(() => {
-  //   console.log("isPublic", isPublic);
-  // }, [isPublic]);
+  useEffect(() => {
+    console.log("____ =>  isPublic", isPublic);
+  }, [isPublic]);
 
   const handleGenerateSafeShare = async () => {
     setIsSharingLoading(true);
 
     try {
       const res = await createShare(payload);
-      console.log(payload, "\n", "shared", res);
+      console.log("____ => ", payload, "\n", "shared", res);
       setSharingDetails(res?.data);
     } catch (e) {
       console.log(e);
@@ -83,8 +101,8 @@ const ShareModal = ({
 
   const snapshotLink =
     sharingDetails?.sharedId &&
-    `http://localhost:3000${appUrls.SHARE}/${sharingDetails?.sharedId}?mode=snapshot`;
-  const liveLink = `http://localhost:3000${appUrls.SHARE}/${editorId}?mode=live`;
+    `http://localhost:3000${appUrls.SHARE}/${sharingDetails?.sharedId}`;
+  const liveLink = `http://localhost:3000${appUrls.SHARE}/${editorId}`;
 
   const copyLink = (link: string) => {
     navigator.clipboard.writeText(link).then(() => {

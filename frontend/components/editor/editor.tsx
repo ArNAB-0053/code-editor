@@ -68,7 +68,7 @@ export default function EditorComponent({
   const currentCode = useSelector(selectedCode);
   const currentOutput = useSelector(selectedOutput);
 
-  console.log("currentCode", currentCode)
+  // console.log("currentCode", currentCode);
 
   const dispatch = useDispatch();
 
@@ -196,7 +196,7 @@ export default function EditorComponent({
       }}
       className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
-      <Sider p_lang={p_lang} />
+      {!isShared && <Sider p_lang={p_lang} />}
 
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter

@@ -4,6 +4,23 @@ export interface IShareRequest {
     EditorId: string;
     AllowedUsers: string[] | [];
     Visibility: _VisibilityEnum;
+    OwnerDetails: IOwnerDetailsReq;
+}
+
+export interface IOwnerDetailsReq {
+  UserId: string;
+  Name: NameObjType;
+  Username: string;
+  MobileNo?: string | null;
+  Email: string;
+}
+
+export interface IOwnerDetails {
+  userId: string;
+  name: NameObjType;
+  username: string;
+  mobileNo?: string | null;
+  email: string;
 }
 
 export interface IShareModel {
@@ -15,18 +32,18 @@ export interface IShareModel {
 export interface IShareDataModel {
   code: string;
   createdAt: string;
-  currentShareCount: number;
-  editorId: string;
-  expiresAt: string;
+  // currentShareCount: number;
+  editorId: string ;
+  expiresAt: string | null;
   id: string;
   isRevoked: boolean;
   lang: string;
   output: string;
-  ownerId: string;
-  shareLimit: number;
+  ownerDetails: IOwnerDetails;
+  // shareLimit: number;
   sharedByUserId: string;
   sharedId: string;
-  sharedToUsers: string[];
+  allowedUsers: string[];
 }
 
 export interface IGetShareDataRequest {

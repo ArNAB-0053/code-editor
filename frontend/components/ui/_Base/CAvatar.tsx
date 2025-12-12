@@ -5,8 +5,10 @@ import { cn } from "@/lib/utils";
 
 export interface AvatarProps extends IBaseStylingProps, IExtraProps {
   variant?: "transparent" | "default" | "noBorder" | "none";
-  name: NameObjType;
+  name?: NameObjType;
   characters?: number;
+  type?: "string" | "object";
+  initials?: "string";
 }
 
 const BaseCAvatar = ({
@@ -16,32 +18,61 @@ const BaseCAvatar = ({
   className,
   style,
   variant = "default",
+  type = "object",
+  initials,
   characters = 2,
 }: AvatarProps) => {
+  if (type === "string") {
+    return (
+      <div
+        className={cn(
+          "border-2 rounded-full flex items-center justify-center w-9 h-9 text-xl font-semibold uppercase overflow-hidden",
+          websiteFonts[font as WebsiteFontsKey]?.className,
+          className
+        )}
+        style={{
+          borderColor:
+            variant === "noBorder" || variant === "none"
+              ? "transparent"
+              : theme.border20,
+          background:
+            variant === "transparent" || variant === "none"
+              ? "transparent"
+              : `${theme.activeColor}30`,
+          color: `${theme.activeColor}`,
+          ...style,
+        }}
+      >
+        {initials}
+      </div>
+    );
+  }
+
   const extractInitials = (nameValue: NameObjType) => {
     if (
       typeof nameValue === "object" &&
       nameValue !== null &&
       !Array.isArray(nameValue)
     ) {
-      const fn = nameValue?.firstName?? " ";
-      const mn = nameValue?.middleName?? " ";
-      const ln = nameValue?.lastName?? " ";
+      const fn = nameValue?.firstName ?? " ";
+      const mn = nameValue?.middleName ?? " ";
+      const ln = nameValue?.lastName ?? " ";
 
       if (characters === 3 && mn) return fn[0] + mn[0] + ln[0];
-      else if (characters === 3 && !mn || characters === 2) return fn[0] + ln[0];
+      else if ((characters === 3 && !mn) || characters === 2)
+        return fn[0] + ln[0];
       else if (characters === 1) return fn[0];
     }
 
     return "";
   };
 
-  const initials = extractInitials(name);
+  const c_initials = extractInitials(name!);
 
   return (
     <div
       className={cn(
-        "border-2 rounded-full flex items-center justify-center w-9 h-9 text-xl font-semibold uppercase",
+        "border-2 rounded-full flex items-center justify-center w-9 h-9 text-xl font-semibold uppercase overflow-hidden",
         websiteFonts[font as WebsiteFontsKey]?.className,
         className
       )}
@@ -58,7 +89,7 @@ const BaseCAvatar = ({
         ...style,
       }}
     >
-      {initials}
+      {c_initials}
     </div>
   );
 };

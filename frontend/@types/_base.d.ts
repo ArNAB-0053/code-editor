@@ -53,6 +53,7 @@ export interface IProfileDetails
   userId: string;
   nameObj: NameObjType;
   username: string;
+  mobileNo?: string
 }
 
 export type NameObjType = {

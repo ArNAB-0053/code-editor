@@ -34,11 +34,12 @@ namespace backend.Services.implementations
             {
                 SharedId = Guid.NewGuid().ToString("N").Substring(0, 12), 
                 EditorId = editorData.Id,
-                OwnerId = editorData.UserId,
+                OwnerDetails = req.OwnerDetails,
                 Code = editorData.Code,
                 Lang = editorData.Lang,
                 Output = editorData.Output,
-                AllowedUsers = req.AllowedUsers
+                AllowedUsers = req.AllowedUsers,
+                Visibility = req.Visibility
             };
 
             _share.InsertOne(share);
