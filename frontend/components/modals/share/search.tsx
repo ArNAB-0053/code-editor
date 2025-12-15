@@ -2,7 +2,7 @@ import { SetterFunctionTypesArray } from "@/@types/_base";
 import { ISearchResultEach } from "@/@types/auth";
 import { WebsiteFontsKey } from "@/@types/font";
 import { ThemeTypes } from "@/@types/theme";
-import { EmptyBox } from "@/components/empty";
+import { EmptyBox, EmptyContent } from "@/components/empty";
 import { ASelect } from "@/components/ui/antd";
 import { CAvatar } from "@/components/ui/custom";
 import { themeConfig } from "@/config/themeConfig";
@@ -202,15 +202,13 @@ const SearchUsername = ({
       notFoundContent={
         <div
           style={{ padding: "8px", opacity: 0.6 }}
-          className="text-white text-center"
+          className="text-white text-center rounded-xl"
         >
           {searchItem == "" ? (
+            // <EmptyContent title="Start typing for the result" />
             "Start typing for the result"
           ) : (
-            <div className="flex items-center justify-center flex-col opacity-50">
-              <EmptyBox />
-              No users found
-            </div>
+            <EmptyContent title="No users found" />
           )}
         </div>
       }

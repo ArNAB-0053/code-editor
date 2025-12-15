@@ -1,4 +1,5 @@
 import { _VisibilityEnum } from "./_enums";
+import { IUserDetails } from "./auth";
 
 export interface IShareRequest {
     EditorId: string;
@@ -44,6 +45,11 @@ export interface IShareDataModel {
   sharedByUserId: string;
   sharedId: string;
   allowedUsers: string[];
+}
+
+export interface IShareByMeRes {
+  share: IShareDataModel,
+  sharedWith: IUserDetails[]
 }
 
 export interface IGetShareDataRequest {

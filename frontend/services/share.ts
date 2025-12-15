@@ -1,5 +1,6 @@
 import {
   IGetShareDataRequest,
+  IShareByMeRes,
   IShareDataModel,
   IShareModel,
   IShareRequest,
@@ -73,7 +74,7 @@ export const useShareToMeList = (userId: string) => {
 };
 
 // GET Shares - Share By Me
-export const getShareByMeList = async (userId: string): Promise<IShareDataModel[]> => {
+export const getShareByMeList = async (userId: string): Promise<IShareByMeRes[]> => {
   const res = await axiosInstance.post(`${URI}/share-by-me`, { userId });
 
   if (!res.data) {

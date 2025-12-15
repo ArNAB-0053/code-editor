@@ -14,7 +14,7 @@ namespace backend.Models
         public string EditorId { get; set; }  
         public OwnerDetails OwnerDetails { get; set; }   
         public string SharedByUserId { get; set; } 
-        public List<string> AllowedUsers { get; set; } = new();
+        //public List<string> AllowedUsers { get; set; } = new();
 
         public string Code { get; set; }
         public string Lang { get; set; }

@@ -61,11 +61,11 @@ const ShareEditor = () => {
     dispatch(setOutputRedux(sharedData?.output));
 
     ownerDetailsRef.current = sharedData?.ownerDetails;
-    console.log("ownerDetailsRef.current", ownerDetailsRef.current);
+    // console.log("ownerDetailsRef.current", ownerDetailsRef.current);
     setOwnerDetails(ownerDetailsRef.current);
   }, [sharedData, dispatch, isLoading]);
 
-  console.log("OWN", ownerDetails);
+  console.log("OWN", sharedData);
 
   if (isLoading) {
     return <p>Loading</p>;
@@ -73,6 +73,7 @@ const ShareEditor = () => {
 
   return (
     <div className="w-full flex gap-x-2">
+     
       <EditorComponent p_lang={sharedData?.lang?.trim() || lang} isShared />
       <div
         className=" text-wrap text-white overflow-x-hidden"

@@ -11,6 +11,7 @@ import { selectedUserId } from "@/redux/slices/userSlice";
 import { useShareToMeList } from "@/services/share";
 import React from "react";
 import { useSelector } from "react-redux";
+import ACard from "../ui/antd/card";
 
 const ShareToMe = () => {
   const userId = useSelector(selectedUserId);
@@ -42,13 +43,16 @@ const ShareToMe = () => {
 
       <div className="flex items-center gap-3">
         {data?.map((x: IShareDataModel, i) => (
-          <div key={i} className="bg-white/10 p-3 rounded-xl">
+          <ACard key={i} title="main.py">
             lang: {x.lang}
             <br />
             code: {x.code}
             <br />
             output: {x.output}
-          </div>
+
+            <h3 className="border-t mt-3">Owner</h3>
+            {x.ownerDetails.username}
+          </ACard>
         ))}
       </div>
     </div>
