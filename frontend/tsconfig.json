@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "../temp/forms.tsx"  ],
+, "../temp/forms.tsx", "redux/expireReducer.ts"  ],
   "exclude": ["node_modules"]
 }
