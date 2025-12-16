@@ -14,7 +14,7 @@ export interface CAvatarProps extends IBaseStylingProps {
   name?: NameObjType;
   characters?: number;
   type?: "string" | "object";
-  initials?: "string";
+  initials?: string;
 }
 
 export const CAvatar = ({

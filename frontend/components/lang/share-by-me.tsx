@@ -1,109 +1,192 @@
 "use client";
-import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
-import { IShareByMeRes, IShareDataModel } from "@/@types/share";
+import { IShareByMeRes } from "@/@types/share";
 import { themeConfig } from "@/config/themeConfig";
-import { editorFonts, websiteFonts } from "@/fonts";
-import {
-  selectEditorFont,
-  selectEditorFontSize,
-  selectEditorTheme,
-  selectWebsiteFont,
-} from "@/redux/slices/preferenceSlice";
+import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useShareByMeList } from "@/services/share";
 import { useSelector } from "react-redux";
-import ACard from "../ui/antd/card";
-import { Editor, Monaco } from "@monaco-editor/react";
-import getEditorSytaxRules from "@/helper/editor-syntax-rules";
+import { CAvatar } from "../ui/custom";
+import { cn } from "@/lib/utils";
+import { MAX_SHARE_VISIBLE } from ".";
+import Link from "next/link";
+import { Users, ExternalLink } from "lucide-react";
+import { getFullnameFromNameObj } from "@/helper/_base.helper";
+import { HeaderTitle } from "./header-title";
+import CodePreview from "./code-preview";
+import EmptyShare from "./empty";
 
 const ShareByMe = () => {
   const userId = useSelector(selectedUserId);
   const { data } = useShareByMeList(userId);
 
-  console.log("[share] __share_by_me__ : ", data);
-
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
-  const websiteFont = useSelector(selectWebsiteFont);
-  const font = websiteFonts[websiteFont as WebsiteFontsKey];
-  const editorFont = useSelector(selectEditorFont);
-  const editorFontSize = useSelector(selectEditorFontSize);
-
-  const syntaxRules = getEditorSytaxRules(theme);
-
-  const handleBeforeMount = (monaco: Monaco) => {
-    monaco.editor.defineTheme("app-dark", {
-      base: "vs-dark",
-      inherit: true,
-      rules: syntaxRules,
-      colors: {
-        "editor.background": theme.editorBackground,
-        "editor.foreground": theme.outputColor,
-        "editorLineNumber.foreground": theme.editorLineNumberForeground,
-        "editorLineNumber.activeForeground": theme.outputColor,
-        "editor.selectionBackground": theme.editorSelectionBackground,
-        "editorCursor.foreground": theme.outputColor,
-      },
-    });
-  };
+  // const websiteFont = useSelector(selectWebsiteFont);
+  // const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   return (
-    <div>
-      <h3 className="mb-4 font-semibold relative pl-4">
-        Shared By Me
-        <div
-          className="h-full w-1 absolute left-0 top-1/2 -translate-y-1/2"
-          style={{ background: theme.activeColor }}
-        />
-      </h3>
+    <div className="w-full">
+      <HeaderTitle data={data} title="Shared By Me" />
 
       {data?.length === 0 && (
-        <p style={{ color: theme.disabledTextColor }}>
-          No data found that shared by you.
-        </p>
+        <EmptyShare
+          title="No shared snippets yet"
+          description="Share your code snippets with others to see them here"
+        />
       )}
 
-      <div className="flex items-center gap-3 flex-wrap">
-        {data?.map((x: IShareByMeRes, i) => (
-          <ACard key={i} title={null}>
+      <div
+        className="
+          grid
+          grid-cols-1
+          min-[640px]:grid-cols-2
+          min-[700px]:grid-cols-2
+          min-[950px]:grid-cols-3
+          min-[1100px]:grid-cols-3
+          min-[1300px]:grid-cols-4
+          gap-4
+        "
+      >
+        {data?.map((x: IShareByMeRes, i) => {
+          const len = x.sharedWith.length;
+          const isRem = len > MAX_SHARE_VISIBLE;
+          const rem = len - MAX_SHARE_VISIBLE;
+
+          return (
             <div
-              className="pb-2 relative overflow-hidden rounded-xl "
+              key={i}
+              className="group relative rounded-xl overflow-hidden transition-all duration-300 "
               style={{
-                backgroundColor: theme?.editorBackground,
+                backgroundColor: theme.editorBackground,
+                borderColor: theme.border,
+                borderWidth: "1.5px",
               }}
             >
-              <div className="w-full h-24 overflow-hidden rounded-xl px-3 py-2 ">
-                <Editor
-                  value={x.share.code}
-                  width="100%"
-                  height="calc(95vh - 95px)"
-                  defaultLanguage={x.share.lang}
-                  language={x.share.lang}
-                  theme="app-dark"
-                  beforeMount={handleBeforeMount}
-                  options={{
-                    fontFamily: editorFonts[editorFont as EditorFontKey],
-                    fontSize: editorFontSize,
-                    minimap: { enabled: false },
-                    automaticLayout: true,
-                  }}
-                  className="rounded-xl!"
-                />
+              <CodePreview code={x?.share?.code} lang={x?.share?.lang} />
+              <div className="p-4 space-y-3">
+                {/* Shared With Section */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Users
+                      size={14}
+                      style={{ color: theme.disabledTextColor }}
+                    />
+                    <span
+                      className="text-xs font-medium"
+                      style={{ color: theme.disabledTextColor }}
+                    >
+                      Shared with {len} {len === 1 ? "person" : "people"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Avatar Group */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center -space-x-2">
+                    {x.sharedWith.slice(0, MAX_SHARE_VISIBLE).map((u, idx) => (
+                      <div
+                        key={idx}
+                        className={cn(
+                          "relative",
+                          len === 1
+                            ? "flex items-center justify-center gap-x-2"
+                            : ""
+                        )}
+                        style={{ zIndex: MAX_SHARE_VISIBLE - idx }}
+                      >
+                        <CAvatar
+                          name={u.name}
+                          characters={1}
+                          className="w-8 h-8 text-xs font-semibold ring-2 backdrop-blur-2xl"
+                          style={{
+                            background: `${theme.activeColor}50`,
+                            color: theme.activeColor,
+                            ringColor: theme.editorBackground,
+                          }}
+                        />
+                        {len === 1 && (
+                          <span className="flex-1">
+                            <p
+                              style={{ color: theme.disabledTextColor }}
+                              className="text-sm truncate max-w-28 overflow-hidden"
+                            >
+                              {getFullnameFromNameObj(x.sharedWith[0].name)}
+                            </p>
+                            <p
+                              className="text-xs -translate-y-1 font-medium"
+                              style={{ color: theme.activeColor }}
+                            >
+                              @{x.sharedWith[0].username}
+                            </p>
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                    {isRem && (
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ring-2 backdrop-blur-2xl"
+                        style={{
+                          background: `${theme.activeColor}50`,
+                          color: theme.activeColor,
+                          ringColor: theme.editorBackground,
+                          zIndex: 0,
+                        }}
+                      >
+                        +{rem}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* View Button */}
+                  <Link
+                    href={`/lang/${x.share.sharedId}`}
+                    className="group/btn flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all duration-200"
+                    style={{
+                      color: theme.textColor,
+                      backgroundColor: theme.activeColor,
+                    }}
+                  >
+                    View
+                    <ExternalLink
+                      size={12}
+                      className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                    />
+                  </Link>
+                </div>
+
+                {/* Individual Username Display (for single share) */}
+                {/* {len === 1 && (
+                  <div
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs"
+                    style={{
+                      background: `${theme.activeColor}10`,
+                      borderColor: `${theme.activeColor}20`,
+                      borderWidth: "1px",
+                    }}
+                  >
+                    <span style={{ color: theme.disabledTextColor }}>
+                      Shared with:
+                    </span>
+                    <span
+                      className="font-medium"
+                      style={{ color: theme.activeColor }}
+                    >
+                      @{x.sharedWith[0].username}
+                    </span>
+                  </div>
+                )} */}
               </div>
 
-              <div className="bg-white/5 h-full w-full absolute left-0 top-0 backdrop-blur-[0.9px] rounded-xl" />
+              {/* Hover Effect Border */}
+              {/* <div
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  boxShadow: `0 0 0 2px ${theme.activeColor}40`,
+                }}
+              /> */}
             </div>
-            lang: {x.share.lang}
-            <br />
-            output: {x.share.output}
-            <div>
-              Share To:
-              {x.sharedWith.map((u, i) => (
-                <p key={i}>{u.username}</p>
-              ))}
-            </div>
-          </ACard>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -24,19 +24,19 @@ import styled from "styled-components";
 
 const StyledASelect = styled(ASelect)<{ $theme: ThemeTypes }>`
   .ant-select-selection-overflow {
-    padding: 3px 4px 6px 4px !important;
+    padding: 3px 2px 3px 2px !important;
   }
 
-  .ant-select-selection-wrap,
+  // .ant-select-selection-wrap,
   .ant-select-selection-overflow-item,
   .ant-select-selection-item {
-    height: 100% !important;
+    height: 28px !important;
   }
 
   .ant-select-selection-item {
     background: ${({ $theme }) => $theme.activeColor} !important;
-    padding-inline-start: 10px !important;
-    padding-inline-end: 10px !important;
+    padding-inline-start: 5px !important;
+    padding-inline-end: 5px !important;
   }
 
   .anticon-close {
@@ -92,7 +92,7 @@ const createTagRender = (theme: ThemeTypes, font: NextFont) => {
         closable={closable}
         onClose={onClose}
         className={cn(
-          " flex! items-center! justify-center! h-full! gap-x-2! mr-1! text-sm! rounded-xl! px-3! ",
+          " flex! items-center! justify-center! h-full! gap-x-2! mr-1! text-xs! px-1! ",
           font?.className
         )}
         style={{
@@ -106,7 +106,7 @@ const createTagRender = (theme: ThemeTypes, font: NextFont) => {
           initials={label && label[0]}
           variant="default"
           characters={1}
-          className="border-[2.2px]! w-6 h-6 text-xs "
+          className="border-[2.2px]! w-5 h-5 text-[10px]!  "
           style={{
             borderColor: theme?.border20,
             background: `${theme?.border10}`,
@@ -155,7 +155,7 @@ const SearchUsername = ({
       $theme={theme}
       tagRender={createTagRender(theme, font)}
       mode="multiple"
-      style={{ width: "100%", height: "50px", fontSize: "14px" }}
+      style={{ width: "100%", minHeight: "50px", fontSize: "14px" }}
       className="mt-0!"
       placeholder="Search people to share your code"
       //   defaultValue={[]}
