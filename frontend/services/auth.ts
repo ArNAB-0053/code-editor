@@ -1,4 +1,4 @@
-import { IAvailability, IAuthReturn, IRegister } from "@/@types/auth";
+import { IAvailability, IAuthReturn, IRegister, ISearchResult } from "@/@types/auth";
 import axiosInstance from "@/lib/axios-instance";
 import { LoginFormType, RegisterFormType } from "@/zod/auth.z";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -81,5 +81,23 @@ export const useGetEmailAvailability = (email: string) => {
     queryKey: [QUERY_KEYS.USERNAME_CHECK, email],
     queryFn: () => getEmailAvailability(email),
     enabled: !!email,
+  });
+};
+
+// ----------------------------------------------------
+//                        SEARCH
+// ----------------------------------------------------
+export const searchByUsername = async (prefix: string): Promise<ISearchResult> => {
+  const res = await axiosInstance.get(`${URI}/search`, {
+    params: { username: prefix },
+  });
+  return res.data;
+};
+
+export const useSearchByUsername = (prefix: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SEARCH, prefix],
+    queryFn: () => searchByUsername(prefix),
+    enabled: !!prefix,
   });
 };

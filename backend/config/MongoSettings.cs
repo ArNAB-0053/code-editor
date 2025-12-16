@@ -7,5 +7,6 @@
         public string AuthCollectionName { get; set; }
         public string CodeSaveCollectionName { get; set; }
         public string ShareCollectionName { get; set; }
+        public string SharedUserCollectionName { get; set; }
     }
 }

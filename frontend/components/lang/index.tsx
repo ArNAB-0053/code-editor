@@ -11,6 +11,7 @@ import {
   selectEditorTheme,
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
+import { GlobalEditorStyles } from "@/styles/customStyledCss";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -31,7 +32,8 @@ const Lang = () => {
 
   const dispatch = useDispatch();
   return (
-    <div className="lg:p-8 ">
+    <>
+      <GlobalEditorStyles />
       <h3 className="mb-4 font-semibold relative pl-4">
         Select programming language
         <div
@@ -70,7 +72,7 @@ const Lang = () => {
           </StyledLink>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

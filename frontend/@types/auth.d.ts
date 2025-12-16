@@ -24,3 +24,12 @@ export interface IRegister {
     email: string;
     password: string;
 }
+
+export interface ISearchResultEach {
+    name: NameObjType,
+    username: string,
+    userId: string,
+    email: string
+}
+
+export type ISearchResult = ISearchResultEach[]

@@ -29,6 +29,9 @@ export type SetterFunctionTypesString = React.Dispatch<
 export type SetterFunctionTypesNumber = React.Dispatch<
   React.SetStateAction<number>
 >;
+export type SetterFunctionTypesArray = React.Dispatch<
+  React.SetStateAction<string[]>
+>;
 export interface IModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,6 +53,7 @@ export interface IProfileDetails
   userId: string;
   nameObj: NameObjType;
   username: string;
+  mobileNo?: string
 }
 
 export type NameObjType = {
