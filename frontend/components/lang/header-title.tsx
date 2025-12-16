@@ -1,5 +1,6 @@
 "use client";
 import { WebsiteFontsKey } from "@/@types/font";
+import { IShareByMeRes, IShareDataModel } from "@/@types/share";
 import { themeConfig } from "@/config/themeConfig";
 import { websiteFonts } from "@/fonts";
 import {
@@ -10,7 +11,7 @@ import { Code, Share2 } from "lucide-react";
 import { useSelector } from "react-redux";
 
 type HeaderTitleType = {
-  data: any[];
+  data: IShareDataModel[] | IShareByMeRes[] ;
   title: string;
 };
 

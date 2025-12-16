@@ -45,7 +45,7 @@ const CodePreview = ({ code, lang }: CodePreviewType) => {
   };
   return (
     <div className="relative h-40 overflow-hidden">
-      <div className="absolute inset-0 p-3">
+      <div className="absolute inset-0 p-4">
         <Editor
           value={code}
           width="100%"
@@ -70,10 +70,13 @@ const CodePreview = ({ code, lang }: CodePreviewType) => {
             lineDecorationsWidth: 0,
             lineNumbersMinChars: 0,
           }}
+          className=" blur-[0.5px] pointer-events-none "
         />
       </div>
 
-      <div className="bg-white/10 h-full w-full absolute blur-[1px] backdrop-blur-[0.1px]"></div>
+      <div
+        className=" h-full w-full absolute bg-linear-to-b from-transparent via-white/10 to-white/15 blur-2xl"
+      />
 
       {/* Gradient Overlay */}
       <div

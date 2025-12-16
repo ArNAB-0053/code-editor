@@ -26,7 +26,7 @@ const ShareByMe = () => {
 
   return (
     <div className="w-full">
-      <HeaderTitle data={data} title="Shared By Me" />
+      <HeaderTitle data={data as IShareByMeRes[]} title="Shared By Me" />
 
       {data?.length === 0 && (
         <EmptyShare
@@ -58,8 +58,8 @@ const ShareByMe = () => {
               className="group relative rounded-xl overflow-hidden transition-all duration-300 "
               style={{
                 backgroundColor: theme.editorBackground,
-                borderColor: theme.border,
-                borderWidth: "1.5px",
+                borderColor: theme.border10,
+                borderWidth: "2px",
               }}
             >
               <CodePreview code={x?.share?.code} lang={x?.share?.lang} />
@@ -83,13 +83,25 @@ const ShareByMe = () => {
                 {/* Avatar Group */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center -space-x-2">
+                    {isRem && (
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ring-2 backdrop-blur-2xl"
+                        style={{
+                          background: `${theme.activeColor}50`,
+                          color: theme.activeColor,
+                          zIndex: MAX_SHARE_VISIBLE + 1,
+                        }}
+                      >
+                        +{rem}
+                      </div>
+                    )}
                     {x.sharedWith.slice(0, MAX_SHARE_VISIBLE).map((u, idx) => (
                       <div
                         key={idx}
                         className={cn(
-                          "relative",
+                          "relative ",
                           len === 1
-                            ? "flex items-center justify-center gap-x-2"
+                            ? "flex items-center justify-center gap-x-2 "
                             : ""
                         )}
                         style={{ zIndex: MAX_SHARE_VISIBLE - idx }}
@@ -97,11 +109,13 @@ const ShareByMe = () => {
                         <CAvatar
                           name={u.name}
                           characters={1}
-                          className="w-8 h-8 text-xs font-semibold ring-2 backdrop-blur-2xl"
+                          className="w-8 h-8 text-xs font-semibold border-0 ring-2 backdrop-blur-2xl"
                           style={{
-                            background: `${theme.activeColor}50`,
+                            background:
+                              idx == MAX_SHARE_VISIBLE - 1
+                                ? `${theme.activeColor}65`
+                                : `${theme.activeColor}50`,
                             color: theme.activeColor,
-                            ringColor: theme.editorBackground,
                           }}
                         />
                         {len === 1 && (
@@ -122,19 +136,6 @@ const ShareByMe = () => {
                         )}
                       </div>
                     ))}
-                    {isRem && (
-                      <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ring-2 backdrop-blur-2xl"
-                        style={{
-                          background: `${theme.activeColor}50`,
-                          color: theme.activeColor,
-                          ringColor: theme.editorBackground,
-                          zIndex: 0,
-                        }}
-                      >
-                        +{rem}
-                      </div>
-                    )}
                   </div>
 
                   {/* View Button */}

@@ -33,7 +33,7 @@ const ShareToMe = () => {
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
   return (
     <div className="w-full mb-8">
-      <HeaderTitle data={data} title="Shared With Me" />
+      <HeaderTitle data={data as IShareDataModel[]} title="Shared With Me" />
 
       {data?.length === 0 && (
         <EmptyShare
@@ -60,8 +60,8 @@ const ShareToMe = () => {
             className="group relative rounded-xl overflow-hidden transition-all duration-300 "
             style={{
               backgroundColor: theme.editorBackground,
-              borderColor: theme.border,
-              borderWidth: "1.5px",
+              borderColor: theme.border10,
+              borderWidth: "2px",
             }}
           >
             <CodePreview code={x.code} lang={x.lang} />
@@ -84,11 +84,10 @@ const ShareToMe = () => {
                   <CAvatar
                     name={x.ownerDetails.name}
                     characters={1}
-                    className="w-8 h-8 text-xs font-semibold ring-2 backdrop-blur-2xl"
+                    className="w-8 h-8 text-xs font-semibold ring-2 backdrop-blur-2xl border-0"
                     style={{
                       background: `${theme.activeColor}50`,
                       color: theme.activeColor,
-                      ringColor: theme.editorBackground,
                     }}
                   />
                   <span className="flex-1">
