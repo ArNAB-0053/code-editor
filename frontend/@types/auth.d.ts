@@ -11,6 +11,7 @@ export interface IUserDetails {
     email: string,
     name: NameObjType,
     username: string,
+    mobileNo?: string | null;
 }
 
 export interface IAvailability {

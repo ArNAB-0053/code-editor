@@ -6,3 +6,4 @@ export { default as AInput } from "./input";
 export { default as ASelect } from "./select";
 export * from "./form";
 export * from "./popover"
+export * from "./table"

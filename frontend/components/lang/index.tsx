@@ -16,12 +16,20 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { CDivider } from "../ui/custom";
+import { HeaderLangTitle } from "./header-title";
+import ShareToOrByMe from "./share";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
     background: ${({ $theme }) => $theme.border15} !important;
   }
 `;
+
+export const MAX_SHARE_VISIBLE = {
+  TABLE: 8,
+  CARD: 3,
+};
 
 const Lang = () => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -34,21 +42,13 @@ const Lang = () => {
   return (
     <>
       <GlobalEditorStyles />
-      <h3 className="mb-4 font-semibold relative pl-4">
-        Select programming language
-        <div
-          className="h-full w-1 absolute left-0 top-1/2 -translate-y-1/2"
-          style={{ background: theme.activeColor }}
-        />
-      </h3>
+      <HeaderLangTitle title="Select programming language" />
       <div
-        className="mb-8 grid max-[350px]:grid-cols-1 grid-cols-2 min-[400px]:grid-cols-3 min-[600px]:grid-cols-4 min-[768px]:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 gap-4 flex-wrap rounded-xl relative "
-        style={
-          {
-            // background: `${theme?.activeColor}10`,
-            // borderColor: theme?.border10,
-          }
-        }
+        className="mb-8 grid max-[350px]:grid-cols-1 grid-cols-2 min-[400px]:grid-cols-3 min-[600px]:grid-cols-4 min-[768px]:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 gap-4 flex-wrap rounded-xl relative p-4 "
+        style={{
+          background: `${theme?.activeColor}10`,
+          borderColor: theme?.border10,
+        }}
       >
         {langs?.map((x, i) => (
           <StyledLink
@@ -72,6 +72,18 @@ const Lang = () => {
           </StyledLink>
         ))}
       </div>
+
+      <CDivider
+        style={{
+          background: theme.activeColor,
+          width: "10rem",
+          height: "2px",
+        }}
+        className="my-20"
+      />
+
+      {/* SHARE */}
+      <ShareToOrByMe />
     </>
   );
 };

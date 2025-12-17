@@ -8,7 +8,7 @@ export interface AvatarProps extends IBaseStylingProps, IExtraProps {
   name?: NameObjType;
   characters?: number;
   type?: "string" | "object";
-  initials?: "string";
+  initials?: string;
 }
 
 const BaseCAvatar = ({
