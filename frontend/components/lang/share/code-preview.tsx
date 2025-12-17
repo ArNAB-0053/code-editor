@@ -1,12 +1,11 @@
 "use client";
-import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
+import { EditorFontKey } from "@/@types/font";
 import { themeConfig } from "@/config/themeConfig";
-import { editorFonts, websiteFonts } from "@/fonts";
+import { editorFonts } from "@/fonts";
 import {
   selectEditorFont,
   selectEditorFontSize,
   selectEditorTheme,
-  selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { Editor, Monaco } from "@monaco-editor/react";
@@ -16,13 +15,18 @@ import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 type CodePreviewType = {
   code: string;
   lang: string;
+  height?: string;
+  showLangBadge?: boolean;
 };
 
-const CodePreview = ({ code, lang }: CodePreviewType) => {
+const CodePreview = ({
+  code,
+  lang,
+  height = "10rem",
+  showLangBadge = true,
+}: CodePreviewType) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
-  const websiteFont = useSelector(selectWebsiteFont);
-  const font = websiteFonts[websiteFont as WebsiteFontsKey];
   const editorFont = useSelector(selectEditorFont);
   const editorFontSize = useSelector(selectEditorFontSize);
 
@@ -44,7 +48,13 @@ const CodePreview = ({ code, lang }: CodePreviewType) => {
     });
   };
   return (
-    <div className="relative h-40 overflow-hidden">
+    <div
+      className="relative overflow-hidden"
+      style={{
+        height: height,
+        width: '100%'
+      }}
+    >
       <div className="absolute inset-0 p-4">
         <Editor
           value={code}
@@ -74,9 +84,7 @@ const CodePreview = ({ code, lang }: CodePreviewType) => {
         />
       </div>
 
-      <div
-        className=" h-full w-full absolute bg-linear-to-b from-transparent via-white/10 to-white/15 blur-2xl"
-      />
+      <div className=" h-full w-full absolute bg-linear-to-b from-transparent via-white/10 to-white/15 blur-2xl" />
 
       {/* Gradient Overlay */}
       <div
@@ -87,20 +95,22 @@ const CodePreview = ({ code, lang }: CodePreviewType) => {
       />
 
       {/* Language Badge */}
-      <div className="absolute bottom-3 right-3">
-        <div
-          className="px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-md flex items-center gap-1.5"
-          style={{
-            background: `${theme.activeColor}25`,
-            borderColor: `${theme.activeColor}40`,
-            borderWidth: "1px",
-            color: theme.activeColor,
-          }}
-        >
-          <Code size={12} />
-          {lang}
+      {showLangBadge && (
+        <div className="absolute bottom-3 right-3">
+          <div
+            className="px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-md flex items-center gap-1.5"
+            style={{
+              background: `${theme.activeColor}25`,
+              borderColor: `${theme.activeColor}40`,
+              borderWidth: "1px",
+              color: theme.activeColor,
+            }}
+          >
+            <Code size={12} />
+            {lang}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

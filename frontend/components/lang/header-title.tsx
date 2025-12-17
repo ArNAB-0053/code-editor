@@ -11,7 +11,7 @@ import { Code, Share2 } from "lucide-react";
 import { useSelector } from "react-redux";
 
 type HeaderTitleType = {
-  data: IShareDataModel[] | IShareByMeRes[] ;
+  data: IShareDataModel[] | IShareByMeRes[];
   title: string;
 };
 
@@ -22,37 +22,32 @@ export const HeaderTitle = ({ data, title }: HeaderTitleType) => {
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   return (
-    <div className="mb-6 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div
-          className="p-2 rounded-lg"
-          style={{
-            background: `${theme.activeColor}15`,
-            borderColor: `${theme.activeColor}30`,
-            borderWidth: "1px",
-          }}
+    <div className="flex items-center gap-3">
+      <div
+        className="p-2 rounded-lg"
+        style={{
+          background: `${theme.activeColor}15`,
+          borderColor: `${theme.activeColor}30`,
+          borderWidth: "1px",
+        }}
+      >
+        <Share2
+          size={20}
+          style={{ color: theme.activeColor }}
+          strokeWidth={2.5}
+        />
+      </div>
+      <div>
+        <h3
+          className="text-lg font-semibold"
+          style={{ color: theme.textColor }}
         >
-          <Share2
-            size={20}
-            style={{ color: theme.activeColor }}
-            strokeWidth={2.5}
-          />
-        </div>
-        <div>
-          <h3
-            className="text-lg font-semibold"
-            style={{ color: theme.textColor }}
-          >
-            {title}
-          </h3>
-          <p
-            className="text-xs -mt-1"
-            style={{ color: theme.disabledTextColor }}
-          >
-            {data?.length || 0} {data?.length === 1 ? "snippet" : "snippets"}{" "}
-            shared
-          </p>
-        </div>
+          {title}
+        </h3>
+        <p className="text-xs -mt-1" style={{ color: theme.disabledTextColor }}>
+          {data?.length || 0} {data?.length === 1 ? "snippet" : "snippets"}{" "}
+          shared
+        </p>
       </div>
     </div>
   );

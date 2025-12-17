@@ -16,10 +16,9 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ShareToMe from "./share-to-me";
-import ShareByMe from "./share-by-me";
 import { CDivider } from "../ui/custom";
 import { HeaderLangTitle } from "./header-title";
+import ShareToOrByMe from "./share";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
@@ -27,7 +26,10 @@ const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   }
 `;
 
-export const MAX_SHARE_VISIBLE = 3;
+export const MAX_SHARE_VISIBLE = {
+  TABLE: 8,
+  CARD: 3,
+};
 
 const Lang = () => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -75,13 +77,13 @@ const Lang = () => {
         style={{
           background: theme.activeColor,
           width: "10rem",
-          height: "2px"
+          height: "2px",
         }}
         className="my-20"
       />
 
-      <ShareToMe />
-      <ShareByMe />
+      {/* SHARE */}
+      <ShareToOrByMe />
     </>
   );
 };

@@ -4,7 +4,7 @@ import { appUrls } from "./config/navigation.config";
 const BACKEND_URI = process.env.NEXT_PUBLIC_BACKEND_URI!;
 const URI = `${BACKEND_URI}/api/user/me`;
 
-export async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const token = req.cookies.get("jwt")?.value;
   const path = req.nextUrl.pathname;
 
