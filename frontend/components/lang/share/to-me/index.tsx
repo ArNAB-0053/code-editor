@@ -1,7 +1,7 @@
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useShareToMeList } from "@/services/share";
 import { useSelector } from "react-redux";
-import {  IShareDataModel } from "@/@types/share";
+import { IShareDataModel } from "@/@types/share";
 import { HeaderTitle } from "../../header-title";
 import { TabsProps } from "antd";
 import { IoGrid } from "react-icons/io5";
@@ -13,7 +13,7 @@ import ShareToMeCard from "./card";
 
 const ShareToMe = () => {
   const userId = useSelector(selectedUserId);
-  const { data } = useShareToMeList(userId);
+  const { data, isLoading } = useShareToMeList(userId);
 
   const items: TabsProps["items"] = [
     {
@@ -24,7 +24,12 @@ const ShareToMe = () => {
     {
       key: "2",
       label: <RiLayoutGrid2Line size={20} />,
-      children: <ShareToMeTable data={data as IShareDataModel[]} />,
+      children: (
+        <ShareToMeTable
+          isLoading={isLoading}
+          data={data as IShareDataModel[]}
+        />
+      ),
     },
   ];
 
@@ -40,7 +45,7 @@ const ShareToMe = () => {
     <ShareTemplate
       items={items}
       leftExtraContent={
-        <HeaderTitle data={data as IShareDataModel[]} title="Shared By Me" />
+        <HeaderTitle data={data as IShareDataModel[]} title="Shared With Me" />
       }
     />
   );

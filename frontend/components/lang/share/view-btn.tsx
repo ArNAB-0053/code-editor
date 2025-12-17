@@ -1,3 +1,4 @@
+import { appUrls } from "@/config/navigation.config";
 import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
@@ -17,7 +18,7 @@ const ViewButton = ({
 
   return (
     <Link
-      href={`/lang/${sharedId}`}
+      href={`${appUrls.SHARE}/${sharedId}`}
       className={cn(
         "group/btn flex items-center justify-center gap-1.5  text-xs font-medium transition-all duration-200",
         variant === "button" ? "rounded-lg px-4 py-2" : "underline-offset-4"

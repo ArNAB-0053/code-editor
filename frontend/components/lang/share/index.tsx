@@ -1,7 +1,7 @@
 import ShareByMe from "./by-me";
 import ShareToMe from "./to-me";
 
-const ShareToOrByMe = () => {
+const ShareToAndByMe = () => {
   return (
     <>
       <ShareToMe />
@@ -10,4 +10,4 @@ const ShareToOrByMe = () => {
   );
 };
 
-export default ShareToOrByMe;
+export default ShareToAndByMe;

@@ -9,12 +9,9 @@ import CodePreview from "@/components/lang/share/code-preview";
 import { FC } from "react";
 import UsersAvatar from "../users-avatar";
 import ViewButton from "../../view-btn";
+import { ShareByMeProps } from "@/@types/share";
 
-interface ShareByMeTableProps {
-  data: IShareByMeRes[];
-}
-
-const ShareByMeCard: FC<ShareByMeTableProps> = ({ data }) => {
+const ShareByMeCard: FC<ShareByMeProps> = ({ data }) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
   // const websiteFont = useSelector(selectWebsiteFont);

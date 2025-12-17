@@ -56,3 +56,31 @@ export interface IGetShareDataRequest {
   ShareId: string;
   CurrentUserId: string
 }
+
+
+// ----- route: `/lang`
+export interface ShareToMeDataType {
+  key: string;
+  code: string;
+  lang: string;
+  sharedBy: IOwnerDetails;
+  sharedId: string;
+}
+
+export interface ShareToMeProps {
+  data: IShareDataModel[];
+  isLoading: boolean;
+}
+
+interface ShareByMeDataType {
+  key: string;
+  code: string;
+  lang: string;
+  sharedWith: IUserDetails[];
+  sharedId: string;
+}
+
+export interface ShareByMeProps {
+  data: IShareByMeRes[];
+  isLoading: boolean;
+}

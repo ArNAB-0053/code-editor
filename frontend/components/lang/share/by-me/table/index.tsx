@@ -1,7 +1,5 @@
-import { IUserDetails } from "@/@types/auth";
-import { IShareByMeRes } from "@/@types/share";
 import { TableProps, Tag } from "antd";
-import React, { FC, useMemo } from "react";
+import { FC, useMemo } from "react";
 import CodePreview from "../../code-preview";
 import UsersAvatar from "../users-avatar";
 import { MAX_SHARE_VISIBLE } from "@/components/lang";
@@ -14,29 +12,19 @@ import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
 import { websiteFonts } from "@/fonts";
-import { StyledATable } from "../../styledATable";
 import { ColumnsType } from "antd/es/table";
+import { StyledATable } from "@/styles/StyledATable";
+import { EmptyContent } from "@/components/empty";
+import { ShareByMeDataType, ShareByMeProps } from "@/@types/share";
 
-interface DataType {
-  key: string;
-  code: string;
-  lang: string;
-  sharedWith: IUserDetails[];
-  sharedId: string;
-}
-
-interface ShareByMeTableProps {
-  data: IShareByMeRes[];
-}
-
-const ShareByMeTable: FC<ShareByMeTableProps> = ({ data }) => {
+const ShareByMeTable: FC<ShareByMeProps> = ({ data, isLoading }) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
-  const columns: TableProps<DataType>["columns"] = [
+  const columns: TableProps<ShareByMeDataType>["columns"] = [
     {
       title: "Code",
       dataIndex: "code",
@@ -97,7 +85,7 @@ const ShareByMeTable: FC<ShareByMeTableProps> = ({ data }) => {
     },
   ];
 
-  const dataSource: DataType[] = useMemo<DataType[]>(() => {
+  const dataSource: ShareByMeDataType[] = useMemo<ShareByMeDataType[]>(() => {
     return data?.map((item) => ({
       key: item.share.id,
       code: item.share.code,
@@ -111,9 +99,18 @@ const ShareByMeTable: FC<ShareByMeTableProps> = ({ data }) => {
 
   return (
     <StyledATable
-      className="custom-scrollbar"
+      $theme={theme}
+      className="max-md:w-[800px] w-full custom-scrollbar"
       columns={columns as ColumnsType}
       dataSource={dataSource}
+      scroll={{ x: 800 }}
+      virtual
+      loading={isLoading}
+      locale={{
+        emptyText: (
+          <EmptyContent title="No shared snippets yet" rootClassName="py-5" />
+        ),
+      }}
     />
   );
 };

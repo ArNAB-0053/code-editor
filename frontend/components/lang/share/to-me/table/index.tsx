@@ -1,4 +1,3 @@
-import { IOwnerDetails, IShareDataModel } from "@/@types/share";
 import { TableProps, Tag } from "antd";
 import { FC, useMemo } from "react";
 import CodePreview from "../../code-preview";
@@ -12,29 +11,19 @@ import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
 import { websiteFonts } from "@/fonts";
 import UsersAvatar from "../users-avatar";
-import { StyledATable } from "../../styledATable";
 import { ColumnsType } from "antd/es/table";
+import { StyledATable } from "@/styles/StyledATable";
+import { EmptyContent } from "@/components/empty";
+import { ShareToMeProps, ShareToMeDataType } from "@/@types/share";
 
-interface DataType {
-  key: string;
-  code: string;
-  lang: string;
-  sharedBy: IOwnerDetails;
-  sharedId: string;
-}
-
-interface ShareToMeTableProps {
-  data: IShareDataModel[];
-}
-
-const ShareToMeTable: FC<ShareToMeTableProps> = ({ data }) => {
+const ShareToMeTable: FC<ShareToMeProps> = ({ data, isLoading }) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
-  const columns: TableProps<DataType>["columns"] = [
+  const columns: TableProps<ShareToMeDataType>["columns"] = [
     {
       title: "Code",
       dataIndex: "code",
@@ -83,7 +72,7 @@ const ShareToMeTable: FC<ShareToMeTableProps> = ({ data }) => {
     },
   ];
 
-  const dataSource: DataType[] = useMemo<DataType[]>(() => {
+  const dataSource: ShareToMeDataType[] = useMemo<ShareToMeDataType[]>(() => {
     return data?.map((item) => ({
       key: item.id,
       code: item.code,
@@ -95,9 +84,18 @@ const ShareToMeTable: FC<ShareToMeTableProps> = ({ data }) => {
 
   return (
     <StyledATable
-      className="overflow-x-auto w-full max-md:w-[1200px] custom-scrollbar"
+      $theme={theme}
+      className="max-md:w-[800px] w-full custom-scrollbar"
       columns={columns as ColumnsType}
       dataSource={dataSource}
+      scroll={{ x: 800 }}
+      loading={isLoading}
+      virtual
+      locale={{
+        emptyText: (
+          <EmptyContent title="No shared snippets yet" rootClassName="py-5" />
+        ),
+      }}
     />
   );
 };

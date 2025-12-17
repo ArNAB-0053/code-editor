@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { CDivider } from "../ui/custom";
 import { HeaderLangTitle } from "./header-title";
-import ShareToOrByMe from "./share";
+import ShareToAndByMe from "./share";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
@@ -83,7 +83,7 @@ const Lang = () => {
       />
 
       {/* SHARE */}
-      <ShareToOrByMe />
+      <ShareToAndByMe />
     </>
   );
 };

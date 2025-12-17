@@ -16,6 +16,8 @@ interface IEmptyContent {
   titleClassName?: string;
   titleStyle?: React.CSSProperties;
   title: string;
+  rootStyle?: React.CSSProperties;
+  rootClassName?: string;
 }
 
 export const EmptyBox = ({
@@ -46,6 +48,8 @@ export const EmptyContent = ({
   boxStyle,
   titleClassName,
   titleStyle,
+  rootClassName,
+  rootStyle,
 }: IEmptyContent) => {
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
@@ -53,7 +57,13 @@ export const EmptyContent = ({
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div
+      className={cn(
+        "w-full flex flex-col items-center justify-center",
+        rootClassName
+      )}
+      style={rootStyle}
+    >
       <EmptyBox className={boxClassName} style={boxStyle} />
       <p
         className={cn("text-xs", font?.className, titleClassName)}

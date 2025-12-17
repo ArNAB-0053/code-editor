@@ -6,7 +6,7 @@ import {
   selectEditorTheme,
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
-import { GlobalStyles } from "@/styles/customStyledCss";
+import { GlobalStyles } from "@/styles/GlobalStyledCss";
 import React from "react";
 import { useSelector } from "react-redux";
 
