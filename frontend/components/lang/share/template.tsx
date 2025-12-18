@@ -1,5 +1,3 @@
-import { selectedUserId } from "@/redux/slices/userSlice";
-import { useShareByMeList } from "@/services/share";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Tabs, TabsProps } from "antd";
@@ -8,7 +6,6 @@ import {
   selectedActiveTabKey,
   setActiveTabKey,
 } from "@/redux/slices/activeTab";
-import EmptyShare from "../empty";
 
 type ShareByMeType = {
   items: TabsProps["items"];
@@ -16,9 +13,6 @@ type ShareByMeType = {
 };
 
 const ShareTemplate = ({ items, leftExtraContent }: ShareByMeType) => {
-  const userId = useSelector(selectedUserId);
-  const { data } = useShareByMeList(userId);
-
   const activeTabKey = useSelector(selectedActiveTabKey);
 
   const dispatch = useDispatch();
@@ -30,13 +24,6 @@ const ShareTemplate = ({ items, leftExtraContent }: ShareByMeType) => {
   return (
     // NOTE: inside className "share" must be present as this is used for styling "Tabs" that is inside "share" className - without "share" it will get the default style of antd.
     <div className="share w-full mb-10">
-      {data?.length === 0 && (
-        <EmptyShare
-          title="No shared snippets yet"
-          description="Share your code snippets with others to see them here"
-        />
-      )}
-
       <Tabs
         defaultActiveKey={activeTabKey}
         items={items}
@@ -50,3 +37,9 @@ const ShareTemplate = ({ items, leftExtraContent }: ShareByMeType) => {
 };
 
 export default ShareTemplate;
+
+
+{/* <EmptyShare
+        title="No shared snippets yet"
+        description="Share your code snippets with others to see them here"
+      /> */}

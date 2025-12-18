@@ -1,6 +1,5 @@
 import { appUrls } from "@/config/navigation.config";
 import Link from "next/link";
-import React from "react";
 import { CAvatar, CDivider } from "../ui/custom";
 import { useSelector } from "react-redux";
 import {
@@ -16,7 +15,6 @@ import { getFullnameFromNameObj } from "@/helper/_base.helper";
 import { cn } from "@/lib/utils";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
-import { OWNER_WIDTH } from ".";
 import { MdEmail } from "react-icons/md";
 import { EmptyContent } from "../empty";
 
@@ -146,8 +144,6 @@ const Owner = ({ ownerDetails }: { ownerDetails: IOwnerDetails }) => {
           </div>
 
           <div className="w-full mt-3 flex items-center justify-between gap-x-2">
-            {/* Width is 32px - w-8 */}
-            {/* NOTE: IF IT CHANGES BELOW WIDTH ALSO CHANGE */}
             <div
               className="h-8 w-8 flex items-center justify-center aspect-square rounded-xl "
               style={{

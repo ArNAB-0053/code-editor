@@ -9,9 +9,11 @@ import { useSelector } from "react-redux";
 const ViewButton = ({
   sharedId,
   variant = "button",
+  title = "View"
 }: {
   sharedId: string;
   variant?: "link" | "button";
+  title?: string;
 }) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -30,7 +32,7 @@ const ViewButton = ({
         textDecorationLine: variant === "button" ? "none" : "underline",
       }}
     >
-      View
+      {title}
       <ExternalLink
         size={12}
         className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"

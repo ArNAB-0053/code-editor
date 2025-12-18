@@ -5,7 +5,7 @@ export const appUrls = {
     LANG: '/lang',
     PYTHON: '/lang/python',
     PROFILE: '/profile',
-    SHARE: '/share',
+    SHARE: '/shared-with-me',
     TERMS_AND_CONDOTIONS: '/legal/terms-and-conditions',
     PRIVACY_POLICY: '/legal/privacy-policy',
 };

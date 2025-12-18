@@ -73,5 +73,19 @@ namespace backend.Controllers
             }
         }
 
+        [HttpPost("share-by-me-details")]
+        public IActionResult GetDetailsOfShareByMeItem([FromBody] ShareByMeItemRequest req)
+        {
+            try
+            {
+                var res = _service.GetDetailsOfShareByMeItem(req.OwnerId, req.ShareId);
+                return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
     }
 }
