@@ -5,7 +5,8 @@ import storage from "redux-persist/lib/storage";
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/userSlice";
 import editorCodeReducer from "./slices/editorSlice";
-import activeTabReducer from "./slices/activeTab"
+import activeTabReducer from "./slices/activeTab";
+import sharedEditorCodeReducer from "./slices/sharedEditorSlice";
 
 const persistPreferenceConfig = {
   key: "preference",
@@ -44,6 +45,7 @@ export const store = configureStore({
     activeField: activeFieldReducer,
     user: persistedUserDetails,
     editorCode: editorCodeReducer,
+    sharedEditorCode: sharedEditorCodeReducer,
     activeTab: persistedActiveTab,
   },
   middleware: (getDefaultMiddleware) =>
