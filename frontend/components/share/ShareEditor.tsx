@@ -1,20 +1,9 @@
 "use client";
-import { useParams } from "next/navigation";
 import EditorComponent from "../editor/editor";
-import { ReactElement, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  selectedLang,
-  setCodeRedux,
-  setLangRedux,
-  setOutputRedux,
-} from "@/redux/slices/editorSlice";
-import { useSharedData } from "@/services/share";
+import { ReactElement } from "react";
+import { selectedLang } from "@/redux/slices/editorSlice";
 import { useSelector } from "react-redux";
-import { selectedUserId } from "@/redux/slices/userSlice";
-import {
-  IShareDataModel,
-} from "@/@types/share";
+import { IShareDataModel } from "@/@types/share";
 import {
   selectEditorTheme,
   selectWebsiteFont,
@@ -32,9 +21,16 @@ type ShareEditorType = {
   isLoading: boolean;
   heading?: string | ReactElement;
   detailsComponent: ReactElement;
+  headerIcon?: ReactElement;
 };
 
-const ShareEditor = ({ sharedData, isLoading, heading, detailsComponent }: ShareEditorType) => {
+const ShareEditor = ({
+  sharedData,
+  isLoading,
+  heading,
+  detailsComponent,
+  headerIcon = <FaInfoCircle />,
+}: ShareEditorType) => {
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const theme = themeConfig(editorTheme);
@@ -50,7 +46,7 @@ const ShareEditor = ({ sharedData, isLoading, heading, detailsComponent }: Share
     <div className="w-full flex gap-x-2">
       <EditorComponent p_lang={sharedData?.lang?.trim() || lang} isShared />
       <div
-        className=" text-wrap text-white overflow-x-hidden"
+        className=" text-wrap text-white overflow-x-hidden overflow-y-auto pb-4 custom-scrollbar"
         style={{
           width: OWNER_WIDTH,
           height: "calc(100vh - 50px - 20px)",
@@ -67,7 +63,7 @@ const ShareEditor = ({ sharedData, isLoading, heading, detailsComponent }: Share
             borderLeftColor: theme?.activeColor,
           }}
         >
-          <FaInfoCircle />
+          {headerIcon}
           {heading}
         </div>
         {detailsComponent}

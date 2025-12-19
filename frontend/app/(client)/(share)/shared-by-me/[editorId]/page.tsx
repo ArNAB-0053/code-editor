@@ -1,5 +1,9 @@
+import SharedByMePage from "@/components/share/by-me";
+
 const page = () => {
-  return <p>dssajh</p>;
+  return (
+    <SharedByMePage/>
+  );
 };
 
 export default page;

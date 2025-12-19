@@ -79,7 +79,7 @@ const ShareByMeTable: FC<ShareByMeProps> = ({ data, isLoading }) => {
       key: "sharedId",
       render: (_, record) => (
         <div className="w-full">
-          <ViewButton title="Go to editor" variant="link" sharedId={record.sharedId} />
+          <ViewButton isShareByMe title="Go to editor" variant="link" sharedId={record.sharedId} />
         </div>
       ),
     },

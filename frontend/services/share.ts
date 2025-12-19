@@ -1,9 +1,11 @@
 import {
-  IGetShareDataRequest,
+  IGetShareByMeDataRequest,
+  IGetShareWithMeDataRequest,
   IShareByMeRes,
   IShareDataModel,
   IShareModel,
   IShareRequest,
+  IShareWithMeRes,
 } from "@/@types/share";
 import axiosInstance from "@/lib/axios-instance";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -32,10 +34,10 @@ export const useCreateShare = () => {
 };
 
 // GET the snapshot data
-export const getSharedData = async (
-  payload: IGetShareDataRequest
-): Promise<IShareDataModel> => {
-  const res = await axiosInstance.post(`${URI}/s/data`, payload);
+export const getSharedWithMeDataDetails = async (
+  payload: IGetShareWithMeDataRequest
+): Promise<IShareWithMeRes> => {
+  const res = await axiosInstance.post(`${URI}/data/with-me`, payload);
 
   if (!res.data) {
     const txt = await res.statusText;
@@ -45,10 +47,10 @@ export const getSharedData = async (
   return res.data.data;
 };
 
-export const useSharedData = (payload: IGetShareDataRequest) => {
+export const useSharedWithMeDataDetails = (payload: IGetShareWithMeDataRequest) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SHARE, payload?.ShareId],
-    queryFn: () => getSharedData(payload),
+    queryFn: () => getSharedWithMeDataDetails(payload),
     enabled: !!payload?.ShareId,
   });
 };
@@ -90,5 +92,26 @@ export const useShareByMeList = (userId: string) => {
     queryKey: [QUERY_KEYS.SHARE_BY_ME, userId],
     queryFn: () => getShareByMeList(userId),
     enabled: !!userId,
+  });
+};
+
+export const getSharedByMeDataDetails = async (
+  payload: IGetShareByMeDataRequest
+): Promise<IShareByMeRes> => {
+  const res = await axiosInstance.post(`${URI}/data/by-me`, payload);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data.data;
+};
+
+export const useSharedByMeDataDetails = (payload: IGetShareByMeDataRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SHARE, payload?.SharedId],
+    queryFn: () => getSharedByMeDataDetails(payload),
+    enabled: !!payload?.SharedId,
   });
 };

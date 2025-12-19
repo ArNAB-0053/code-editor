@@ -9,12 +9,15 @@ import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { IUserDetails } from "@/@types/auth";
 
-type UsersAvatarType = {
+type UsersAvatarProps = {
   len: number;
   isRem: boolean;
   rem: number;
   sharedWith: IUserDetails[];
   type?: "table" | "card";
+  avatarClassName?: string;
+  nameClassName?: string;
+  usernameClassName?: string;
 };
 
 const UsersAvatar = ({
@@ -23,7 +26,10 @@ const UsersAvatar = ({
   rem,
   sharedWith,
   type = "card",
-}: UsersAvatarType) => {
+  avatarClassName,
+  nameClassName,
+  usernameClassName,
+}: UsersAvatarProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -46,7 +52,10 @@ const UsersAvatar = ({
             <CAvatar
               name={u.name}
               characters={1}
-              className="w-8 h-8 text-xs font-semibold border-0 ring-2 backdrop-blur-2xl"
+              className={cn(
+                "w-8 h-8 text-xs font-semibold border-0 ring-2 backdrop-blur-2xl",
+                avatarClassName
+              )}
               style={{
                 background:
                   idx === 0
@@ -59,12 +68,18 @@ const UsersAvatar = ({
               <span className="flex-1">
                 <p
                   style={{ color: theme.disabledTextColor }}
-                  className="text-sm truncate max-w-28 overflow-hidden"
+                  className={cn(
+                    "text-sm truncate max-w-28 overflow-hidden",
+                    nameClassName
+                  )}
                 >
                   {getFullnameFromNameObj(sharedWith[0].name)}
                 </p>
                 <p
-                  className="text-xs -translate-y-1 font-medium"
+                  className={cn(
+                    "text-xs -translate-y-1 font-medium",
+                    usernameClassName
+                  )}
                   style={{ color: theme.activeColor }}
                 >
                   @{sharedWith[0].username}
@@ -75,7 +90,10 @@ const UsersAvatar = ({
         ))}
       {isRem && (
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ring-2 backdrop-blur-2xl"
+          className={cn(
+            "w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ring-2 backdrop-blur-2xl",
+            avatarClassName
+          )}
           style={{
             background: `${theme.activeColor}50`,
             color: theme.activeColor,

@@ -4,8 +4,21 @@ import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
 import { IOwnerDetails } from "@/@types/share";
+import { cn } from "@/lib/utils";
 
-const UsersAvatar = ({ sharedBy }: { sharedBy: IOwnerDetails }) => {
+type UsersAvatarProps = {
+  sharedBy: IOwnerDetails;
+  avatarClassName?: string;
+  nameClassName?: string;
+  usernameClassName?: string;
+};
+
+const UsersAvatar = ({
+  sharedBy,
+  avatarClassName,
+  nameClassName,
+  usernameClassName,
+}: UsersAvatarProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -16,7 +29,10 @@ const UsersAvatar = ({ sharedBy }: { sharedBy: IOwnerDetails }) => {
           <CAvatar
             name={sharedBy.name}
             characters={1}
-            className="w-8 h-8 text-xs font-semibold border-0 ring-2 backdrop-blur-2xl"
+            className={cn(
+              "w-8 h-8 text-xs font-semibold border-0 ring-2 backdrop-blur-2xl",
+              avatarClassName
+            )}
             style={{
               background: `${theme.activeColor}50`,
               color: theme.activeColor,
@@ -25,12 +41,18 @@ const UsersAvatar = ({ sharedBy }: { sharedBy: IOwnerDetails }) => {
           <span className="flex-1">
             <p
               style={{ color: theme.disabledTextColor }}
-              className="text-sm truncate max-w-28 overflow-hidden"
+              className={cn(
+                "text-sm truncate max-w-28 overflow-hidden",
+                nameClassName
+              )}
             >
               {getFullnameFromNameObj(sharedBy.name)}
             </p>
             <p
-              className="text-xs -translate-y-1 font-medium"
+              className={cn(
+                "text-xs -translate-y-1 font-medium",
+                usernameClassName
+              )}
               style={{ color: theme.activeColor }}
             >
               @{sharedBy.username}

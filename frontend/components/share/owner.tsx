@@ -10,15 +10,22 @@ import { jetBrainsMono, spaceGrotesk, websiteFonts } from "@/fonts";
 import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
 import { fallbackAvatar, fallbackProfileDetails } from "@/constants/base.const";
-import { IOwnerDetails } from "@/@types/share";
+import { IOwnerDetails, IShareDataModel } from "@/@types/share";
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
 import { cn } from "@/lib/utils";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { EmptyContent } from "../empty";
+import Remaining from "./with-me/remaining";
+import { dateISOtoNormal } from "@/helper/date-formatter";
 
-const Owner = ({ ownerDetails }: { ownerDetails: IOwnerDetails }) => {
+type OwnerProps = {
+  ownerDetails: IOwnerDetails;
+  remaining: IShareDataModel[];
+};
+
+const Owner = ({ ownerDetails, remaining }: OwnerProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const theme = themeConfig(editorTheme);
@@ -175,22 +182,45 @@ const Owner = ({ ownerDetails }: { ownerDetails: IOwnerDetails }) => {
 
         <div className="w-full">
           <p
-            className="text-start mt-6 w-full font-semibold text-xs "
+            className="text-start mt-6 w-full font-semibold text-xs -translate-x-3"
             style={{
+              width: "calc(100% + 24px)",
               color: theme.disabledTextColor,
             }}
           >
             Other Sharings
           </p>
-          <CDivider className="mt-1 mb-4!" />
+          <CDivider className="mt-1 mb-2! -translate-x-3" />
 
-          {/* Just for the margin-top */}
-          <div className="mt-20" />
-          <EmptyContent
-            title="No Data Found"
-            boxClassName="opacity-50!"
-            titleClassName="opacity-60!"
-          />
+          {remaining?.length === 0 && (
+            <>
+              {/* Just for the margin-top */}
+              <div className="mt-20" />
+              <EmptyContent
+                title="No Data Found"
+                boxClassName="opacity-50!"
+                titleClassName="opacity-60!"
+              />
+            </>
+          )}
+
+          <div
+            className="flex items-center justify-center flex-col gap-y-1 -translate-x-3"
+            style={{
+              width: "calc(100% + 24px)",
+            }}
+          >
+            {remaining?.map((rem, i) => (
+              <Remaining
+                key={i}
+                code={rem.code}
+                lang={rem.lang}
+                sharedBy={ownerDetails}
+                sharedId={rem.sharedId}
+                createdAt={dateISOtoNormal(rem.createdAt)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

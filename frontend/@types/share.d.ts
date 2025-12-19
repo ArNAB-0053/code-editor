@@ -47,14 +47,28 @@ export interface IShareDataModel {
   allowedUsers: string[];
 }
 
-export interface IShareByMeRes {
+export interface IShareByMeResRemaining{
   share: IShareDataModel,
   sharedWith: IUserDetails[]
 }
+export interface IShareByMeRes {
+  remaining: IShareByMeResRemaining[],
+  share: IShareDataModel,
+  sharedWith: IUserDetails[]
+}
+export interface IShareWithMeRes {
+  remaining: IShareDataModel[],
+  share: IShareDataModel,
+}
 
-export interface IGetShareDataRequest {
+export interface IGetShareWithMeDataRequest {
   ShareId: string;
   CurrentUserId: string
+}
+
+export interface IGetShareByMeDataRequest {
+  SharedId: string;
+  OwnerId: string
 }
 
 

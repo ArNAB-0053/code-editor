@@ -31,7 +31,7 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPost("s/data")]
+        [HttpPost("data/with-me")]
         public IActionResult GetShareSnapShot([FromBody] GetShareRequest req)
         {
             try
@@ -73,12 +73,12 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPost("share-by-me-details")]
+        [HttpPost("data/by-me")]
         public IActionResult GetDetailsOfShareByMeItem([FromBody] ShareByMeItemRequest req)
         {
             try
             {
-                var res = _service.GetDetailsOfShareByMeItem(req.OwnerId, req.ShareId);
+                var res = _service.GetDetailsOfShareByMeItem(req.OwnerId, req.SharedId);
                 return Ok(new { status = "success", data = res });
             }
             catch (Exception ex)

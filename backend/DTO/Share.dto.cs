@@ -25,7 +25,7 @@ namespace backend.DTO
     public class ShareByMeItemRequest
     {
         public string OwnerId { get; set; }
-        public string ShareId { get; set; }
+        public string SharedId { get; set; }
     }
 
     public class OwnerDetails
@@ -55,10 +55,22 @@ namespace backend.DTO
         public string? MobileNo { get; set; }
     }
 
-    public class ShareByMeDto
+    public class ShareByMeDtoTemp
     {
         public ShareModel Share { get; set; }
         public List<UserBasicDto> SharedWith { get; set; }
+    }
+
+    public class ShareByMeDto
+    {
+        public List<ShareByMeDtoTemp> Remaining { get; set; }
+        public ShareModel Share { get; set; }
+        public List<UserBasicDto> SharedWith { get; set; }
+    }
+
+    public class ShareWithMeDTO {
+        public ShareModel Share { get; set; }
+        public List<ShareModel> Remaining { get; set; }
     }
 
     [BsonIgnoreExtraElements]

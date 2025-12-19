@@ -11,18 +11,7 @@ import { ThemeTypes } from "@/@types/theme";
 import { ReactNode } from "react";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { fallbackProfileDetails } from "@/constants/base.const";
-import { PiUserFocusBold, PiUserFocusLight } from "react-icons/pi";
-
-const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
-  &:hover {
-    color: ${({ $theme }) => $theme.activeColor} !important;
-  }
-`;
-const StyledDiv = styled.div<{ $theme: ThemeTypes }>`
-  &:hover {
-    color: ${({ $theme }) => $theme.activeColor} !important;
-  }
-`;
+import { StyledDiv, StyledLink } from "@/styles/StyledComponents";
 
 export const AvatarTemplate = ({
   dropdownContent,

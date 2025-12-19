@@ -70,31 +70,70 @@ namespace backend.Services.implementations
         }
 
         // (GET) SHARED DATA (sharedWithMe)
-        public ShareModel GetShare(string shareId, string? userId)
+        public ShareWithMeDTO GetShare(string shareId, string? userId)
         {
-            var share = _share.Find(x => x.SharedId == shareId).FirstOrDefault();
+            var pipeline = new[]
+                    {
+                        new BsonDocument("$facet",
+                        new BsonDocument
+                            {
+                                { "Remaining",
+                        new BsonArray
+                                {
+                                    new BsonDocument("$match",
+                                    new BsonDocument("UserId", "69383151691997054ab69989")),
+                                    new BsonDocument("$lookup",
+                                    new BsonDocument
+                                        {
+                                            { "from", "share" },
+                                            { "localField", "SharedId" },
+                                            { "foreignField", "SharedId" },
+                                            { "as", "Share" }
+                                        }),
+                                    new BsonDocument("$unwind", "$Share"),
+                                    new BsonDocument("$replaceRoot",
+                                    new BsonDocument("newRoot", "$Share"))
+                                } },
+                                { "Share",
+                        new BsonArray
+                                {
+                                    new BsonDocument("$match",
+                                    new BsonDocument
+                                        {
+                                            { "UserId", "69383151691997054ab69989" },
+                                            { "SharedId", "30297d525d09" }
+                                        }),
+                                    new BsonDocument("$lookup",
+                                    new BsonDocument
+                                        {
+                                            { "from", "share" },
+                                            { "localField", "SharedId" },
+                                            { "foreignField", "SharedId" },
+                                            { "as", "Share" }
+                                        }),
+                                    new BsonDocument("$unwind", "$Share"),
+                                    new BsonDocument("$replaceRoot",
+                                    new BsonDocument("newRoot", "$Share"))
+                                } }
+                            }),
+                        new BsonDocument("$project",
+                        new BsonDocument
+                            {
+                                { "Remaining", "$Remaining" },
+                                { "Share",
+                        new BsonDocument("$arrayElemAt",
+                        new BsonArray
+                                    {
+                                        "$Share",
+                                        0
+                                    }) }
+                            })
+                    };
+            var result = _sharedUser
+                .Aggregate<ShareWithMeDTO>(pipeline)
+                .FirstOrDefault();
 
-            if (share == null)
-                throw new Exception("Invalid share link");
-
-            // If revoked
-            if (share.IsRevoked)
-                throw new Exception("This share link has been revoked");
-
-            if (share.Visibility == ShareVisibility.Private)
-            {
-                if (string.IsNullOrEmpty(userId))
-                    throw new Exception("Login required");
-
-                var hasAccess = _sharedUser.Find(x =>
-                    x.SharedId == shareId && x.UserId == userId
-                ).Any();
-
-                if (!hasAccess)
-                    throw new Exception("You don't have permission");
-            }
-
-            return share;
+            return result;
         }
 
         // ---------------------------------------------------------------------------------------
@@ -329,67 +368,162 @@ namespace backend.Services.implementations
         {
             var pipeline = new[]
                 {
-                    new BsonDocument("$match",
+                    new BsonDocument("$facet",
                     new BsonDocument
                         {
-                            { "OwnerId", ownerId },
-                            { "SharedId", shareId }
-                        }),
-                    new BsonDocument("$lookup",
-                    new BsonDocument
-                        {
-                            { "from", "share" },
-                            { "localField", "SharedId" },
-                            { "foreignField", "SharedId" },
-                            { "as", "Share" }
-                        }),
-                    new BsonDocument("$unwind", "$Share"),
-                    new BsonDocument("$lookup",
-                    new BsonDocument
-                        {
-                            { "from", "users" },
-                            { "let",
-                    new BsonDocument("userId",
-                    new BsonDocument("$toObjectId", "$UserId")) },
-                            { "pipeline",
+                            { "Remaining",
                     new BsonArray
                             {
                                 new BsonDocument("$match",
-                                new BsonDocument("$expr",
-                                new BsonDocument("$eq",
+                                new BsonDocument
+                                    {
+                                        { "OwnerId", ownerId },
+                                        { "SharedId",
+                                new BsonDocument("$ne", shareId) }
+                                    }),
+                                new BsonDocument("$lookup",
+                                new BsonDocument
+                                    {
+                                        { "from", "share" },
+                                        { "localField", "SharedId" },
+                                        { "foreignField", "SharedId" },
+                                        { "as", "Share" }
+                                    }),
+                                new BsonDocument("$unwind", "$Share"),
+                                new BsonDocument("$lookup",
+                                new BsonDocument
+                                    {
+                                        { "from", "users" },
+                                        { "let",
+                                new BsonDocument("userId",
+                                new BsonDocument("$toObjectId", "$UserId")) },
+                                        { "pipeline",
                                 new BsonArray
+                                        {
+                                            new BsonDocument("$match",
+                                            new BsonDocument("$expr",
+                                            new BsonDocument("$eq",
+                                            new BsonArray
+                                                        {
+                                                            "$_id",
+                                                            "$$userId"
+                                                        })))
+                                        } },
+                                        { "as", "SharedWith" }
+                                    }),
+                                new BsonDocument("$unwind", "$SharedWith"),
+                                new BsonDocument("$group",
+                                new BsonDocument
+                                    {
+                                        { "_id", "$Share.SharedId" },
+                                        { "Share",
+                                new BsonDocument("$first", "$Share") },
+                                        { "SharedWith",
+                                new BsonDocument("$push",
+                                new BsonDocument
                                             {
-                                                "$_id",
-                                                "$$userId"
-                                            })))
+                                                { "UserId",
+                                new BsonDocument("$toString", "$SharedWith._id") },
+                                                { "Name", "$SharedWith.Name" },
+                                                { "Username", "$SharedWith.Username" },
+                                                { "MobileNo", "$SharedWith.MobileNo" },
+                                                { "Email", "$SharedWith.Email" }
+                                            }) }
+                                    }),
+                                new BsonDocument("$project",
+                                new BsonDocument
+                                    {
+                                        { "_id", 0 },
+                                        { "Share", 1 },
+                                        { "SharedWith", 1 }
+                                    })
                             } },
-                            { "as", "SharedWith" }
-                        }),
-                    new BsonDocument("$unwind", "$SharedWith"),
-                    new BsonDocument("$group",
-                    new BsonDocument
-                        {
-                            { "_id", "$SharedWith._id" },
-                            { "Share",
-                    new BsonDocument("$first", "$Share") },
-                            { "SharedWith",
-                    new BsonDocument("$push",
-                    new BsonDocument
-                                {
-                                    { "UserId",
-                    new BsonDocument("$toString", "$SharedWith._id") },
-                                    { "Name", "$SharedWith.Name" },
-                                    { "Username", "$SharedWith.Username" },
-                                    { "Email", "$SharedWith.Email" },
-                                    { "MobileNo", "$SharedWith.MobileNo" }
-                                }) }
+                            { "ShareDetails",
+                    new BsonArray
+                            {
+                                new BsonDocument("$match",
+                                new BsonDocument
+                                    {
+                                        { "OwnerId", ownerId },
+                                        { "SharedId", shareId }
+                                    }),
+                                new BsonDocument("$lookup",
+                                new BsonDocument
+                                    {
+                                        { "from", "share" },
+                                        { "localField", "SharedId" },
+                                        { "foreignField", "SharedId" },
+                                        { "as", "Share" }
+                                    }),
+                                new BsonDocument("$unwind", "$Share"),
+                                new BsonDocument("$lookup",
+                                new BsonDocument
+                                    {
+                                        { "from", "users" },
+                                        { "let",
+                                new BsonDocument("userId",
+                                new BsonDocument("$toObjectId", "$UserId")) },
+                                        { "pipeline",
+                                new BsonArray
+                                        {
+                                            new BsonDocument("$match",
+                                            new BsonDocument("$expr",
+                                            new BsonDocument("$eq",
+                                            new BsonArray
+                                                        {
+                                                            "$_id",
+                                                            "$$userId"
+                                                        })))
+                                        } },
+                                        { "as", "SharedWith" }
+                                    }),
+                                new BsonDocument("$unwind", "$SharedWith"),
+                                new BsonDocument("$group",
+                                new BsonDocument
+                                    {
+                                        { "_id", 0 },
+                                        { "Share",
+                                new BsonDocument("$first", "$Share") },
+                                        { "SharedWith",
+                                new BsonDocument("$push",
+                                new BsonDocument
+                                            {
+                                                { "UserId",
+                                new BsonDocument("$toString", "$SharedWith._id") },
+                                                { "Name", "$SharedWith.Name" },
+                                                { "Username", "$SharedWith.Username" },
+                                                { "Email", "$SharedWith.Email" },
+                                                { "MobileNo", "$SharedWith.MobileNo" }
+                                            }) }
+                                    }),
+                                new BsonDocument("$project",
+                                new BsonDocument
+                                    {
+                                        { "_id", 0 },
+                                        { "Share", 1 },
+                                        { "SharedWith", 1 }
+                                    })
+                            } }
                         }),
                     new BsonDocument("$project",
                     new BsonDocument
                         {
                             { "_id", 0 },
-                            { "Share", 1 },
-                            { "SharedWith", 1 }
+                            { "Remaining", "$Remaining" },
+                            { "Share",
+                    new BsonDocument("$arrayElemAt",
+                    new BsonArray
+                                {
+                                    "$ShareDetails.Share",
+                                    0
+                                }) },
+                            { "SharedWith",
+                    new BsonDocument("$arrayElemAt",
+                    new BsonArray
+                                {
+                                    "$ShareDetails.SharedWith",
+                                    0
+                                }) }
                         })
                 };
 

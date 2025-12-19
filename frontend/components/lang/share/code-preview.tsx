@@ -11,12 +11,17 @@ import { useSelector } from "react-redux";
 import { Editor, Monaco } from "@monaco-editor/react";
 import { Code } from "lucide-react";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
+import { cn } from "@/lib/utils";
+import React from "react";
 
 type CodePreviewType = {
   code: string;
   lang: string;
   height?: string;
   showLangBadge?: boolean;
+  editorWrapperClassName?: string;
+  editorWrapperStyle?: React.CSSProperties;
+  editorFontSizeProp?: string;
 };
 
 const CodePreview = ({
@@ -24,6 +29,9 @@ const CodePreview = ({
   lang,
   height = "10rem",
   showLangBadge = true,
+  editorWrapperClassName,
+  editorWrapperStyle,
+  editorFontSizeProp,
 }: CodePreviewType) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -52,10 +60,13 @@ const CodePreview = ({
       className="relative overflow-hidden"
       style={{
         height: height,
-        width: '100%'
+        width: "100%",
       }}
     >
-      <div className="absolute inset-0 p-4">
+      <div
+        className={cn("absolute inset-0 p-4", editorWrapperClassName)}
+        style={editorWrapperStyle}
+      >
         <Editor
           value={code}
           width="100%"
@@ -66,7 +77,9 @@ const CodePreview = ({
           beforeMount={handleBeforeMount}
           options={{
             fontFamily: editorFonts[editorFont as EditorFontKey],
-            fontSize: editorFontSize - 2,
+            fontSize: editorFontSizeProp
+              ? editorFontSizeProp
+              : editorFontSize - 2,
             minimap: { enabled: false },
             automaticLayout: true,
             readOnly: true,
@@ -80,7 +93,7 @@ const CodePreview = ({
             lineDecorationsWidth: 0,
             lineNumbersMinChars: 0,
           }}
-          className=" blur-[0.5px] pointer-events-none "
+          className=" blur-[0.5px] pointer-events-none  "
         />
       </div>
 

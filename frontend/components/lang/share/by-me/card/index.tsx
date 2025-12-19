@@ -69,7 +69,7 @@ const ShareByMeCard: FC<ShareByMeProps> = ({ data }) => {
                   rem={rem}
                 />
 
-                <ViewButton sharedId={x.share.sharedId} />
+                <ViewButton isShareByMe sharedId={x.share.sharedId} />
               </div>
             </div>
           </div>

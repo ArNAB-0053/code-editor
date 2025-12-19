@@ -94,15 +94,11 @@ const ShareModal = ({
       setIsSharingLoading(false);
     }
   };
-  // const generatedLink =
-  //   shareMode === "snapshot"
-  //     ? `http://localhost:3000${appUrls.SHARE}/${sharingDetails?.sharedId}?mode=snapshot`
-  //     : `http://localhost:3000${appUrls.SHARE}/${editorId}?mode=live`;
 
   const snapshotLink =
     sharingDetails?.sharedId &&
-    `http://localhost:3000${appUrls.SHARE}/${sharingDetails?.sharedId}`;
-  const liveLink = `http://localhost:3000${appUrls.SHARE}/${editorId}`;
+    `http://localhost:3000${appUrls.SHARE.WITH_ME}/${sharingDetails?.sharedId}`;
+  const liveLink = `http://localhost:3000${appUrls.SHARE.WITH_ME}/${editorId}`;
 
   const copyLink = (link: string) => {
     navigator.clipboard.writeText(link).then(() => {

@@ -29,6 +29,7 @@ const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
 export const MAX_SHARE_VISIBLE = {
   TABLE: 8,
   CARD: 3,
+  LIST: 2
 };
 
 const Lang = () => {
