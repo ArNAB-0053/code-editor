@@ -213,11 +213,11 @@ const Owner = ({ ownerDetails, remaining }: OwnerProps) => {
             {remaining?.map((rem, i) => (
               <Remaining
                 key={i}
-                code={rem.code}
-                lang={rem.lang}
+                code={rem?.code}
+                lang={rem?.lang}
                 sharedBy={ownerDetails}
-                sharedId={rem.sharedId}
-                createdAt={dateISOtoNormal(rem.createdAt)}
+                sharedId={rem?.sharedId}
+                createdAt={dateISOtoNormal(rem?.createdAt)}
               />
             ))}
           </div>

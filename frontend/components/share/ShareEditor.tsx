@@ -13,6 +13,7 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { FaInfoCircle } from "react-icons/fa";
+import SharedEditorComponent from "../editor/sharedEditor";
 
 export const OWNER_WIDTH = "25rem";
 
@@ -44,7 +45,7 @@ const ShareEditor = ({
 
   return (
     <div className="w-full flex gap-x-2">
-      <EditorComponent p_lang={sharedData?.lang?.trim() || lang} isShared />
+      <SharedEditorComponent p_lang={sharedData?.lang?.trim() || lang} isShared />
       <div
         className=" text-wrap text-white overflow-x-hidden overflow-y-auto pb-4 custom-scrollbar"
         style={{
