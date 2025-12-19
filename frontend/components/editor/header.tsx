@@ -13,21 +13,7 @@ import { useRef, useState } from "react";
 import { IoMdShare } from "react-icons/io";
 import { AButton } from "../ui/antd";
 import { cn } from "@/lib/utils";
-import { createGlobalStyle } from "styled-components";
-import { ThemeTypes } from "@/@types/theme";
 import ShareModal from "../modals/share";
-
-const GlobalStyles = createGlobalStyle<{ $theme: ThemeTypes }>`
-  .ant-switch {
-    background: ${({ $theme }) => $theme?.border20} !important;
-  }
-  .ant-switch-checked {
-    background: ${({ $theme }) => $theme?.activeColor} !important;
-  }
-  .ant-switch-handle::before {
-    background: rgba(255,255,255,0.50) !important;
-  }
-`;
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
@@ -68,8 +54,8 @@ const EditorHeaderComponent = (props: HeaderProps) => {
     props.setLoading(true);
     props.setError("");
 
-    console.log(currentCode)
-    console.log(props.p_lang)
+    console.log(currentCode);
+    console.log(props.p_lang);
 
     try {
       const res = await runCode({
@@ -111,7 +97,6 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   return (
     // Editor Header
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
-      <GlobalStyles $theme={theme} />
       <span className="font-medium text-center flex items-center justify-center gap-x-2 w-[100px]">
         main.py
         {/* <IoMdCloudDone className="opacity-40 size-3.5" /> */}

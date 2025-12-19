@@ -3,8 +3,9 @@ import BaseCDivider from "../_Base/CDivider";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
 import { useSelector } from "react-redux";
+import React from "react";
 export interface CDividerType {
-  style?: any;
+  style?: React.CSSProperties;
   className?: string;
   direction?: "horizontal" | "vertical";
 }

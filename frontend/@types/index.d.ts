@@ -1,4 +1,3 @@
-import { Ref } from "react";
 import { SetterFunctionTypesBool, SetterFunctionTypesString } from "./_base";
 
 export interface OutputHeaderProps {
@@ -15,7 +14,7 @@ export interface EditorHeaderProps {
   setIsCopied: SetterFunctionTypesBool;
   loading: boolean;
   setLoading: setterFunctionTypesBool;
-  setError: setterFunctionTypesString;
+  setError: SetterFunctionTypesString;
   isShared: boolean;
 }
 

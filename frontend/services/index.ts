@@ -5,6 +5,10 @@ export const QUERY_KEYS = {
     SHARE: 'share',
     USERNAME_CHECK: 'username-check',
     EMAIL_CHECK: 'email-check',
+    SEARCH: 'search',
+
+    SHARE_TO_ME: 'share-to-me',
+    SHARE_BY_ME: 'share-by-me',
 
     CONNECTION: 'connection',
     NOTIFICATION: 'notification',
