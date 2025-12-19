@@ -67,11 +67,11 @@ const Users = ({
       {remaining?.map((rem, i) => (
         <Remaining
           key={i}
-          code={rem.share.code}
-          lang={rem.share.lang}
-          sharedWith={rem.sharedWith}
-          sharedId={rem.share.sharedId}
-          createdAt={dateISOtoNormal(rem.share.createdAt)}
+          code={rem?.share?.code}
+          lang={rem?.share?.lang}
+          sharedWith={rem?.sharedWith}
+          sharedId={rem?.share?.sharedId}
+          createdAt={dateISOtoNormal(rem?.share?.createdAt)}
         />
       ))}
     </div>

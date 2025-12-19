@@ -1,10 +1,5 @@
 "use client";
 import { IOwnerDetails, IShareDataModel } from "@/@types/share";
-import {
-  setCodeRedux,
-  setLangRedux,
-  setOutputRedux,
-} from "@/redux/slices/editorSlice";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useSharedWithMeDataDetails } from "@/services/share";
 import { useParams } from "next/navigation";
@@ -13,12 +8,14 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Owner from "../owner";
 import ShareEditor from "../ShareEditor";
+import { selectedSharedCode, setShareCodeRedux, setShareIdRedux, setShareLangRedux, setShareOutputRedux } from "@/redux/slices/sharedEditorSlice";
 
 const SharedWithMePage = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
   const userId = useSelector(selectedUserId);
+  const currCode = useSelector(selectedSharedCode)
   const shareId = params?.editorId;
 
   const [ownerDetails, setOwnerDetails] = useState<IOwnerDetails>();
@@ -33,13 +30,17 @@ const SharedWithMePage = () => {
 
   const { data: sharedData, isLoading } = useSharedWithMeDataDetails(payload);
 
-  // console.log(sharedData);
+  console.log(sharedData);
+  
 
   useEffect(() => {
     if (!sharedData || isLoading) return;
-    dispatch(setLangRedux(sharedData?.share?.lang));
-    dispatch(setCodeRedux(sharedData?.share?.code));
-    dispatch(setOutputRedux(sharedData?.share?.output));
+    dispatch(setShareIdRedux(sharedData?.share.sharedId))
+    dispatch(setShareLangRedux(sharedData?.share?.lang));
+    dispatch(setShareCodeRedux(sharedData?.share?.code));
+    dispatch(setShareOutputRedux(sharedData?.share?.output));
+
+    console.log(currCode);
 
     ownerDetailsRef.current = sharedData?.share?.ownerDetails;
     remainingRef.current = sharedData?.remaining;
