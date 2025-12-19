@@ -1,6 +1,7 @@
 ﻿using backend.DTO;
 using backend.Models;
 using backend.Services.implementations;
+using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -30,12 +31,54 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPost("s/data")]
+        [HttpPost("data/with-me")]
         public IActionResult GetShareSnapShot([FromBody] GetShareRequest req)
         {
             try
             {
                 var res = _service.GetShare(shareId: req.ShareId, userId: req.CurrentUserId);
+                return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        [HttpPost("share-by-me")]
+        public IActionResult GetAllSharesByMe([FromBody] UserIdRequest req)
+        {
+            try
+            {
+                var res = _service.GetAllShareByUser(req.UserId);
+                return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        [HttpPost("share-to-me")]
+        public IActionResult GetAllSharesToMe([FromBody] UserIdRequest req)
+        {
+            try
+            {
+                var res = _service.GetAllShareToUser(req.UserId);
+                return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        [HttpPost("data/by-me")]
+        public IActionResult GetDetailsOfShareByMeItem([FromBody] ShareByMeItemRequest req)
+        {
+            try
+            {
+                var res = _service.GetDetailsOfShareByMeItem(req.OwnerId, req.SharedId);
                 return Ok(new { status = "success", data = res });
             }
             catch (Exception ex)

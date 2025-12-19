@@ -4,11 +4,12 @@ import { z } from "zod";
 export const registerSchema = z
   .object({
     name: z.object({
-      firstname: z.string().min(1, "First name required"),
-      middlename: z.string().optional().or(z.literal("")),
-      lastname: z.string().min(1, "Last name required"),
+      firstName: z.string().min(1, "First name required"),
+      middleName: z.string().optional().or(z.literal("")),
+      lastName: z.string().min(1, "Last name required"),
     }),
-
+    // initial: z.string().optional().or(z.literal("")),
+    // mobile: z.string().optional().or(z.literal("")),
     email: z.string().email("Invalid email"),
     username: z.string().superRefine((value, ctx) => {
       const err = getUsernameError(value);

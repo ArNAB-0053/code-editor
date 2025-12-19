@@ -7,7 +7,7 @@ permissions:
 
 on:
   push:
-    branches-ignore: ["main", "dev"]
+    branches: ["main", "stable"]
   pull_request:
     branches: ["main", "stable"]
 

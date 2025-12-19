@@ -2,22 +2,19 @@
 import { useSelector } from "react-redux";
 import BaseACard, { IACardProps } from "../_Base/ACard";
 import {
-  selectEditorFont,
   selectEditorTheme,
+  selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
+import { websiteFonts } from "@/fonts";
+import { WebsiteFontsKey } from "@/@types/font";
 
-const ACard = ({
-  title,
-  style,
-  className,
-  children,
-  ...rest
-}: IACardProps) => {
+const ACard = ({ title, style, className, children, ...rest }: IACardProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
-  const font = useSelector(selectEditorFont);
+  const websiteFont = useSelector(selectWebsiteFont);
+  const font = websiteFonts[websiteFont as WebsiteFontsKey];
   return (
     <BaseACard
       theme={theme}

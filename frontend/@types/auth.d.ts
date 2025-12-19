@@ -11,6 +11,7 @@ export interface IUserDetails {
     email: string,
     name: NameObjType,
     username: string,
+    mobileNo?: string | null;
 }
 
 export interface IAvailability {
@@ -24,3 +25,12 @@ export interface IRegister {
     email: string;
     password: string;
 }
+
+export interface ISearchResultEach {
+    name: NameObjType,
+    username: string,
+    userId: string,
+    email: string
+}
+
+export type ISearchResult = ISearchResultEach[]

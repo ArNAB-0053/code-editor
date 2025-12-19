@@ -103,3 +103,13 @@ body {
   background-color: transparent !important;
 }
 
+.ant-modal {
+  background-color: transparent !important;
+}
+
+/* @layer components {
+  .ant-select-selection-placeholder {
+    @apply 
+  }
+} */
+

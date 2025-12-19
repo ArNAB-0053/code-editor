@@ -7,6 +7,7 @@ import {
   setUserName,
   setUserEmail,
   setUserUsername,
+  setPersistedAt,
 } from "@/redux/slices/userSlice";
 import { messagesConfig } from "@/config/messages.config";
 import { appUrls } from "@/config/navigation.config";
@@ -42,6 +43,7 @@ export const useAuth = () => {
         dispatch(setUserName(data?.name));
         dispatch(setUserEmail(data?.email));
         dispatch(setUserUsername(data?.username));
+        dispatch(setPersistedAt(Date.now()));
 
         if (showToast)
           toast.success(messagesConfig.LOGIN.SUCCESS, { id: toastId ?? "" });

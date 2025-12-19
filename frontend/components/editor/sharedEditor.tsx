@@ -4,7 +4,6 @@ import { Splitter } from "antd";
 import styled from "styled-components";
 import { themeConfig } from "@/config/themeConfig";
 import { Editor, Monaco } from "@monaco-editor/react";
-import { getDefaultCode } from "@/helper/defaultCode";
 import { useSelector } from "react-redux";
 import {
   selectEditorFont,
@@ -12,38 +11,14 @@ import {
   selectEditorTheme,
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
-import EditorHeaderComponent from "./header";
-import Sider from "./sider";
 import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
-import { useAutoSaveCode, useGetCode } from "@/services/code";
-import { selectedUserId } from "@/redux/slices/userSlice";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useDispatch } from "react-redux";
-import {
-  selectedCode,
-  selectedEditorId,
-  selectedOutput,
-  setCodeRedux,
-  setEditorId,
-  setLangRedux,
-  setOutputRedux,
-} from "@/redux/slices/editorSlice";
-import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
-import { AModal } from "../ui/antd";
-import Link from "next/link";
-import { appUrls } from "@/config/navigation.config";
-
-export interface IEditorProps {
-  p_lang: string;
-  currentCode: string;
-  currentOutput: string;
-  editorId: string;
-  isShared?: boolean;
-}
+import { selectedSharedCode, selectedSharedLang, selectedSharedOutput, setShareCodeRedux } from "@/redux/slices/sharedEditorSlice";
+import SharedEditorHeaderComponent from "./sharedHeader";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -56,18 +31,28 @@ const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   }
 `;
 
-const CodeEditor = ({
+export default function SharedEditorComponent({
   p_lang,
-  currentCode,
-  currentOutput,
-  editorId,
   isShared = false,
-}: IEditorProps) => {
-  const defaultCode = getDefaultCode(p_lang);
+}: {
+  p_lang: string;
+  isShared?: boolean;
+}) {
+  // const defaultCode = getDefaultCode(p_lang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const [open, setOpen] = useState(false);
+  const lang = useSelector(selectedSharedLang);
+  // const [sharingDetails, setSharingDetails] = useState(null);
+
+  // console.log("___Editor___ (defaultCode)", defaultCode)
+
+  const currentCode = useSelector(selectedSharedCode);
+  const currentOutput = useSelector(selectedSharedOutput);
+
+  // console.log("currentCode", currentCode);
+
+  const dispatch = useDispatch();
 
   const editorFont = useSelector(selectEditorFont);
   const editorFontSize = useSelector(selectEditorFontSize);
@@ -76,11 +61,15 @@ const CodeEditor = ({
 
   const theme = themeConfig(editorTheme);
 
-  const dispatch = useDispatch();
-
   // refs for monaco editor
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+  }, [isCopied]);
 
   const syntaxRules = getEditorSytaxRules(theme);
 
@@ -131,12 +120,17 @@ const CodeEditor = ({
   }, [editorTheme]);
 
   // Generate Shared Link
-  const sharedLink = `http://localhost:3000${appUrls.SHARE}/${editorId}`;
+
+  // console.log(sharingDetails)
 
   return (
-    <>
-      <Sider />
-
+    <div
+      style={{
+        fontFamily: "Inter, Roboto, system-ui",
+        height: "calc(100vh - 25px)",
+      }}
+      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
+    >
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
@@ -157,7 +151,7 @@ const CodeEditor = ({
                 websiteFonts[websiteFont as WebsiteFontsKey]?.className
               }`}
             >
-              <EditorHeaderComponent
+              <SharedEditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={false}
                 p_lang={p_lang}
@@ -166,17 +160,20 @@ const CodeEditor = ({
                 loading={loading}
                 setLoading={setLoading}
                 setError={setError}
-                setOpen={setOpen}
+                isShared={isShared}
               />
               <div className="pt-2">
                 <Editor
+                  key={lang}
                   value={currentCode}
-                  onChange={(value) => dispatch(setCodeRedux(value ?? ""))}
+                  onChange={(value) => {
+                    dispatch(setShareCodeRedux(value ?? ""));
+                  }}
                   width="100%"
                   height="calc(95vh - 95px)"
                   defaultLanguage={p_lang}
-                  language={p_lang}
-                  defaultValue={defaultCode}
+                  language={lang}
+                  // defaultValue={defaultCode}
                   theme="app-dark"
                   onMount={handleOnMount}
                   beforeMount={handleBeforeMount}
@@ -202,7 +199,7 @@ const CodeEditor = ({
                 whiteSpace: "pre-wrap",
               }}
             >
-              <EditorHeaderComponent
+              <SharedEditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={true}
                 loading={loading}
@@ -232,22 +229,6 @@ const CodeEditor = ({
           </Splitter.Panel>
         </StyledSplitter>
       </div>
-
-      <AModal
-        title="Generate Shared Link"
-        centered
-        open={open}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-        footer={false}
-        className="overflow-hidden"
-      >
-        <Link href={sharedLink} target="_blank">
-          {sharedLink}
-        </Link>
-      </AModal>
-    </>
+    </div>
   );
-};
-
-export default CodeEditor;
+}

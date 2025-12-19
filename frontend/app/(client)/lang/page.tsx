@@ -1,9 +1,8 @@
 import Lang from "@/components/lang";
-import React from "react";
 
 const page = () => {
   return (
-    <div className="pb-20 mt-10">
+    <div className="pb-20 mt-10 lg:px-8 lg-pt-8 ">
       <Lang />
     </div>
   );
