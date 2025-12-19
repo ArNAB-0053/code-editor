@@ -3,6 +3,7 @@ export const appUrls = {
     LOGIN: '/auth/sign-in',
     REGISTER: '/auth/sign-up',
     LANG: '/lang',
+    FILE: '/files',
     PYTHON: '/lang/python',
     PROFILE: '/profile',
     SHARE: {

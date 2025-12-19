@@ -12,6 +12,7 @@ import {
   Karla,
   Lato,
   Lexend,
+  Lora,
   Montserrat,
   Mulish,
   Nunito,
@@ -110,3 +111,4 @@ export const oswald = Oswald({ subsets: ["latin"], weight: ["400", "500", "600",
 export const play_cu = Playwrite_CU({ weight: ["400"] });
 export const play_us_modern = Playwrite_US_Modern({ weight: ["400"] });
 export const cookie = Cookie({weight: ["400"] });
+export const lora = Lora({weight: ["400", "500", "600"], subsets: ["latin"], style: "italic" });

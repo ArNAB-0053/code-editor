@@ -4,12 +4,12 @@ import { themeConfig } from "@/config/themeConfig";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { Users } from "lucide-react";
-import { MAX_SHARE_VISIBLE } from "@/components/lang";
-import CodePreview from "@/components/lang/share/code-preview";
 import { FC } from "react";
 import UsersAvatar from "../users-avatar";
 import ViewButton from "../../view-btn";
 import { ShareByMeProps } from "@/@types/share";
+import CodePreview from "../../code-preview";
+import { MAX_SHARE_VISIBLE } from "@/components/file";
 
 const ShareByMeCard: FC<ShareByMeProps> = ({ data }) => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -26,7 +26,8 @@ const ShareByMeCard: FC<ShareByMeProps> = ({ data }) => {
           min-[700px]:grid-cols-2
           min-[950px]:grid-cols-3
           min-[1100px]:grid-cols-3
-          min-[1300px]:grid-cols-4
+          min-[1250px]:grid-cols-4
+          min-[1460px]:grid-cols-5
           gap-4
         "
     >

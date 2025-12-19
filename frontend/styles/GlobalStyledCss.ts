@@ -28,6 +28,18 @@ export const GlobalStyles = createGlobalStyle<{
     padding: 10px !important;
   }
 
+  .ant-breadcrumb-link, .ant-breadcrumb-separator {
+    color: ${({ $theme }) => $theme?.textColor} !important;
+  }
+  
+  .ant-breadcrumb-link {
+    // background: ${({ $theme }) => $theme?.border20} !important;
+    // padding: 0 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
   
 
   // -----------------------------------------------------------------------------------

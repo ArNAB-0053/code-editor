@@ -16,7 +16,7 @@ export default function ClientLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const isOnlyLang = pathname === appUrls.LANG.toLowerCase();
+  const allowScroll = pathname === appUrls.LANG.toLowerCase() || appUrls.FILE.toLocaleLowerCase();
 
   return (
     <ReduxPersistProvider>
@@ -26,7 +26,7 @@ export default function ClientLayout({
           <main
             className={cn(
               "px-6 pt-4",
-              isOnlyLang ? "h-svh overflow-y-auto custom-scrollbar" : ""
+              allowScroll ? "h-svh overflow-y-auto custom-scrollbar" : ""
             )}
           >
             <PageHeader />

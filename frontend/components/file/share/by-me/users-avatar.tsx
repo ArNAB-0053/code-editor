@@ -1,8 +1,6 @@
-import React from "react";
 import { MAX_SHARE_VISIBLE } from "../..";
 import { CAvatar } from "@/components/ui/custom";
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
-import { ExternalLink, Link } from "lucide-react";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";

@@ -17,20 +17,13 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { CDivider } from "../ui/custom";
-import { HeaderLangTitle } from "./header-title";
-import ShareToAndByMe from "./share";
+import { HeaderLangTitle } from "./header";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
     background: ${({ $theme }) => $theme.border15} !important;
   }
 `;
-
-export const MAX_SHARE_VISIBLE = {
-  TABLE: 8,
-  CARD: 3,
-  LIST: 2
-};
 
 const Lang = () => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -82,9 +75,6 @@ const Lang = () => {
         }}
         className="my-20"
       />
-
-      {/* SHARE */}
-      <ShareToAndByMe />
     </>
   );
 };

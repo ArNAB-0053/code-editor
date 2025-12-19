@@ -16,14 +16,15 @@ const ShareToMeCard: FC<ShareToMeProps> = ({ data }) => {
 
   return (
     <div
-      className="
+     className="
           grid
           grid-cols-1
           min-[640px]:grid-cols-2
           min-[700px]:grid-cols-2
           min-[950px]:grid-cols-3
           min-[1100px]:grid-cols-3
-          min-[1300px]:grid-cols-4
+          min-[1250px]:grid-cols-4
+          min-[1460px]:grid-cols-5
           gap-4
         "
     >
