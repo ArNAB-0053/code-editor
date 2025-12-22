@@ -62,14 +62,15 @@ const EditorHeaderComponent = (props: HeaderProps) => {
         code: currentCode,
         lang: props.p_lang,
       });
-      // console.log(res);
+      console.log(res);
       const output = res.output ?? "";
+      console.log(lastOpt.current !== output)
       if (lastOpt.current !== output) {
         updateOutput(
           { editorId, output },
           {
             onSuccess: (res) => {
-              // console.log("Updated", res);
+              console.log("Updated", res);
               lastOpt.current = output;
               dispatch(setOutputRedux(output));
             },

@@ -31,6 +31,7 @@ import {
   Roboto,
   Roboto_Mono,
   Rubik,
+  Sora,
   Source_Code_Pro,
   Space_Grotesk,
   Urbanist,
@@ -79,6 +80,7 @@ export const play = Play({ subsets: ["latin"], weight: ["400", "700"] });
 export const amarante = Amarante({weight: ["400"] });
 export const geo = Geo({weight: ["400"] });
 export const asimovian = Asimovian({weight: ["400"] });
+export const sora = Sora({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
 
 export const websiteFonts: WebsiteFontsMap = {
   prompt,
@@ -102,6 +104,7 @@ export const websiteFonts: WebsiteFontsMap = {
   // amarante,
   // geo,
   // asimovian,
+  sora,
 };
 
 // Font for styling only

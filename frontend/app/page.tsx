@@ -9,20 +9,24 @@ import { BACKEND_URI } from "@/lib/axios-instance";
 export async function getMyProfile() {
   const token = await getCookiesServer("jwt");
 
-  if(!token) return null;
+  if (!token) return null;
 
-  const res = await fetch(`${BACKEND_URI}/api/user/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${BACKEND_URI}/api/user/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    return null
+    if (!res.ok) {
+      return null;
+    }
+
+    return res.json();
+  } catch (err) {
+    return null;
   }
-
-  return res.json();
 }
 
 const Page = async () => {

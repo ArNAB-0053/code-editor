@@ -7,7 +7,8 @@ import {
 import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
 import { FormItemProps } from "antd";
-import { IBaseAFormProps } from "@/@types/_base";
+import { IBaseAFormProps, IBaseCustomProps } from "@/@types/_base";
+import { jetBrainsMono } from "@/fonts";
 
 export const AForm = ({ children, ...rest }: IBaseAFormProps) => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -29,5 +30,27 @@ export const AFormItem = ({ children, ...rest }: FormItemProps) => {
     <BaseAItem font={WebsiteFont as WebsiteFontsKey} theme={theme} {...rest}>
       {children}
     </BaseAItem>
+  );
+};
+
+export const CFormLabel = ({
+  children,
+  style,
+  className,
+}: IBaseCustomProps) => {
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
+
+  return (
+    <h4
+      className={`${jetBrainsMono.className} relative font-medium translate-y-2 ${className}`}
+      style={{
+        color: theme.disabledTextColor,
+        fontSize: "12px",
+        ...style,
+      }}
+    >
+      {children}
+    </h4>
   );
 };

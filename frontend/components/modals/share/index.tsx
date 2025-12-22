@@ -55,7 +55,7 @@ const ShareModal = ({
 
   const { mutateAsync: createShare } = useCreateShare();
 
-  console.log("searchItem => ", searchItems);
+  // console.log("searchItem => ", searchItems);
 
   useEffect(() => {
     setTimeout(() => {
@@ -77,9 +77,9 @@ const ShareModal = ({
     OwnerDetails: OwnerDetails,
   };
 
-  useEffect(() => {
-    console.log("____ =>  isPublic", isPublic);
-  }, [isPublic]);
+  // useEffect(() => {
+  //   console.log("____ =>  isPublic", isPublic);
+  // }, [isPublic]);
 
   const handleGenerateSafeShare = async () => {
     setIsSharingLoading(true);

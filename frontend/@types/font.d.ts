@@ -30,7 +30,8 @@ export const _WebsiteFonts = {
   karla,
   // amarante,
   // geo,
-  // asimovian
+  // asimovian,
+  sora,
 } as const;
 export type WebsiteFontsKey = keyof typeof _WebsiteFonts;
 export type WebsiteFontsMap = Record<WebsiteFontsKey, NextFont>;

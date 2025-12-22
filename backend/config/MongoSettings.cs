@@ -8,5 +8,7 @@
         public string CodeSaveCollectionName { get; set; }
         public string ShareCollectionName { get; set; }
         public string SharedUserCollectionName { get; set; }
+        public string FilesCollectionName { get; set; }
+        public string FilesCodeCollectionName { get; set; }
     }
 }

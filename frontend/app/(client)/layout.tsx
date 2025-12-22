@@ -9,6 +9,7 @@ import { WrapperRedux } from "@/providers/WrapperRedux";
 import { usePathname } from "next/navigation";
 import { appUrls } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
+import Breadcrumbs from "@/components/breadcrumbs";
 
 export default function ClientLayout({
   children,
@@ -16,7 +17,7 @@ export default function ClientLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const allowScroll = pathname === appUrls.LANG.toLowerCase() || appUrls.FILE.toLocaleLowerCase();
+  const allowScroll = pathname === appUrls.LANG.toLowerCase() || pathname === appUrls.FILE.toLocaleLowerCase();
 
   return (
     <ReduxPersistProvider>
@@ -26,11 +27,14 @@ export default function ClientLayout({
           <main
             className={cn(
               "px-6 pt-4",
-              allowScroll ? "h-svh overflow-y-auto custom-scrollbar" : ""
+              allowScroll ? "h-svh overflow-y-auto custom-scrollbar " : ""
             )}
           >
             <PageHeader />
-            <section className="w-full mt-4">{children}</section>
+            <section className="w-full mt-4">
+              <Breadcrumbs />
+              {children}
+            </section>
           </main>
         </WrapperRedux>
       </CookieProviderForLocalStorage>
