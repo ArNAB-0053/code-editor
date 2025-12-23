@@ -234,7 +234,7 @@ const FilesPage = () => {
       ),
       children: (
         <div
-          className="overflow-x-hidden overflow-y-auto custom-scrollbar pr-2 pl-3"
+          className="overflow-x-hidden overflow-y-auto custom-scrollbar pr-2 pl-3 "
           style={{
             height: "calc(100svh - 120px)",
           }}
