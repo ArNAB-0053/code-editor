@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { IFileFolder, IFilesModel } from "@/@types/files";
 import CodePreview from "./share/code-preview";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import RenameDeleteDropdown from "./rename-delete-dropdown";
 
 const FilesCard = ({ data }: { data: IFileFolder }) => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -57,14 +58,7 @@ const FilesCard = ({ data }: { data: IFileFolder }) => {
                 </span>
               </div>
 
-              <button className="p-1.5 hover:bg-white/5 -translate-y-1 rounded-full cursor-pointer">
-                <BsThreeDotsVertical
-                  size={14}
-                  style={{
-                    color: theme.textColor,
-                  }}
-                />
-              </button>
+              <RenameDeleteDropdown/>
             </section>
 
             {/* Body */}

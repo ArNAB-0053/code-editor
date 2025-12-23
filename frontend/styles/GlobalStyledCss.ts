@@ -198,6 +198,10 @@ export const GlobalStyles = createGlobalStyle<{
       opacity: 100% !important;
     }
 
+    .ant-tabs-tab.ant-tabs-tab-active:hover > .ant-tabs-tab-btn, .ant-tabs-tab-btn:focus:not(:focus-visible)  {
+      color: ${({ $theme }) => $theme.textColor} !important;
+    }
+
     .ant-tabs-tab.ant-tabs-tab-active:hover > .ant-tabs-tab-btn  {
       color: ${({ $theme }) => $theme.textColor} !important;
     }

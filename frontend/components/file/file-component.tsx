@@ -20,9 +20,11 @@ import { FaFolder } from "react-icons/fa";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
-import { jetBrainsMono, websiteFonts } from "@/fonts";
+import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdDeleteForever, MdDriveFileRenameOutline } from "react-icons/md";
+import RenameDeleteDropdown from "./rename-delete-dropdown";
 
 const FileComponent = () => {
   const [openFile, setOpenFile] = useState(false);
@@ -151,7 +153,7 @@ const FileComponent = () => {
             >
               <Link
                 href={`${appUrls.FILE}/${folder.id}`}
-                className="flex items-center justify-start opacity-90 text-sm"
+                className="flex items-center justify-start opacity-90 text-sm gap-x-2"
                 style={{
                   color: theme.textColor,
                 }}
@@ -159,14 +161,8 @@ const FileComponent = () => {
                 <FaFolder className="w-6" />
                 <p className="truncate">{folder.fileName}</p>
               </Link>
-              <button className="p-1.5 hover:bg-white/5 rounded-full cursor-pointer">
-                <BsThreeDotsVertical
-                  size={14}
-                  style={{
-                    color: theme.textColor,
-                  }}
-                />
-              </button>
+
+              <RenameDeleteDropdown />
             </div>
           );
         })}
