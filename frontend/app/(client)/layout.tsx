@@ -17,7 +17,7 @@ export default function ClientLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const allowScroll = pathname === appUrls.LANG.toLowerCase() || pathname === appUrls.FILE.toLocaleLowerCase();
+  const allowScroll = pathname === appUrls.LANG.toLowerCase() ;
 
   return (
     <ReduxPersistProvider>

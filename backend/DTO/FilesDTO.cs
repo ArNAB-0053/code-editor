@@ -30,7 +30,7 @@ namespace backend.DTO
 
 
     // Service DTOs
-    public class FileWithCodeDTO
+    public class FileWithCodeDTOTemp
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -47,5 +47,12 @@ namespace backend.DTO
 
         // Code Content
         public FileCodesModel? CodeContent { get; set; }
+    }
+
+    public class FileWithCodeDTO
+    {
+        // Code Content
+        public List<FileWithCodeDTOTemp> Files { get; set; }
+        public List<FilesModel> Folders { get; set; }
     }
 }

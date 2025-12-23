@@ -1,18 +1,42 @@
 "use client";
-import { useFileListByUserId } from "@/services/files";
-import ShareToAndByMe from "./share";
+import { Tabs, TabsProps, theme } from "antd";
+import FileComponent from "./file-component";
+import ShareToMe from "./share/to-me";
+import ShareByMe from "./share/by-me";
+import { cn } from "@/lib/utils";
+import { jetBrainsMono, websiteFonts } from "@/fonts";
+import { IoGrid } from "react-icons/io5";
+import {
+  selectEditorTheme,
+  selectWebsiteFont,
+} from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
-import { selectedUserId } from "@/redux/slices/userSlice";
-import { EmptyContent } from "../empty";
-import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
+import { WebsiteFontsKey } from "@/@types/font";
+import { FaTrash } from "react-icons/fa";
+import FolderCodeIcon from "@/assets/FolderCode";
+import { ShareByMeIcon, ShareWithMeIcon } from "@/assets/ShareIcons";
+import Trash from "./trash";
+import { ReactElement, useState } from "react";
+import { CDivider } from "../ui/custom";
 import { themeConfig } from "@/config/themeConfig";
-import FilesCard from "./card";
-import { FaFolderPlus } from "react-icons/fa6";
-import { useState } from "react";
-import { Dropdown } from "antd";
-import { CButton } from "../ui/custom";
-import { FiFilePlus, FiFolderPlus } from "react-icons/fi";
-import { FilesModal, FolderModal } from "../modals/files";
+import { selectedActiveTabKey } from "@/redux/slices/activeTab";
+import { RiLayoutGrid2Line } from "react-icons/ri";
+import styled from "styled-components";
+import { ThemeTypes } from "@/@types/theme";
+
+const StyledDiv = styled.div<{ $theme: ThemeTypes; $isActiveTab: boolean }>`
+  &:hover {
+    background: ${({ $theme, $isActiveTab }) =>
+      $isActiveTab
+        ? `${$theme.activeColor}`
+        : `${$theme.activeColor}90`} !important;
+  }
+
+  background: ${({ $theme, $isActiveTab }) =>
+    $isActiveTab ? $theme.activeColor : "transparent"} !important;
+  color: ${({ $theme, $isActiveTab }) =>
+    $isActiveTab ? $theme.textColor : $theme.disabledTextColor} !important;
+`;
 
 export const MAX_SHARE_VISIBLE = {
   TABLE: 8,
@@ -20,105 +44,215 @@ export const MAX_SHARE_VISIBLE = {
   LIST: 2,
 };
 
-const FilesPage = () => {
-  const [openFile, setOpenFile] = useState(false);
-  const [openFolder, setOpenFolder] = useState(false);
+type TabLabelTemplateProps = {
+  labelClassName?: string;
+  rootClassName?: string;
+  Icon: ReactElement;
+  label: string;
+  isActiveTab: boolean;
+};
 
-  const userId = useSelector(selectedUserId);
+type DisabledItemTemplateProps = {
+  labelClassName?: string;
+  rootClassName?: string;
+  label: string;
+};
+
+const TabLabelTemplate = ({
+  labelClassName,
+  rootClassName,
+  Icon,
+  label,
+  isActiveTab,
+}: TabLabelTemplateProps) => {
+  const websiteFont = useSelector(selectWebsiteFont);
+  const font = websiteFonts[websiteFont as WebsiteFontsKey];
+
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
+  return (
+    <StyledDiv
+      $isActiveTab={isActiveTab}
+      $theme={theme}
+      className={cn(
+        "flex items-center gap-x-2 pl-5 pr-7 lg:px-6 py-1.5 lg:py-2.5 w-fit lg:w-[13rem] xl:w-[15rem] rounded-[6px]",
+        rootClassName
+      )}
+    >
+      {Icon}
+      <p className={cn(font?.className, labelClassName)}>{label}</p>
+    </StyledDiv>
+  );
+};
 
-  const payload = {
-    OwnerId: userId,
+const DisabledItemTemplate = ({
+  label,
+  rootClassName,
+  labelClassName,
+}: DisabledItemTemplateProps) => {
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
+  return (
+    <div
+      className={cn(
+        "text-xs font-semibold cursor-default disabled mb-2 w-full text-start",
+        rootClassName
+      )}
+      style={{
+        color: theme.disabledTextColor,
+      }}
+    >
+      <span className={cn("pl-1", labelClassName)}>{label}</span>
+      <CDivider
+        style={{
+          backgroundColor: theme.disabledTextColor,
+        }}
+        className="mt-1! mb-0! opacity-70"
+      />
+    </div>
+  );
+};
+
+const FilesPage = () => {
+  const activeTab = useSelector(selectedActiveTabKey);
+
+  const [activeSiderTab, setActiveSiderTab] = useState("1");
+
+  const onChange = (key: string) => {
+    setActiveSiderTab(key);
   };
-  const { data: files, isLoading } = useFileListByUserId(payload);
 
-  console.log(files);
+  const items: TabsProps["items"] = [
+    {
+      key: "group-files-1",
+      label: <DisabledItemTemplate label="Files" labelClassName="uppercase" />,
+      disabled: true,
+    },
+    {
+      key: "1",
+      label: (
+        // Controlling the width of Tab from here by giving one 15rem
+        <TabLabelTemplate
+          Icon={
+            activeTab === "1" ? (
+              <IoGrid size={18} />
+            ) : (
+              <RiLayoutGrid2Line size={20} />
+            )
+          }
+          label="All"
+          labelClassName="translate-y-0.5 translate-x-0.5"
+          isActiveTab={activeSiderTab === "1"}
+        />
+      ),
+      children: (
+        <div
+          className="overflow-x-hidden overflow-y-auto custom-scrollbar pr-2 pl-3"
+          style={{
+            height: "calc(100svh - 120px)",
+          }}
+        >
+          <FileComponent />
+          <ShareToMe />
+          <ShareByMe />
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <TabLabelTemplate
+          Icon={<FolderCodeIcon size={20} />}
+          label="Folders & Files"
+          isActiveTab={activeSiderTab === "2"}
+        />
+      ),
+      children: (
+        <div
+          className="overflow-x-hidden overflow-y-auto custom-scrollbar pr-2 pl-3"
+          style={{
+            height: "calc(100svh - 120px)",
+          }}
+        >
+          <FileComponent />
+        </div>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <TabLabelTemplate
+          Icon={<ShareWithMeIcon size={20} />}
+          label="Shared With Me"
+          isActiveTab={activeSiderTab === "3"}
+        />
+      ),
+      children: (
+        <div
+          className="overflow-x-hidden overflow-y-auto custom-scrollbar pr-2 pl-3"
+          style={{
+            height: "calc(100svh - 120px)",
+          }}
+        >
+          <ShareToMe />,
+        </div>
+      ),
+    },
+    {
+      key: "4",
+      label: (
+        <TabLabelTemplate
+          Icon={<ShareByMeIcon size={20} />}
+          label="Shared By Me"
+          isActiveTab={activeSiderTab === "4"}
+        />
+      ),
+      children: (
+        <div
+          className="overflow-x-hidden overflow-y-auto custom-scrollbar pr-2 pl-3"
+          style={{
+            height: "calc(100svh - 120px)",
+          }}
+        >
+          <ShareByMe />
+        </div>
+      ),
+    },
+    {
+      key: "group-files-2",
+      label: <DisabledItemTemplate label="Recycle Bin" rootClassName="mt-6" labelClassName="uppercase" />,
+      disabled: true,
+    },
+    {
+      key: "5",
+      label: (
+        <TabLabelTemplate
+          Icon={<FaTrash className="-translate-y-0.5" />}
+          label="Trash"
+          isActiveTab={activeSiderTab === "5"}
+        />
+      ),
+      children: (
+        <div
+          className="overflow-x-hidden overflow-y-auto custom-scrollbar pr-2 pl-3"
+          style={{
+            height: "calc(100svh - 120px)",
+          }}
+        >
+          <Trash />,
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <div className="mt-2">
-      {isLoading && <div>Loading files...</div>}
-
-      {!isLoading && files?.data?.length === 0 && (
-        <EmptyContent title="No files created yet" />
-      )}
-
-      <div className="flex items-center justify-between">
-        <h1 className="font-medium">All Files</h1>
-        <div className="flex flex-col font-semibold text-start text-sm">
-          <Dropdown
-            trigger={["click"]}
-            menu={{
-              items: [
-                {
-                  key: 1,
-                  label: (
-                    <div
-                      className="flex items-center justify-center flex-col gap-y-1 w-[14rem] py-2! overflow-hidden"
-                      style={{
-                        backgroundColor: theme.border5,
-                      }}
-                    >
-                      <CButton
-                        className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
-                        variant="transparent"
-                        hoverBgColor={theme.activeColor}
-                        onClick={() => setOpenFile(true)}
-                      >
-                        <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
-                          <FiFilePlus size={18} />
-                          Create New File
-                        </div>
-                      </CButton>
-
-                      <CButton
-                        className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! p-0!"
-                        variant="transparent"
-                        hoverBgColor={theme.activeColor}
-                        onClick={() => setOpenFolder(true)}
-                      >
-                        <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-5 py-1.5 hover:opacity-100 w-full font-semibold">
-                          <FiFolderPlus size={18} />
-                          <span className="translate-x-0.5">
-                            Create New Folder
-                          </span>
-                        </div>
-                      </CButton>
-                    </div>
-                  ),
-                },
-              ],
-            }}
-            className="cursor-pointer "
-            rootClassName=" backdrop-blur-xl rounded-xl p-0! "
-            overlayStyle={{
-              backgroundColor: `${theme.border10}`,
-            }}
-          >
-            <div
-              className="flex items-center justify-center gap-x-2 py-1.5 px-3 rounded-xl text-sm hover:opacity-80 transition-all duration-200 ease-linear cursor-pointer font-semibold w-full"
-              style={{
-                backgroundColor: theme.border10,
-                color: theme.disabledTextColor,
-              }}
-            >
-              <FaFolderPlus />
-              Create New
-            </div>
-          </Dropdown>
-        </div>
-      </div>
-
-      <FilesModal open={openFile} setOpen={setOpenFile} />
-      <FolderModal open={openFolder} setOpen={setOpenFolder} />
-
-      {/* FILES LIST */}
-      <div className=" mb-6">
-        <FilesCard data={files?.data || []} />
-      </div>
-
-      {/* SHARE */}
-      <ShareToAndByMe />
+    <div className={cn("files", jetBrainsMono?.className)}>
+      <Tabs
+        defaultActiveKey="1"
+        tabPosition="left"
+        items={items}
+        onChange={onChange}
+      />
     </div>
   );
 };

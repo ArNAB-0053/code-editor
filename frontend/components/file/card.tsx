@@ -2,11 +2,11 @@
 import { themeConfig } from "@/config/themeConfig";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
-import { IFilesModel } from "@/@types/files";
+import { IFileFolder, IFilesModel } from "@/@types/files";
 import CodePreview from "./share/code-preview";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-const FilesCard = ({ data }: { data: IFilesModel[] }) => {
+const FilesCard = ({ data }: { data: IFileFolder }) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
   // const websiteFont = useSelector(selectWebsiteFont);
@@ -18,15 +18,15 @@ const FilesCard = ({ data }: { data: IFilesModel[] }) => {
           grid
           grid-cols-1
           min-[640px]:grid-cols-2
-          min-[700px]:grid-cols-3
-          min-[950px]:grid-cols-4
-          min-[1100px]:grid-cols-4
-          min-[1250px]:grid-cols-5
-          min-[1460px]:grid-cols-6
+          min-[700px]:grid-cols-2
+          min-[950px]:grid-cols-3
+          min-[1100px]:grid-cols-3
+          min-[1250px]:grid-cols-4
+          min-[1460px]:grid-cols-5
           gap-4
         "
     >
-      {data?.map((x: IFilesModel, i) => {
+      {data?.files?.map((x: IFilesModel, i) => {
         return (
           <div
             key={i}
@@ -58,7 +58,12 @@ const FilesCard = ({ data }: { data: IFilesModel[] }) => {
               </div>
 
               <button className="p-1.5 hover:bg-white/5 -translate-y-1 rounded-full cursor-pointer">
-                <BsThreeDotsVertical size={14} />
+                <BsThreeDotsVertical
+                  size={14}
+                  style={{
+                    color: theme.textColor,
+                  }}
+                />
               </button>
             </section>
 

@@ -64,11 +64,11 @@ namespace backend.Controllers
 
         // (GET) - GET file by Id (fileId + ownerId)
         [HttpPost("details")]
-        public async Task<IActionResult> GetById([FromBody] FileDetailsRequest req)
+        public IActionResult GetById([FromBody] FileDetailsRequest req)
         {
             try
             {
-                var res = await _service.GetById(req.FileId, req.OwnerId);
+                var res = _service.GetById(req.FileId, req.OwnerId);
                 if(res == null) return NotFound(new { status = "error", message = "File not found" });
                 return Ok(new { status = "success", data = res });
             }

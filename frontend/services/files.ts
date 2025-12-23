@@ -7,7 +7,7 @@ const URI = "api/files";
 
 // (POST) - create a new file - (CREATE)
 export const fileCreation = async (payload: ICreateFileRequest) => {
-  const res = await axiosInstance.post(`${URI}`, payload);
+  const res = await axiosInstance.post(URI, payload);
   if (!res.data) {
     const txt = await res.statusText;
     throw new Error(`HTTP ${res.status}: ${txt}`);

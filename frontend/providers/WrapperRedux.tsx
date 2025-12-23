@@ -19,7 +19,7 @@ export const WrapperRedux = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className={font?.className}>
-      <GlobalStyles $theme={theme} />
+      <GlobalStyles $theme={theme} $font={font} />
       {children}
     </div>
   );

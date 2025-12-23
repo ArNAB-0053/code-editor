@@ -52,29 +52,55 @@ namespace backend.Services.implementations
         }
 
         // GET all files - based on OwnerId
-        public List<FileWithCodeDTO> GetAllFiles(string ownerId)
+        public FileWithCodeDTO GetAllFiles(string ownerId)
         {
             var pipeline = new[]
-                {
-                    new BsonDocument("$match",
-                    new BsonDocument("OwnerId", ownerId)),
-                    new BsonDocument("$lookup",
-                    new BsonDocument
-                        {
-                            { "from", "filesCode" },
-                            { "localField", "_id" },
-                            { "foreignField", "FileId" },
-                            { "as", "CodeContent" }
-                        }),
-                    new BsonDocument("$unwind", "$CodeContent")
-                };
+                    {
+                        new BsonDocument("$facet",
+                        new BsonDocument
+                            {
+                                { "Files",
+                        new BsonArray
+                                {
+                                    new BsonDocument("$match",
+                                    new BsonDocument
+                                        {
+                                            { "OwnerId", ownerId },
+                                            { "FileType", "FILE" }
+                                        }),
+                                    new BsonDocument("$sort",
+                                    new BsonDocument("_id", -1)),
+                                    new BsonDocument("$lookup",
+                                    new BsonDocument
+                                        {
+                                            { "from", "filesCode" },
+                                            { "localField", "_id" },
+                                            { "foreignField", "FileId" },
+                                            { "as", "CodeContent" }
+                                        }),
+                                    new BsonDocument("$unwind", "$CodeContent")
+                                } },
+                                { "Folders",
+                        new BsonArray
+                                {
+                                    new BsonDocument("$match",
+                                    new BsonDocument
+                                        {
+                                            { "OwnerId", ownerId },
+                                            { "FileType", "FOLDER" }
+                                        }),
+                                    new BsonDocument("$sort",
+                                    new BsonDocument("_id", -1)),
+                                } },
+                            })
+                    };
 
-            var result = _files.Aggregate<FileWithCodeDTO>(pipeline).ToList();
+            var result = _files.Aggregate<FileWithCodeDTO>(pipeline).FirstOrDefault();
             return result;
         }
 
         // GET file by Id - based on fileId + ownerId
-        public async Task<FileWithCodeDTO> GetById(string fileId, string ownerId)
+        public FileWithCodeDTO GetById(string fileId, string ownerId)
         {
             var pipeline = new[]
                     {

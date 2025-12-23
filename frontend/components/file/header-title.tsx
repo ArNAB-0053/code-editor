@@ -1,7 +1,10 @@
 "use client";
+import { WebsiteFontsKey } from "@/@types/font";
 import { IShareByMeRes, IShareDataModel } from "@/@types/share";
 import { themeConfig } from "@/config/themeConfig";
-import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
+import { websiteFonts } from "@/fonts";
+import { cn } from "@/lib/utils";
+import { selectEditorTheme, selectWebsiteFont } from "@/redux/slices/preferenceSlice";
 import { Code, Share2 } from "lucide-react";
 import { useSelector } from "react-redux";
 
@@ -14,8 +17,11 @@ export const HeaderTitle = ({ data, title }: HeaderTitleType) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
+    const websiteFont = useSelector(selectWebsiteFont);
+    const font = websiteFonts[websiteFont as WebsiteFontsKey];
+
   return (
-    <div className="flex items-center gap-3">
+    <div className={cn("files flex items-center gap-3", font?.className)}>
       <div
         className="p-2 rounded-lg"
         style={{
