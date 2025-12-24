@@ -1,7 +1,7 @@
 import { IOwnerDetails } from "@/@types/share";
-import CodePreview from "@/components/lang/share/code-preview";
-import UsersAvatar from "@/components/lang/share/to-me/users-avatar";
-import ViewButton from "@/components/lang/share/view-btn";
+import CodePreview from "@/components/file/share/code-preview";
+import UsersAvatar from "@/components/file/share/to-me/users-avatar";
+import ViewButton from "@/components/file/share/view-btn";
 import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";

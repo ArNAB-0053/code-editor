@@ -20,7 +20,7 @@ const BaseCDivider = ({
       <div
         className={`w-px mx-3 ${className}`}
         style={{
-          background: theme.border10,
+          backgroundColor: theme.border10,
           height: "100%",
           ...style,
         }}
@@ -30,7 +30,7 @@ const BaseCDivider = ({
   return (
     <div
       style={{
-        background: theme.border10,
+        backgroundColor: theme.border10,
         width: "100%",
         ...style,
       }}

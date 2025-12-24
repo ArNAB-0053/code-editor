@@ -37,9 +37,3 @@ const ShareTemplate = ({ items, leftExtraContent }: ShareByMeType) => {
 };
 
 export default ShareTemplate;
-
-
-{/* <EmptyShare
-        title="No shared snippets yet"
-        description="Share your code snippets with others to see them here"
-      /> */}

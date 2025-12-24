@@ -3,6 +3,7 @@ export const appUrls = {
     LOGIN: '/auth/sign-in',
     REGISTER: '/auth/sign-up',
     LANG: '/lang',
+    FILE: '/files',
     PYTHON: '/lang/python',
     PROFILE: '/profile',
     SHARE: {
@@ -11,4 +12,6 @@ export const appUrls = {
     },
     TERMS_AND_CONDOTIONS: '/legal/terms-and-conditions',
     PRIVACY_POLICY: '/legal/privacy-policy',
+    UNDEFINED: undefined,
+    NULL: null
 };

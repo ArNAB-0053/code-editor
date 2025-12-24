@@ -2,7 +2,7 @@ import { TableProps, Tag } from "antd";
 import { FC, useMemo } from "react";
 import CodePreview from "../../code-preview";
 import UsersAvatar from "../users-avatar";
-import { MAX_SHARE_VISIBLE } from "@/components/lang";
+import { MAX_SHARE_VISIBLE } from "@/components/file";
 import ViewButton from "../../view-btn";
 import {
   selectEditorTheme,
@@ -95,7 +95,7 @@ const ShareByMeTable: FC<ShareByMeProps> = ({ data, isLoading }) => {
     }));
   }, [data]);
 
-  console.log(dataSource);
+  // console.log(dataSource);
 
   return (
     <StyledATable
@@ -111,6 +111,7 @@ const ShareByMeTable: FC<ShareByMeProps> = ({ data, isLoading }) => {
           <EmptyContent title="No shared snippets yet" rootClassName="py-5" />
         ),
       }}
+      // pagination={{ pageSize: 2 }}
     />
   );
 };

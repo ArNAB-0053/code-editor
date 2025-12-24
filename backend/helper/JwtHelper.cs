@@ -39,6 +39,8 @@ namespace backend.helper
                 signingCredentials: creds
             );
 
+            Console.WriteLine(token.ToString());
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

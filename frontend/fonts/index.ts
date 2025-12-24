@@ -12,6 +12,7 @@ import {
   Karla,
   Lato,
   Lexend,
+  Lora,
   Montserrat,
   Mulish,
   Nunito,
@@ -30,6 +31,7 @@ import {
   Roboto,
   Roboto_Mono,
   Rubik,
+  Sora,
   Source_Code_Pro,
   Space_Grotesk,
   Urbanist,
@@ -78,6 +80,7 @@ export const play = Play({ subsets: ["latin"], weight: ["400", "700"] });
 export const amarante = Amarante({weight: ["400"] });
 export const geo = Geo({weight: ["400"] });
 export const asimovian = Asimovian({weight: ["400"] });
+export const sora = Sora({ subsets: ["latin"],  weight: ["400", "500", "600", "700"] });
 
 export const websiteFonts: WebsiteFontsMap = {
   prompt,
@@ -101,6 +104,7 @@ export const websiteFonts: WebsiteFontsMap = {
   // amarante,
   // geo,
   // asimovian,
+  sora,
 };
 
 // Font for styling only
@@ -110,3 +114,4 @@ export const oswald = Oswald({ subsets: ["latin"], weight: ["400", "500", "600",
 export const play_cu = Playwrite_CU({ weight: ["400"] });
 export const play_us_modern = Playwrite_US_Modern({ weight: ["400"] });
 export const cookie = Cookie({weight: ["400"] });
+export const lora = Lora({weight: ["400", "500", "600"], subsets: ["latin"], style: "italic" });

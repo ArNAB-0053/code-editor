@@ -61,3 +61,14 @@ export type NameObjType = {
   middleName?: string;
   lastName: string;
 };
+
+export interface IBaseLogoProps {
+  size?: number;
+  style?: React.CSSProperties;
+  className?: string;
+}
+
+export interface IBaseReturn {
+  status: "success" | "error";
+  message?: string
+}

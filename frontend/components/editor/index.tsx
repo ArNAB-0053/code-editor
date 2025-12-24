@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import EditorComponent from "./editor";
 import { useDispatch } from "react-redux";
 import { useGetCode } from "@/services/code";

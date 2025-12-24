@@ -9,9 +9,17 @@ import { spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { FiLogOut } from "react-icons/fi";
 import { useFont } from "@/context/FontProvider";
+import { IProfileDetails } from "@/@types/_base";
 
-export const NRAvatarDropdown = () => {
-  const { data: profileDetails, isLoading } = useMyProfile();
+export interface AccountProps {
+  profileDetails: IProfileDetails;
+  isLoading: boolean;
+}
+
+export const NRAvatarDropdown = ({
+  profileDetails,
+  isLoading,
+}: AccountProps) => {
   const { theme } = useTheme();
   const { font } = useFont();
 

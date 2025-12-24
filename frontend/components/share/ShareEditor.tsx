@@ -47,7 +47,7 @@ const ShareEditor = ({
     <div className="w-full flex gap-x-2">
       <SharedEditorComponent p_lang={sharedData?.lang?.trim() || lang} isShared />
       <div
-        className=" text-wrap text-white overflow-x-hidden overflow-y-auto pb-4 custom-scrollbar"
+        className=" text-wrap text-white overflow-x-hidden overflow-y-auto pb-9 custom-scrollbar"
         style={{
           width: OWNER_WIDTH,
           height: "calc(100vh - 50px - 20px)",

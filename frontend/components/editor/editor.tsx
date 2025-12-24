@@ -4,7 +4,6 @@ import { Splitter } from "antd";
 import styled from "styled-components";
 import { themeConfig } from "@/config/themeConfig";
 import { Editor, Monaco } from "@monaco-editor/react";
-import { getDefaultCode } from "@/helper/defaultCode";
 import { useSelector } from "react-redux";
 import {
   selectEditorFont,
@@ -24,7 +23,6 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useDispatch } from "react-redux";
 import {
   selectedCode,
-  selectedEditorId,
   selectedLang,
   selectedOutput,
   setCodeRedux,
@@ -33,9 +31,6 @@ import {
 } from "@/redux/slices/editorSlice";
 import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
-import { AModal } from "../ui/antd";
-import Link from "next/link";
-import { appUrls } from "@/config/navigation.config";
 import { messagesConfig } from "@/config/messages.config";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
@@ -68,7 +63,7 @@ export default function EditorComponent({
   const currentCode = useSelector(selectedCode);
   const currentOutput = useSelector(selectedOutput);
 
-  // console.log("currentCode", currentCode);
+  console.log("currentOutput", currentOutput);
 
   const dispatch = useDispatch();
 
@@ -77,7 +72,6 @@ export default function EditorComponent({
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const userId = useSelector(selectedUserId);
-  const editorId = useSelector(selectedEditorId);
 
   const autoSaveCode = useAutoSaveCode();
 
@@ -256,7 +250,7 @@ export default function EditorComponent({
           </Splitter.Panel>
           <Splitter.Panel defaultSize="40%" min="20%">
             <div
-              className={`min-h-[95vh] overflow-y-auto border-r relative ${
+              className={` overflow-y-auto border-r relative ${
                 websiteFonts[websiteFont as WebsiteFontsKey]?.className
               }`}
               style={{
@@ -264,6 +258,7 @@ export default function EditorComponent({
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
+                height: 'calc(100svh  - 120px)'
               }}
             >
               <EditorHeaderComponent
