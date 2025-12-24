@@ -53,10 +53,6 @@ namespace backend.Controllers
             try
             {
                 var res = _service.GetAllFiles(req.OwnerId, req.IsDeleted ?? false);
-                Console.WriteLine("req =>");
-                Console.WriteLine(req.OwnerId, req.IsDeleted);
-                Console.WriteLine("res =>");
-                Console.WriteLine(res.Files);
                 if (res == null) return NotFound(new { status = "error", message = "File not found" });                
                 return Ok(new { status = "success", data = res });
             }
