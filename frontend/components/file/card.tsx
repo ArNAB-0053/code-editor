@@ -63,7 +63,11 @@ const FilesCard = ({
                 </span>
               </div>
 
-              <ThreeDotDropdown fileId={x.id} isTrash={isTrash} />
+              <ThreeDotDropdown
+                fileId={x.id}
+                isTrash={isTrash}
+                fileName={x.fileName}
+              />
             </section>
 
             {/* Body */}

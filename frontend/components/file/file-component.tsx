@@ -190,7 +190,7 @@ const FileComponent = ({
                     <FaFolder className="w-6" />
                     <p className="truncate">{folder.fileName}</p>
                   </div>
-                  <ThreeDotDropdown fileId={folder.id} isTrash={isTrash} />
+                  <ThreeDotDropdown fileId={folder.id} isTrash={isTrash} fileName={folder.fileName} />
                 </>
               ) : (
                 <>
@@ -204,7 +204,7 @@ const FileComponent = ({
                     <FaFolder className="w-6" />
                     <p className="truncate">{folder.fileName}</p>
                   </Link>
-                  <ThreeDotDropdown fileId={folder.id} isTrash={isTrash} />
+                  <ThreeDotDropdown fileId={folder.id} isTrash={isTrash} fileName={folder.fileName} />
                 </>
               )}
             </div>

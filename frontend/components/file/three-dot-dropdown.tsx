@@ -23,14 +23,26 @@ import { useRestore, useSoftDelete } from "@/services/files";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { ISoftDeleteRequest } from "@/@types/files";
 import { toast } from "sonner";
+import { AModal } from "../ui/antd";
+import styled from "styled-components";
+
+const StyledAModal = styled(AModal)`
+  .ant-modal-content {
+    padding: 0 !important;
+  }
+`;
+
+interface ThreeDotDropdownProps {
+  fileId: string;
+  isTrash?: boolean;
+  fileName?: string;
+}
 
 const ThreeDotDropdown = ({
   fileId,
   isTrash = false,
-}: {
-  fileId: string;
-  isTrash?: boolean;
-}) => {
+  fileName,
+}: ThreeDotDropdownProps) => {
   const userId = useSelector(selectedUserId);
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -73,7 +85,9 @@ const ThreeDotDropdown = ({
                           const toastId = toast.loading("Removing from Trash");
                           restore(payload, {
                             onSuccess: () =>
-                              toast.success("Removed from Trash", { id: toastId }),
+                              toast.success("Removed from Trash", {
+                                id: toastId,
+                              }),
                             onError: () =>
                               toast.error("Something went Wrong", {
                                 id: toastId,
@@ -92,7 +106,7 @@ const ThreeDotDropdown = ({
                         className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
                         variant="transparent"
                         hoverBgColor={`${theme.border15}`}
-                        
+                        onClick={() => setOpen(true)}
                       >
                         <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
                           <MdDeleteForever size={18} />
@@ -204,19 +218,51 @@ const ThreeDotDropdown = ({
         </button>
       </Dropdown>
 
-      {/* <AModal
+      <StyledAModal
         title={null}
         open={open}
+        closeIcon={null}
         onCancel={() => setOpen(false)}
         footer={null}
-        className="overflow-hidden! md:w-[20rem]!"
+        className="overflow-hidden! md:w-[25rem]! "
         useSideIndicator={false}
+        centered
       >
-        <div>
-          <h1>Are you sure ??</h1>
+        <div className="flex justify-center flex-col w-full px-5 py-3 ">
+          <h1 className=" font-semibold text-lg">
+            Permanently delete this file?
+          </h1>
+          <span className=" my-4 text-sm opacity-80">
+            This action will permanently delete <b>{fileName}</b>.
+            You won’t be able to recover it later.
+          </span>
 
+          <div className="flex items-center justify-end gap-x-3 mt-2">
+            <CButton
+              className="flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
+              variant="transparent"
+              hoverBgColor={`${theme.border15}`}
+              onClick={() => setOpen(false)}
+            >
+              <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
+                {/* <MdDriveFileRenameOutline size={18} /> */}
+                Cancel
+              </div>
+            </CButton>
+
+            <CButton
+              className=" flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
+              // variant="transparent"
+              type="danger"
+            >
+              <div className=" flex! items-center! justify-start! gap-x-3! px-4.5 py-1.5 hover:opacity-80 w-full font-semibold transition-all duration-200 ease-linear">
+                <MdDeleteForever size={18} />
+                Delete
+              </div>
+            </CButton>
+          </div>
         </div>
-      </AModal> */}
+      </StyledAModal>
     </>
   );
 };
