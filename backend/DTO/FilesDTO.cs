@@ -19,6 +19,7 @@ namespace backend.DTO
     public class FileListRequest
     {
         public string OwnerId { get; set; }
+        public bool? IsDeleted { get; set; } = false;
     }
 
 
@@ -38,7 +39,9 @@ namespace backend.DTO
         public string OwnerId { get; set; }
         public string FileName { get; set; } 
         public FileType FileType { get; set; } 
-        public string? Lang { get; set; } 
+        public string? Lang { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeleteTime { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string? ParentId { get; set; } 
@@ -54,5 +57,11 @@ namespace backend.DTO
         // Code Content
         public List<FileWithCodeDTOTemp> Files { get; set; }
         public List<FilesModel> Folders { get; set; }
+    }
+
+    public class SoftDeleteRequest
+    {
+        public string FileId { get; set; }
+        public string OwnerId { get; set; }
     }
 }

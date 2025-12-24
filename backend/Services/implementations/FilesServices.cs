@@ -1,4 +1,5 @@
-﻿using backend.config;
+﻿using System.Threading.Tasks;
+using backend.config;
 using backend.DTO;
 using backend.Models;
 using MongoDB.Bson;
@@ -51,8 +52,8 @@ namespace backend.Services.implementations
             return file;
         }
 
-        // GET all files - based on OwnerId
-        public FileWithCodeDTO GetAllFiles(string ownerId)
+        // GET all files - based on OwnerId - (LIST)
+        public FileWithCodeDTO GetAllFiles(string ownerId, bool IsDeleted)
         {
             var pipeline = new[]
                     {
@@ -66,7 +67,8 @@ namespace backend.Services.implementations
                                     new BsonDocument
                                         {
                                             { "OwnerId", ownerId },
-                                            { "FileType", "FILE" }
+                                            { "FileType", "FILE" },
+                                            { "IsDeleted", IsDeleted }
                                         }),
                                     new BsonDocument("$sort",
                                     new BsonDocument("_id", -1)),
@@ -87,7 +89,8 @@ namespace backend.Services.implementations
                                     new BsonDocument
                                         {
                                             { "OwnerId", ownerId },
-                                            { "FileType", "FOLDER" }
+                                            { "FileType", "FOLDER" },
+                                            { "IsDeleted", IsDeleted }
                                         }),
                                     new BsonDocument("$sort",
                                     new BsonDocument("_id", -1)),
@@ -99,7 +102,7 @@ namespace backend.Services.implementations
             return result;
         }
 
-        // GET file by Id - based on fileId + ownerId
+        // GET file by Id - based on fileId + ownerId - (DETAILS)
         public FileWithCodeDTO GetById(string fileId, string ownerId)
         {
             var pipeline = new[]
@@ -123,6 +126,42 @@ namespace backend.Services.implementations
                     };
             var result = _files.Aggregate<FileWithCodeDTO>(pipeline).FirstOrDefault();
             return result;
+        }
+
+        // SOFT DELETE - Trash (Recycle Bin)
+        public async Task<bool> SoftDelete(string fileId, string ownerId)
+        {
+            var filter = Builders<FilesModel>.Filter.And(
+                    Builders<FilesModel>.Filter.Eq(x => x.Id, fileId),
+                    Builders<FilesModel>.Filter.Eq(x => x.OwnerId, ownerId),
+                    Builders<FilesModel>.Filter.Eq(x => x.IsDeleted, false)
+                );
+
+            var update = Builders<FilesModel>.Update
+                .Set(x => x.IsDeleted, true)
+                .Set(x => x.DeleteTime, DateTime.UtcNow)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            var result = await _files.UpdateOneAsync(filter, update);
+            return result.ModifiedCount > 0;
+        }
+
+        // RESTORE
+        public async Task<bool> Restore(string fileId, string ownerId)
+        {
+            var filter = Builders<FilesModel>.Filter.And(
+                    Builders<FilesModel>.Filter.Eq(x => x.Id, fileId),
+                    Builders<FilesModel>.Filter.Eq(x => x.OwnerId, ownerId),
+                    Builders<FilesModel>.Filter.Eq(x => x.IsDeleted, true)
+                );
+
+            var update = Builders<FilesModel>.Update
+                .Set(x => x.IsDeleted, false)
+                .Set(x => x.DeleteTime, null)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            var result = await _files.UpdateOneAsync(filter, update);
+            return result.ModifiedCount > 0;
         }
     }
 }

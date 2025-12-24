@@ -12,4 +12,6 @@ export const appUrls = {
     },
     TERMS_AND_CONDOTIONS: '/legal/terms-and-conditions',
     PRIVACY_POLICY: '/legal/privacy-policy',
+    UNDEFINED: undefined,
+    NULL: null
 };

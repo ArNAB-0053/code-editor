@@ -1,12 +1,13 @@
 import { AModal } from "@/components/ui/antd";
 import { FilesCreationForm, FolderCreationForm } from "./creationForm";
+import { SetterFunctionTypesBool } from "@/@types/_base";
 
 export const FilesModal = ({
   open,
   setOpen,
 }: {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: SetterFunctionTypesBool;
 }) => {
   return (
     <AModal
@@ -16,7 +17,7 @@ export const FilesModal = ({
       footer={null}
       className="overflow-hidden! w-full! md:w-[20rem]!"
     >
-      <FilesCreationForm />
+      <FilesCreationForm setOpen={setOpen} />
     </AModal>
   );
 };
@@ -36,7 +37,7 @@ export const FolderModal = ({
       footer={null}
       className="overflow-hidden! w-full! md:w-[20rem]!"
     >
-      <FolderCreationForm />
+      <FolderCreationForm setOpen={setOpen} />
     </AModal>
   );
 };

@@ -16,6 +16,10 @@ namespace backend.Models
 
         public string? Lang { get; set; } // eg: python(.py), javascript(.js), java(.java) etc.
 
+
+        public bool IsDeleted { get; set; } = false; // For trash
+        public DateTime? DeleteTime { get; set; }
+
         [BsonRepresentation(BsonType.ObjectId)]
         public string? ParentId { get; set; } // Parent Folder Id
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

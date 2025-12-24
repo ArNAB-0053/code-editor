@@ -4,10 +4,15 @@ import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { IFileFolder, IFilesModel } from "@/@types/files";
 import CodePreview from "./share/code-preview";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import RenameDeleteDropdown from "./rename-delete-dropdown";
+import ThreeDotDropdown from "./three-dot-dropdown";
 
-const FilesCard = ({ data }: { data: IFileFolder }) => {
+const FilesCard = ({
+  data,
+  isTrash,
+}: {
+  data: IFileFolder;
+  isTrash?: boolean;
+}) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
   // const websiteFont = useSelector(selectWebsiteFont);
@@ -58,7 +63,7 @@ const FilesCard = ({ data }: { data: IFileFolder }) => {
                 </span>
               </div>
 
-              <RenameDeleteDropdown/>
+              <ThreeDotDropdown fileId={x.id} isTrash={isTrash} />
             </section>
 
             {/* Body */}

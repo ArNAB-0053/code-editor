@@ -57,7 +57,6 @@ const Breadcrumbs = () => {
       });
 
       const pathArray = [homeItems, ...temp];
-      console.log(pathArray);
 
       breadcrumbsRef.current = pathArray;
       setBreadcrumbs(breadcrumbsRef.current);

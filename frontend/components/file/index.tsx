@@ -23,6 +23,9 @@ import { selectedActiveTabKey } from "@/redux/slices/activeTab";
 import { RiLayoutGrid2Line } from "react-icons/ri";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { IFilesListResponse } from "@/@types/files";
+import { useFileListByUserId } from "@/services/files";
 
 const StyledDiv = styled.div<{ $theme: ThemeTypes; $isActiveTab: boolean }>`
   &:hover {
@@ -114,9 +117,16 @@ const DisabledItemTemplate = ({
 };
 
 const FilesPage = () => {
+  const userId = useSelector(selectedUserId);
   const activeTab = useSelector(selectedActiveTabKey);
 
   const [activeSiderTab, setActiveSiderTab] = useState("1");
+
+  const payload = {
+    OwnerId: userId,
+    IsDeleted: false,
+  };
+  const { data: files, isLoading } = useFileListByUserId(payload);
 
   const onChange = (key: string) => {
     setActiveSiderTab(key);
@@ -152,7 +162,7 @@ const FilesPage = () => {
             height: "calc(100svh - 120px)",
           }}
         >
-          <FileComponent />
+          <FileComponent files={files as IFilesListResponse} isLoading={isLoading} />
           <ShareToMe />
           <ShareByMe />
         </div>
@@ -174,7 +184,7 @@ const FilesPage = () => {
             height: "calc(100svh - 120px)",
           }}
         >
-          <FileComponent />
+          <FileComponent files={files as IFilesListResponse} isLoading={isLoading} />
         </div>
       ),
     },
@@ -220,7 +230,13 @@ const FilesPage = () => {
     },
     {
       key: "group-files-2",
-      label: <DisabledItemTemplate label="Recycle Bin" rootClassName="mt-6" labelClassName="uppercase" />,
+      label: (
+        <DisabledItemTemplate
+          label="Recycle Bin"
+          rootClassName="mt-6"
+          labelClassName="uppercase"
+        />
+      ),
       disabled: true,
     },
     {

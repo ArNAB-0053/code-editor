@@ -1,7 +1,5 @@
 "use client";
-import { useFileListByUserId } from "@/services/files";
 import { useSelector } from "react-redux";
-import { selectedUserId } from "@/redux/slices/userSlice";
 import { EmptyContent } from "../empty";
 import {
   selectEditorTheme,
@@ -11,46 +9,53 @@ import { themeConfig } from "@/config/themeConfig";
 import FilesCard from "./card";
 import { FaFolderPlus } from "react-icons/fa6";
 import { useState } from "react";
-import { Dropdown, Tabs } from "antd";
+import { Dropdown } from "antd";
 import { CButton } from "../ui/custom";
 import { FiFilePlus, FiFolderPlus } from "react-icons/fi";
 import { FilesModal, FolderModal } from "../modals/files";
-import { IFileFolder } from "@/@types/files";
+import { IFileFolder, IFilesListResponse } from "@/@types/files";
 import { FaFolder } from "react-icons/fa";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
 import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { MdDeleteForever, MdDriveFileRenameOutline } from "react-icons/md";
-import RenameDeleteDropdown from "./rename-delete-dropdown";
+import ThreeDotDropdown from "./three-dot-dropdown";
 
-const FileComponent = () => {
+interface FileComponentProps {
+  files: IFilesListResponse;
+  isLoading: boolean;
+  isTrash?: boolean;
+}
+
+const FileComponent = ({
+  files,
+  isLoading,
+  isTrash = false,
+}: FileComponentProps) => {
   const [openFile, setOpenFile] = useState(false);
   const [openFolder, setOpenFolder] = useState(false);
 
-  const userId = useSelector(selectedUserId);
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
-  const payload = {
-    OwnerId: userId,
-  };
-  const { data: files, isLoading } = useFileListByUserId(payload);
+  // console.log(files);
+
+  const isEmpty =
+    !isLoading &&
+    files?.data?.files?.length === 0 &&
+    files?.data?.folders?.length === 0;
+
+  const isFileEmpty = !isLoading && files?.data?.files?.length === 0;
+
+  const isFolderEmpty = !isLoading && files?.data?.folders?.length === 0;
 
   return (
     <div className={font?.className}>
       {isLoading && <div>Loading files...</div>}
-
-      {!isLoading &&
-        files?.data?.files?.length === 0 &&
-        files?.data?.folders?.length === 0 && (
-          <EmptyContent title="No files created yet" />
-        )}
 
       <div className={cn("flex items-center justify-between", font?.className)}>
         <h1
@@ -125,21 +130,39 @@ const FileComponent = () => {
         </div>
       </div>
 
+      {isEmpty && (
+        <div
+          className="w-full rounded-xl py-16 mt-2"
+          style={{
+            backgroundColor: theme.border10,
+          }}
+        >
+          <EmptyContent
+            title="No files created yet"
+            rootClassName="opacity-50!"
+            boxClassName="w-20! h-20!"
+            titleClassName="text-sm!"
+          />
+        </div>
+      )}
+
       <FilesModal open={openFile} setOpen={setOpenFile} />
       <FolderModal open={openFolder} setOpen={setOpenFolder} />
 
       {/* FOLDERS LIST */}
-      <p
-        className={cn(
-          "text-[11px] font-semibold mt-2 mb-0.5 pl-px uppercase",
-          font?.className
-        )}
-        style={{
-          color: theme.disabledTextColor,
-        }}
-      >
-        All Folders
-      </p>
+      {!isEmpty && !isFolderEmpty && (
+        <p
+          className={cn(
+            "text-[11px] font-semibold mt-2 mb-0.5 pl-px uppercase",
+            font?.className
+          )}
+          style={{
+            color: theme.disabledTextColor,
+          }}
+        >
+          All Folders
+        </p>
+      )}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 w-full gap-2 lg:gap-3">
         {files?.data?.folders?.map((folder, i) => {
           return (
@@ -149,20 +172,41 @@ const FileComponent = () => {
                 backgroundColor: theme.border10,
                 color: theme.textColor,
               }}
-              className="flex items-center justify-between pl-2 pr-2 md:pl-4 lg:pl-5 xl:pl-6 py-2 lg:py-3 opacity-90 gap-x-2 rounded-xl text-sm hover:opacity-70 transition-all duration-200 ease-linear "
+              className={cn(
+                "flex items-center justify-between pl-2 pr-2 md:pl-4 lg:pl-5 xl:pl-6  opacity-90 gap-x-2 rounded-xl text-sm ",
+                isTrash
+                  ? ""
+                  : "hover:opacity-70 transition-all duration-200 ease-linear "
+              )}
             >
-              <Link
-                href={`${appUrls.FILE}/${folder.id}`}
-                className="flex items-center justify-start opacity-90 text-sm gap-x-2"
-                style={{
-                  color: theme.textColor,
-                }}
-              >
-                <FaFolder className="w-6" />
-                <p className="truncate">{folder.fileName}</p>
-              </Link>
-
-              <RenameDeleteDropdown />
+              {isTrash ? (
+                <>
+                  <div
+                    className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3"
+                    style={{
+                      color: theme.textColor,
+                    }}
+                  >
+                    <FaFolder className="w-6" />
+                    <p className="truncate">{folder.fileName}</p>
+                  </div>
+                  <ThreeDotDropdown fileId={folder.id} isTrash={isTrash} />
+                </>
+              ) : (
+                <>
+                  <Link
+                    href={`${appUrls.FILE}/${folder.id}`}
+                    className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3"
+                    style={{
+                      color: theme.textColor,
+                    }}
+                  >
+                    <FaFolder className="w-6" />
+                    <p className="truncate">{folder.fileName}</p>
+                  </Link>
+                  <ThreeDotDropdown fileId={folder.id} isTrash={isTrash} />
+                </>
+              )}
             </div>
           );
         })}
@@ -170,18 +214,20 @@ const FileComponent = () => {
 
       {/* FILES LIST */}
       <div className=" mt-3 mb-6">
-        <p
-          className={cn(
-            "text-[11px] font-semibold mb-0.5 pl-px uppercase",
-            font?.className
-          )}
-          style={{
-            color: theme.disabledTextColor,
-          }}
-        >
-          All Files
-        </p>
-        <FilesCard data={files?.data as IFileFolder} />
+        {!isEmpty && !isFileEmpty && (
+          <p
+            className={cn(
+              "text-[11px] font-semibold mb-0.5 pl-px uppercase",
+              font?.className
+            )}
+            style={{
+              color: theme.disabledTextColor,
+            }}
+          >
+            All Files
+          </p>
+        )}
+        <FilesCard data={files?.data as IFileFolder} isTrash={isTrash} />
       </div>
     </div>
   );

@@ -67,3 +67,8 @@ export interface IBaseLogoProps {
   style?: React.CSSProperties;
   className?: string;
 }
+
+export interface IBaseReturn {
+  status: "success" | "error";
+  message?: string
+}

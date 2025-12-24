@@ -1,7 +1,9 @@
+import { IBaseReturn } from "./_base";
 import { FileTypeEnum } from "./_enums";
 
 export interface IFilesListRequest {
   OwnerId: string;
+  IsDeleted?: boolean;
 }
 
 export interface IFilesDetailsRequest {
@@ -37,6 +39,8 @@ export interface IFileFolderModel {
   id: ObjectId;
   createdAt: Date;
   updatedAt: Date;
+  isDeleted: boolean;
+  deleteTime?: Date;
 }
 
 export interface IFilesModel extends IFileFolderModel {
@@ -48,12 +52,16 @@ export interface IFileFolder {
     folders: IFileFolderModel[];
 }
 
-export interface IFilesListResponse {
+export interface IFilesListResponse extends IBaseReturn {
   status: "success" | "error";
   data: IFileFolder;
 }
 
-export interface IFileDetailsResponse {
-  status: "success" | "error";
+export interface IFileDetailsResponse extends IBaseReturn {
   data: IFilesModel;
+}
+
+export interface ISoftDeleteRequest {
+  FileId: ObjectId;
+  OwnerId: string;
 }

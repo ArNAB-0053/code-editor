@@ -10,8 +10,13 @@ import { FormItemComponent } from "@/components/form-item-component";
 import { FaFolderPlus } from "react-icons/fa";
 import { BsFileEarmarkPlusFill } from "react-icons/bs";
 import { toast } from "sonner";
+import { SetterFunctionTypesBool } from "@/@types/_base";
 
-export const FilesCreationForm = () => {
+export const FilesCreationForm = ({
+  setOpen,
+}: {
+  setOpen: SetterFunctionTypesBool;
+}) => {
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
 
@@ -81,10 +86,13 @@ export const FilesCreationForm = () => {
               <AButton
                 type="primary"
                 disabled={isSubmitting}
-                onClick={handleSubmit}
+                onClick={() => {
+                  handleSubmit();
+                  setOpen(false);
+                }}
                 className="flex! items-center! justify-center!"
               >
-                <BsFileEarmarkPlusFill  />
+                <BsFileEarmarkPlusFill />
                 Create File
               </AButton>
             </div>
@@ -95,7 +103,11 @@ export const FilesCreationForm = () => {
   );
 };
 
-export const FolderCreationForm = () => {
+export const FolderCreationForm = ({
+  setOpen,
+}: {
+  setOpen: SetterFunctionTypesBool;
+}) => {
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
 
@@ -153,7 +165,10 @@ export const FolderCreationForm = () => {
               <AButton
                 type="primary"
                 disabled={isSubmitting}
-                onClick={handleSubmit}
+                onClick={() => {
+                  handleSubmit();
+                  setOpen(false);
+                }}
                 className="flex! items-center! justify-center!"
               >
                 <FaFolderPlus />
