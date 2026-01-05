@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { EmptyContent } from "../empty";
 import {
   selectEditorTheme,
   selectWebsiteFont,
@@ -31,14 +30,14 @@ const Trash = () => {
   const isEmpty =
     !isLoading &&
     deletedFolderFiles?.data?.files.length === 0 &&
-    deletedFolderFiles?.data?.files.length;
+    deletedFolderFiles?.data?.folders.length === 0;
 
   return (
     <div
       className="h-full rounded-xl relative"
-      style={{
-        backgroundColor: isEmpty ? theme.border5 : "transparent",
-      }}
+      // style={{
+      //   backgroundColor: isEmpty ? theme.border5 : "transparent",
+      // }}
     >
       {isLoading && <p>Loading ...</p>}
       {isEmpty && (

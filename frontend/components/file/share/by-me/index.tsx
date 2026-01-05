@@ -12,8 +12,14 @@ import ShareTemplate from "../template";
 import { EmptyContent } from "@/components/empty";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
+import { cn } from "@/lib/utils";
+import { CDivider } from "@/components/ui/custom";
 
-const ShareByMe = () => {
+const ShareByMe = ({
+  isShareByMeComponentPage = false,
+}: {
+  isShareByMeComponentPage?: boolean;
+}) => {
   const userId = useSelector(selectedUserId);
   const { data, isLoading } = useShareByMeList(userId);
 
@@ -25,14 +31,31 @@ const ShareByMe = () => {
       key: "1",
       label: <IoGrid />,
       children: (
-        <ShareByMeCard data={data as IShareByMeRes[]} isLoading={isLoading} />
+        <>
+          <CDivider
+            style={{
+              backgroundColor: `${theme.textColor}50`,
+            }}
+          />
+          <ShareByMeCard data={data as IShareByMeRes[]} isLoading={isLoading} />
+        </>
       ),
     },
     {
       key: "2",
       label: <RiLayoutGrid2Line size={20} />,
       children: (
-        <ShareByMeTable data={data as IShareByMeRes[]} isLoading={isLoading} />
+        <>
+          <CDivider
+            style={{
+              backgroundColor: `${theme.textColor}50`,
+            }}
+          />
+          <ShareByMeTable
+            data={data as IShareByMeRes[]}
+            isLoading={isLoading}
+          />
+        </>
       ),
     },
   ];
@@ -47,11 +70,21 @@ const ShareByMe = () => {
   ) : (
     <>
       <HeaderTitle data={data as IShareByMeRes[]} title="Shared By Me" />
-      <div
-        className="w-full mt-4 mb-8 py-8 rounded-xl"
+      <CDivider
         style={{
-          backgroundColor: theme.border5,
+          backgroundColor: `${theme.textColor}50`,
         }}
+      />
+      <div
+        className={cn(
+          "w-full",
+          isShareByMeComponentPage
+            ? "min-h-[50vh] flex flex-col items-center justify-center"
+            : "mt-4 mb-8 py-8"
+        )}
+        // style={{
+        //   backgroundColor: theme.border5,
+        // }}
       >
         <EmptyContent
           boxClassName=" opacity-50"

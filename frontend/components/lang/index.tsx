@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { CDivider } from "../ui/custom";
 import { HeaderLangTitle } from "./header";
+import { Code } from "lucide-react";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   &:hover {
@@ -36,7 +37,16 @@ const Lang = () => {
   return (
     <>
       <GlobalEditorStyles />
-      <HeaderLangTitle title="Select programming language" />
+      <HeaderLangTitle
+        title="Select programming language"
+        Icon={
+          <Code
+            size={20}
+            style={{ color: theme.activeColor }}
+            strokeWidth={2.5}
+          />
+        }
+      />
       <div
         className="mb-8 grid max-[350px]:grid-cols-1 grid-cols-2 min-[400px]:grid-cols-3 min-[600px]:grid-cols-4 min-[768px]:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 gap-4 flex-wrap rounded-xl relative p-4 "
         style={{

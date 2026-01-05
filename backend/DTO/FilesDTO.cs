@@ -20,6 +20,7 @@ namespace backend.DTO
     {
         public string OwnerId { get; set; }
         public bool? IsDeleted { get; set; } = false;
+        public string? ParentId { get; set; } = null;
     }
 
 
@@ -63,5 +64,11 @@ namespace backend.DTO
     {
         public string FileId { get; set; }
         public string OwnerId { get; set; }
+    }
+
+    public class BreadcrumbDto
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }

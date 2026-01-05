@@ -13,6 +13,8 @@ export const QUERY_KEYS = {
     FILE: 'file',
     FOLDER: 'folder',
     
+    BREADCRUMB: 'breadcrumbs',
+    
     CONNECTION: 'connection',
     NOTIFICATION: 'notification',
     CHAT: 'chat',

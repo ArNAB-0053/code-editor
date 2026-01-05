@@ -52,7 +52,7 @@ namespace backend.Controllers
         {
             try
             {
-                var res = _service.GetAllFiles(req.OwnerId, req.IsDeleted ?? false);
+                var res = _service.GetAllFiles(req.OwnerId, req.IsDeleted ?? false, req.ParentId);
                 if (res == null) return NotFound(new { status = "error", message = "File not found" });                
                 return Ok(new { status = "success", data = res });
             }
@@ -101,6 +101,20 @@ namespace backend.Controllers
             {
                 var res = await _service.Restore(req.FileId, req.OwnerId); 
                 return Ok(new { status = "success" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        [HttpGet("get-breadcrumbs")]
+        public async Task<IActionResult> GetBreadcrumbs([FromQuery] string folderId)
+        {
+            try
+            {
+                var res = await _service.GetBreadcrumbs(folderId);
+                return Ok(new { status = "success", data = res });
             }
             catch (Exception ex)
             {

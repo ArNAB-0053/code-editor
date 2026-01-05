@@ -1,10 +1,16 @@
 "use client";
 import { themeConfig } from "@/config/themeConfig";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
-import { Code } from "lucide-react";
+import { ReactElement } from "react";
 import { useSelector } from "react-redux";
 
-export const HeaderLangTitle = ({ title }: { title: string }) => {
+export const HeaderLangTitle = ({
+  title,
+  Icon,
+}: {
+  title: string;
+  Icon: ReactElement;
+}) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -19,11 +25,7 @@ export const HeaderLangTitle = ({ title }: { title: string }) => {
             borderWidth: "1px",
           }}
         >
-          <Code
-            size={20}
-            style={{ color: theme.activeColor }}
-            strokeWidth={2.5}
-          />
+          {Icon}
         </div>
         <div>
           <h3

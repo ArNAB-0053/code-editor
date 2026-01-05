@@ -174,6 +174,7 @@ export const GlobalStyles = createGlobalStyle<{
     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
       font-weight: 500;
       scale: 110%;
+      color: ${({ $theme }) => $theme.textColor} !important;
     }
 
     .ant-tabs-nav-wrap {

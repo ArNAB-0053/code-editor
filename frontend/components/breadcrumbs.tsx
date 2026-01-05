@@ -14,7 +14,6 @@ import { AiFillHome } from "react-icons/ai";
 import { cn } from "@/lib/utils";
 import { themeConfig } from "@/config/themeConfig";
 import Link from "next/link";
-import { FaFile } from "react-icons/fa";
 import { MdChevronRight, MdFolder } from "react-icons/md";
 
 type BreadcrumbsTypes = {

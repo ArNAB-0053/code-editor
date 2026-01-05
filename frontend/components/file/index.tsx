@@ -24,8 +24,13 @@ import { RiLayoutGrid2Line } from "react-icons/ri";
 import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
 import { selectedUserId } from "@/redux/slices/userSlice";
-import { IFilesListResponse } from "@/@types/files";
+import { IFilesListRequest, IFilesListResponse } from "@/@types/files";
 import { useFileListByUserId } from "@/services/files";
+
+type FilePageProps = {
+  isRoot?: boolean;
+  parentId: string | null;
+};
 
 const StyledDiv = styled.div<{ $theme: ThemeTypes; $isActiveTab: boolean }>`
   &:hover {
@@ -61,7 +66,7 @@ type DisabledItemTemplateProps = {
   label: string;
 };
 
-const TabLabelTemplate = ({
+export const TabLabelTemplate = ({
   labelClassName,
   rootClassName,
   Icon,
@@ -116,15 +121,16 @@ const DisabledItemTemplate = ({
   );
 };
 
-const FilesPage = () => {
+const FilesPage = ({ isRoot = true, parentId = null }: FilePageProps) => {
   const userId = useSelector(selectedUserId);
   const activeTab = useSelector(selectedActiveTabKey);
 
   const [activeSiderTab, setActiveSiderTab] = useState("1");
 
-  const payload = {
+  const payload: IFilesListRequest = {
     OwnerId: userId,
     IsDeleted: false,
+    ParentId: parentId,
   };
   const { data: files, isLoading } = useFileListByUserId(payload);
 
@@ -162,9 +168,16 @@ const FilesPage = () => {
             height: "calc(100svh - 120px)",
           }}
         >
-          <FileComponent files={files as IFilesListResponse} isLoading={isLoading} />
-          <ShareToMe />
-          <ShareByMe />
+          <FileComponent
+            files={files as IFilesListResponse}
+            isLoading={isLoading}
+          />
+          {isRoot && (
+            <>
+              <ShareToMe />
+              <ShareByMe />
+            </>
+          )}
         </div>
       ),
     },
@@ -184,7 +197,11 @@ const FilesPage = () => {
             height: "calc(100svh - 120px)",
           }}
         >
-          <FileComponent files={files as IFilesListResponse} isLoading={isLoading} />
+          <FileComponent
+            files={files as IFilesListResponse}
+            isLoading={isLoading}
+            isFileComponentPage
+          />
         </div>
       ),
     },
@@ -204,7 +221,7 @@ const FilesPage = () => {
             height: "calc(100svh - 120px)",
           }}
         >
-          <ShareToMe />,
+          <ShareToMe isShareToMeComponentPage />,
         </div>
       ),
     },
@@ -224,7 +241,7 @@ const FilesPage = () => {
             height: "calc(100svh - 120px)",
           }}
         >
-          <ShareByMe />
+          <ShareByMe isShareByMeComponentPage />
         </div>
       ),
     },

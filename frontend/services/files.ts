@@ -2,6 +2,7 @@ import axiosInstance from "@/lib/axios-instance";
 import { QUERY_KEYS } from ".";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  IBreadcrumbsRes,
   ICreateFileRequest,
   IFileDetailsResponse,
   IFilesDetailsRequest,
@@ -51,7 +52,7 @@ export const getFileListByUserId = async (
 
 export const useFileListByUserId = (payload: IFilesListRequest) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.FILE, payload?.OwnerId, payload?.IsDeleted],
+    queryKey: [QUERY_KEYS.FILE, payload?.OwnerId, payload?.IsDeleted, payload?.ParentId],
     queryFn: () => getFileListByUserId(payload),
     enabled: !!payload?.OwnerId,
   });
@@ -136,3 +137,31 @@ export const useRestore = () => {
     },
   });
 };
+
+// (GET) - Breadcrumbs
+export const getBreadcrumbs = async (
+  folderId: string
+): Promise<IBreadcrumbsRes> => {
+  const res = await axiosInstance.get(`${URI}/get-breadcrumbs`, {
+    params: {
+      folderId: folderId
+    }
+  });
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useBreadcrumbs = (folderId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.BREADCRUMB, folderId],
+    queryFn: () => getBreadcrumbs(folderId!),
+    enabled: !!folderId,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+

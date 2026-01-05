@@ -1,3 +1,4 @@
+"use client"
 import { ThemeTypes } from "@/@types/theme";
 import { ATable } from "@/components/ui/antd";
 import styled from "styled-components";

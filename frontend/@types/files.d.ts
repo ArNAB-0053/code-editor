@@ -4,6 +4,7 @@ import { FileTypeEnum } from "./_enums";
 export interface IFilesListRequest {
   OwnerId: string;
   IsDeleted?: boolean;
+  ParentId?: ObjectId | string | null;
 }
 
 export interface IFilesDetailsRequest {
@@ -64,4 +65,13 @@ export interface IFileDetailsResponse extends IBaseReturn {
 export interface ISoftDeleteRequest {
   FileId: ObjectId;
   OwnerId: string;
+}
+
+export interface IBreadcrumbData {
+    id: string,
+    name: string
+}
+
+export interface IBreadcrumbsRes extends IBaseReturn {
+  data: IBreadcrumbData 
 }

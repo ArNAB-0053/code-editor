@@ -1,9 +1,12 @@
 "use client";
 import { useTheme } from "@/context/ThemeContext";
 import { NRCAvatar, NRCButton } from "../../ui/no-redux";
-import { useMyProfile } from "@/services/profile";
 import { LuLoader } from "react-icons/lu";
-import { fallbackAvatar, fallbackProfileDetails } from "@/constants/base.const";
+import {
+  fallbackAvatar,
+  fallbackInitial,
+  fallbackProfileDetails,
+} from "@/constants/base.const";
 import { AvatarTemplate } from "./avatar-template";
 import { spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
@@ -30,7 +33,8 @@ export const NRAvatarDropdown = ({
           <a onClick={(e) => e.preventDefault()}>
             {!profileDetails?.nameObj && !isLoading ? (
               <NRCAvatar
-                name={fallbackAvatar}
+                type="string"
+                initials={fallbackInitial}
                 className="border-1.5!"
                 style={{
                   borderColor: theme.activeColor,
@@ -57,7 +61,11 @@ export const NRAvatarDropdown = ({
         }
         avatar={
           <NRCAvatar
-            name={profileDetails?.nameObj || fallbackAvatar}
+            type="object"
+            name={
+              profileDetails?.nameObj ? profileDetails?.nameObj : fallbackAvatar
+            }
+            characters={!profileDetails?.nameObj ? 1 : 2}
             variant="default"
             className="border-2 w-18 h-18 text-2xl"
             style={{

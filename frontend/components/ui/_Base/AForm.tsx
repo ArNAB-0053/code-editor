@@ -1,14 +1,14 @@
 "use client";
 
-import { IBaseAFormProps, IExtraAFormProps } from "@/@types/_base";
+import { IBaseAFormProps, IExtraProps } from "@/@types/_base";
 import { WebsiteFontsKey } from "@/@types/font";
 import { ThemeTypes } from "@/@types/theme";
 import { websiteFonts } from "@/fonts";
-import { Form, FormItemProps } from "antd";
+import { Form, FormItemProps, FormProps } from "antd";
 import styled from "styled-components";
 
-export interface AFormProps extends IBaseAFormProps, IExtraAFormProps {}
-export interface AItemProps extends FormItemProps, IExtraAFormProps {}
+export interface AFormProps extends FormProps, IExtraProps {}
+export interface AItemProps extends FormItemProps, IExtraProps {}
 
 const StyledForm = styled(Form)<{ $theme: ThemeTypes }>`
   .ant-form-item-required {
@@ -37,7 +37,7 @@ export const BaseAItem = ({
 }: AItemProps) => {
   return (
     <StyledFormItem
-      $font={font}
+      $font={font as WebsiteFontsKey}
       $theme={theme}
       {...rest}
     >

@@ -53,54 +53,66 @@ namespace backend.Services.implementations
         }
 
         // GET all files - based on OwnerId - (LIST)
-        public FileWithCodeDTO GetAllFiles(string ownerId, bool IsDeleted)
+        public FileWithCodeDTO GetAllFiles(string ownerId, bool IsDeleted, string? parentId)
         {
+            var baseMatch = new BsonDocument
+            {
+                { "OwnerId", ownerId },
+                { "IsDeleted", IsDeleted }
+            };
+
+            if (!IsDeleted)
+                    {
+                        baseMatch.Add(
+                            "ParentId",
+                            parentId == null
+                                ? BsonNull.Value
+                                : new ObjectId(parentId)
+                        );
+                    }
+
             var pipeline = new[]
                     {
-                        new BsonDocument("$facet",
-                        new BsonDocument
+                new BsonDocument("$facet",
+                    new BsonDocument
+                    {
+                        {
+                            "Files", new BsonArray
                             {
-                                { "Files",
-                        new BsonArray
-                                {
-                                    new BsonDocument("$match",
+                                new BsonDocument("$match",
+                                    new BsonDocument(baseMatch)
+                                    {
+                                        { "FileType", "FILE" }
+                                    }),
+                                new BsonDocument("$sort", new BsonDocument("_id", -1)),
+                                new BsonDocument("$lookup",
                                     new BsonDocument
-                                        {
-                                            { "OwnerId", ownerId },
-                                            { "FileType", "FILE" },
-                                            { "IsDeleted", IsDeleted }
-                                        }),
-                                    new BsonDocument("$sort",
-                                    new BsonDocument("_id", -1)),
-                                    new BsonDocument("$lookup",
-                                    new BsonDocument
-                                        {
-                                            { "from", "filesCode" },
-                                            { "localField", "_id" },
-                                            { "foreignField", "FileId" },
-                                            { "as", "CodeContent" }
-                                        }),
-                                    new BsonDocument("$unwind", "$CodeContent")
-                                } },
-                                { "Folders",
-                        new BsonArray
-                                {
-                                    new BsonDocument("$match",
-                                    new BsonDocument
-                                        {
-                                            { "OwnerId", ownerId },
-                                            { "FileType", "FOLDER" },
-                                            { "IsDeleted", IsDeleted }
-                                        }),
-                                    new BsonDocument("$sort",
-                                    new BsonDocument("_id", -1)),
-                                } },
-                            })
-                    };
+                                    {
+                                        { "from", "filesCode" },
+                                        { "localField", "_id" },
+                                        { "foreignField", "FileId" },
+                                        { "as", "CodeContent" }
+                                    }),
+                                new BsonDocument("$unwind", "$CodeContent")
+                            }
+                        },
+                        {
+                            "Folders", new BsonArray
+                            {
+                                new BsonDocument("$match",
+                                    new BsonDocument(baseMatch)
+                                    {
+                                        { "FileType", "FOLDER" }
+                                    }),
+                                new BsonDocument("$sort", new BsonDocument("_id", -1))
+                            }
+                        }
+                    })
+            };
 
-            var result = _files.Aggregate<FileWithCodeDTO>(pipeline).FirstOrDefault();
-            return result;
+            return _files.Aggregate<FileWithCodeDTO>(pipeline).FirstOrDefault();
         }
+
 
         // GET file by Id - based on fileId + ownerId - (DETAILS)
         public FileWithCodeDTO GetById(string fileId, string ownerId)
@@ -163,5 +175,33 @@ namespace backend.Services.implementations
             var result = await _files.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0;
         }
+
+        // Breadcrumbs
+        public async Task<List<BreadcrumbDto>> GetBreadcrumbs(string folderId)
+        {
+            var breadcrumbs = new List<BreadcrumbDto>();
+            string? currentId = folderId;
+
+            while (currentId != null)
+            {
+                var folder = await _files
+                    .Find(x => x.Id == currentId)
+                    .Project(x => new { x.Id, x.FileName, x.ParentId })
+                    .FirstOrDefaultAsync();
+
+                if (folder == null) break;
+
+                breadcrumbs.Insert(0, new BreadcrumbDto
+                {
+                    Id = folder.Id,
+                    Name = folder.FileName
+                });
+
+                currentId = folder.ParentId;
+            }
+
+            return breadcrumbs;
+        }
+
     }
 }

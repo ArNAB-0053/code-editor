@@ -12,8 +12,14 @@ import ShareToMeCard from "./card";
 import { EmptyContent } from "@/components/empty";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
+import { cn } from "@/lib/utils";
+import { CDivider } from "@/components/ui/custom";
 
-const ShareToMe = () => {
+const ShareToMe = ({
+  isShareToMeComponentPage = false,
+}: {
+  isShareToMeComponentPage?: boolean;
+}) => {
   const userId = useSelector(selectedUserId);
   const { data, isLoading } = useShareToMeList(userId);
 
@@ -25,17 +31,34 @@ const ShareToMe = () => {
       key: "1",
       label: <IoGrid />,
       children: (
-        <ShareToMeCard data={data as IShareDataModel[]} isLoading={isLoading} />
+        <>
+          <CDivider
+            style={{
+              backgroundColor: `${theme.textColor}50`,
+            }}
+          />
+          <ShareToMeCard
+            data={data as IShareDataModel[]}
+            isLoading={isLoading}
+          />
+        </>
       ),
     },
     {
       key: "2",
       label: <RiLayoutGrid2Line size={20} />,
       children: (
-        <ShareToMeTable
-          isLoading={isLoading}
-          data={data as IShareDataModel[]}
-        />
+        <>
+          <CDivider
+            style={{
+              backgroundColor: `${theme.textColor}50`,
+            }}
+          />
+          <ShareToMeTable
+            isLoading={isLoading}
+            data={data as IShareDataModel[]}
+          />
+        </>
       ),
     },
   ];
@@ -50,11 +73,21 @@ const ShareToMe = () => {
   ) : (
     <>
       <HeaderTitle data={data as IShareDataModel[]} title="Shared With Me" />
-      <div
-        className="w-full mt-4 mb-8 py-8 rounded-xl"
+      <CDivider
         style={{
-          backgroundColor: theme.border5,
+          backgroundColor: `${theme.textColor}50`,
         }}
+      />
+      <div
+        className={cn(
+          "w-full",
+          isShareToMeComponentPage
+            ? "min-h-[50vh] flex flex-col items-center justify-center"
+            : "mt-4 mb-8 py-8"
+        )}
+        // style={{
+        //   backgroundColor: theme.border5,
+        // }}
       >
         <EmptyContent
           boxClassName=" opacity-50"

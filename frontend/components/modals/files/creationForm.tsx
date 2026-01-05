@@ -11,20 +11,26 @@ import { FaFolderPlus } from "react-icons/fa";
 import { BsFileEarmarkPlusFill } from "react-icons/bs";
 import { toast } from "sonner";
 import { SetterFunctionTypesBool } from "@/@types/_base";
+import { useParams } from "next/navigation";
 
 export const FilesCreationForm = ({
   setOpen,
 }: {
   setOpen: SetterFunctionTypesBool;
 }) => {
+  const params = useParams();
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
+
+  const isRoot = !Array.isArray(params.id);
+  const parentId = isRoot ? null : params?.id?.at(-1);
 
   const initialValues: CreateFilesFormType = {
     OwnerId: userId,
     FileName: "",
     FileType: FileTypeEnum.FILE,
     Lang: "",
+    ParentId: parentId,
   };
 
   return (
@@ -108,13 +114,18 @@ export const FolderCreationForm = ({
 }: {
   setOpen: SetterFunctionTypesBool;
 }) => {
+  const params = useParams();
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
+
+  const isRoot = !Array.isArray(params.id);
+  const parentId = isRoot ? null : params?.id?.at(-1);
 
   const initialValues: CreateFilesFormType = {
     OwnerId: userId,
     FileName: "",
     FileType: FileTypeEnum.FOLDER,
+    ParentId: parentId,
   };
 
   return (

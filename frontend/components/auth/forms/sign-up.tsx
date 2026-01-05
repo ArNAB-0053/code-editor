@@ -480,7 +480,6 @@ export const SignUpForm = () => {
             <div className="flex gap-3 mt-8">
               {currentStep > 0 && (
                 <NRCButton
-                  type="button"
                   onClick={() => goToStep(currentStep - 1, values, errors)}
                   className={cn(
                     "flex items-center justify-center gap-x-2 px-6",
@@ -512,6 +511,7 @@ export const SignUpForm = () => {
                     "flex-1 flex items-center justify-center gap-x-3 disabled:opacity-40!",
                     jetBrainsMono.className
                   )}
+                  
                 >
                   {isSubmitting ? "Submitting..." : "Continue"}
                   <FaArrowRightLong />
