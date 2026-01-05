@@ -7,16 +7,24 @@ import {
 } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
 import FilesCard from "./card";
-import { IFileFolder, IFilesListResponse } from "@/@types/files";
+import {
+  IBreadcrumbData,
+  IFileFolder,
+  IFilesListResponse,
+} from "@/@types/files";
 import { FaFolder } from "react-icons/fa";
-import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
 import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
 import ThreeDotDropdown from "./three-dot-dropdown";
 import CreateNew from "./create-new";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import FilesBreadcrumbs from "../files-breadcrumbs";
+import { useBreadcrumbs } from "@/services/files";
+import { selectFolderId, setFolderId } from "@/redux/slices/fileFolderSlice";
+import { useDispatch } from "react-redux";
+import BreadcrumbLoader from "../Loaders/breadcrumbs";
 
 interface FileComponentProps {
   files: IFilesListResponse;
@@ -31,11 +39,6 @@ const FileComponent = ({
   isTrash = false,
   isFileComponentPage = false,
 }: FileComponentProps) => {
-  const pathname = usePathname();
-  const redirectedLink = pathname === appUrls.ALL ? appUrls.FILE : pathname;
-
-  // console.log("redirectedLink => ", redirectedLink);
-
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -52,11 +55,27 @@ const FileComponent = ({
   const isFileEmpty = !isLoading && files?.data?.files?.length === 0;
   const isFolderEmpty = !isLoading && files?.data?.folders?.length === 0;
 
+  // breadcrumbs
+  const currentFolderId = useSelector(selectFolderId);
+  console.log("currentFolderId", currentFolderId);
+
+  const dispatch = useDispatch();
+
+  const { data: breadcrumbsData, isLoading: isBreadcrumbLoading } =
+    useBreadcrumbs(currentFolderId as string);
+
   return (
     <div className={font?.className}>
-      {isLoading && <div>Loading files...</div>}
+      {/* {isLoading && <div>Loading files...</div>} */}
 
-      {/* {!isTrash && } */}
+      {!isTrash &&
+        (isBreadcrumbLoading ? (
+          <BreadcrumbLoader />
+        ) : (
+          <FilesBreadcrumbs
+            items={breadcrumbsData?.data as IBreadcrumbData[]}
+          />
+        ))}
 
       {isEmpty && !isTrash && (
         <div
@@ -128,16 +147,18 @@ const FileComponent = ({
                 </>
               ) : (
                 <>
-                  <Link
-                    href={`${redirectedLink}/${folder.id}`}
-                    className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3"
+                  <button
+                    onClick={() => {
+                      dispatch(setFolderId(folder.id));
+                    }}
+                    className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3 cursor-pointer"
                     style={{
                       color: theme.textColor,
                     }}
                   >
                     <FaFolder className="w-6" />
                     <p className="truncate">{folder.fileName}</p>
-                  </Link>
+                  </button>
                   <ThreeDotDropdown
                     fileId={folder.id}
                     isTrash={isTrash}

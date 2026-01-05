@@ -41,7 +41,6 @@ export const GlobalStyles = createGlobalStyle<{
     align-items: center !important;
     justify-content: center !important;
   }
-
    
 
   // -----------------------------------------------------------------------------------

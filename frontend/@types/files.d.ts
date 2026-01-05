@@ -73,5 +73,5 @@ export interface IBreadcrumbData {
 }
 
 export interface IBreadcrumbsRes extends IBaseReturn {
-  data: IBreadcrumbData 
+  data: IBreadcrumbData[]
 }

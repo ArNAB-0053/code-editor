@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { themeConfig } from "@/config/themeConfig";
 import Link from "next/link";
 import { MdChevronRight, MdFolder } from "react-icons/md";
+import { appUrls } from "@/config/navigation.config";
 
 type BreadcrumbsTypes = {
   title: string | ReactElement;
@@ -78,7 +79,7 @@ const Breadcrumbs = () => {
             "text-white font-bold cursor-default flex items-center justify-center gap-x-1 px-2! rounded-md bg-white/15"
           )}
         >
-          {item.href === "/files" && <MdFolder />}
+          {item.href === appUrls.FILE && <MdFolder />}
           {typeof item.title === "string" ? item.title : item.title}
         </span>
       ) : (
@@ -90,7 +91,7 @@ const Breadcrumbs = () => {
             isFirst ? "py-3! -translate-y-0.5" : ""
           )}
         >
-          {item.href === "/files" && <MdFolder />}
+          {item.href === appUrls.FILE && <MdFolder />}
           {typeof item.title === "string" ? item.title : item.title}
         </Link>
       ),
