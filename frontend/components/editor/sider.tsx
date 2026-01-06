@@ -31,25 +31,25 @@ const Sider = ({ p_lang }: { p_lang: string }) => {
         borderColor: theme?.border,
       }}
     >
-      {langs?.map((x, i) => (
+      {Object.entries(langs).map(([key, x], i) => (
         <Tooltip
-          key={i}
+          key={key}
           placement="right"
           title={x.label}
           color={theme.activeColor}
         >
           <StyledLink
             $theme={theme}
-            $isActive={p_lang === x.link}
-            href={x.link}
+            $isActive={p_lang === key}
+            href={key}
             className="border p-2.5 text-center rounded-sm uppercase transition-all ease-linear duration-10"
             style={{
               backgroundColor:
-                p_lang === x.link ? theme.activeColor : theme.border10,
+                p_lang === key ? theme.activeColor : theme.border10,
               borderColor: theme.border20,
             }}
             onClick={() => {
-              dispatch(setLangRedux(x.link));
+              dispatch(setLangRedux(key));
             }}
           >
             {x.logo}

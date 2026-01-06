@@ -54,11 +54,11 @@ const Lang = () => {
           borderColor: theme?.border10,
         }}
       >
-        {langs?.map((x, i) => (
+        {Object.entries(langs).map(([key, x], i) => (
           <StyledLink
             key={i}
             $theme={theme}
-            href={`${appUrls.LANG}/${x.link}`}
+            href={`${appUrls.LANG}/${key}`}
             className={cn(
               "border px-2 py-3 text-sm text-center opacity-80 hover:opacity-100 rounded-md transition-all ease-linear duration-100 flex items-center justify-center flex-col gap-3",
               font?.className
@@ -68,7 +68,7 @@ const Lang = () => {
               borderColor: theme.border20,
             }}
             onClick={() => {
-              dispatch(setLangRedux(x.link));
+              dispatch(setLangRedux(key));
             }}
           >
             <div className="w-7 aspect-square">{x.logo}</div>

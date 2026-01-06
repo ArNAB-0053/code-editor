@@ -1,25 +1,20 @@
-"use client"
+"use client";
 import { IFilesListRequest, IFilesListResponse } from "@/@types/files";
 import FileComponent from "@/components/file/file-component";
 import ShareByMe from "@/components/file/share/by-me";
 import ShareToMe from "@/components/file/share/to-me";
+import { selectFolderId } from "@/redux/slices/fileFolderSlice";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useFileListByUserId } from "@/services/files";
-import { useParams } from "next/navigation";
-import React from "react";
 import { useSelector } from "react-redux";
 
 const Page = () => {
-  const params = useParams();
-  const parentId = params?.id?.at(-1) ?? null;
-
-  // console.log("params.id => ", params.id);
-
+  const currentFolderId = useSelector(selectFolderId);
   const userId = useSelector(selectedUserId);
   const payload: IFilesListRequest = {
     OwnerId: userId,
     IsDeleted: false,
-    ParentId: parentId,
+    ParentId: currentFolderId,
   };
   const { data: files, isLoading } = useFileListByUserId(payload);
   // console.log(files?.data);
@@ -28,8 +23,9 @@ const Page = () => {
       <FileComponent
         files={files as IFilesListResponse}
         isLoading={isLoading}
+        isFileComponentPage
       />
-      {!parentId && (
+      {!currentFolderId && (
         <>
           <ShareToMe />
           <ShareByMe />

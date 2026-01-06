@@ -14,7 +14,7 @@ namespace backend.Models
         [BsonRepresentation(BsonType.String)]
         public FileType FileType { get; set; } = FileType.FILE; // file / folder
 
-        public string? Lang { get; set; } // eg: python(.py), javascript(.js), java(.java) etc.
+        public string? Lang { get; set; } = "python"; // eg: python(.py), javascript(.js), java(.java) etc.
 
 
         public bool IsDeleted { get; set; } = false; // For trash

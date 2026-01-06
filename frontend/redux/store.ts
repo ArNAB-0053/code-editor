@@ -8,6 +8,7 @@ import editorCodeReducer from "./slices/editorSlice";
 import activeTabReducer from "./slices/activeTab";
 import sharedEditorCodeReducer from "./slices/sharedEditorSlice";
 import fileFolderReducer from "./slices/fileFolderSlice"
+import createdFileEditorReducer from "./slices/createdFilesEditorSlice"
 
 const persistPreferenceConfig = {
   key: "preference",
@@ -48,7 +49,8 @@ export const store = configureStore({
     editorCode: editorCodeReducer,
     sharedEditorCode: sharedEditorCodeReducer,
     activeTab: persistedActiveTab,
-    folderId: fileFolderReducer
+    folderId: fileFolderReducer,
+    createdFileEditorCode: createdFileEditorReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

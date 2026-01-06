@@ -63,27 +63,26 @@ const Breadcrumbs = () => {
     }
   }, [router]);
 
-  if (!breadcrumbs) {
-    return null;
-  }
-
   const breadcrumbItems = breadcrumbs.map((item, index) => {
     const isLast = index === breadcrumbs.length - 1;
     const isFirst = index === 0;
 
     return {
+      key: item.href,
       title: isLast ? (
         <span
+          key={index}
           className={cn(
             "transition-colors",
             "text-white font-bold cursor-default flex items-center justify-center gap-x-1 px-2! rounded-md bg-white/15"
           )}
         >
           {item.href === appUrls.FILE && <MdFolder />}
-          {typeof item.title === "string" ? item.title : item.title}
+          {item.title}
         </span>
       ) : (
         <Link
+          key={index}
           href={item.href}
           className={cn(
             "transition-colors text-white/50! ",
@@ -92,7 +91,7 @@ const Breadcrumbs = () => {
           )}
         >
           {item.href === appUrls.FILE && <MdFolder />}
-          {typeof item.title === "string" ? item.title : item.title}
+          {item.title}
         </Link>
       ),
     };

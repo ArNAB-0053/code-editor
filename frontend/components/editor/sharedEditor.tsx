@@ -119,8 +119,6 @@ export default function SharedEditorComponent({
     }
   }, [editorTheme]);
 
-  // Generate Shared Link
-
   // console.log(sharingDetails)
 
   return (

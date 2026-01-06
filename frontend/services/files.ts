@@ -4,11 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   IBreadcrumbsRes,
   ICreateFileRequest,
+  IFileCodeResponse,
   IFileDetailsResponse,
   IFilesDetailsRequest,
   IFilesListRequest,
   IFilesListResponse,
   ISoftDeleteRequest,
+  IUpdateFilesCodeRequest,
+  IUpdateFilesOutputRequest,
 } from "@/@types/files";
 import { IBaseReturn } from "@/@types/_base";
 
@@ -77,6 +80,80 @@ export const useFileDetailsByUserId = (payload: IFilesDetailsRequest) => {
     queryKey: [QUERY_KEYS.FILE, payload?.FileId, payload?.OwnerId],
     queryFn: () => getFileDetailsByUserId(payload),
     enabled: !!payload?.FileId && !!payload?.OwnerId,
+  });
+};
+
+// (GET) - file code by fileId and ownerId
+export const getFileCode = async (
+  payload: IFilesDetailsRequest
+): Promise<IFileCodeResponse> => {
+  const res = await axiosInstance.post(`${URI}/details/code`, payload);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useFileCode = (payload: IFilesDetailsRequest) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.FILE_CODE, payload?.FileId, payload?.OwnerId],
+    queryFn: () => getFileCode(payload),
+    enabled: !!payload?.FileId && !!payload?.OwnerId,
+  });
+};
+
+// (PATCH) - Update Output
+export const updateFilesCodeOutput = async (
+  payload: IUpdateFilesOutputRequest
+): Promise<IBaseReturn> => {
+  const res = await axiosInstance.patch(`${URI}/update/output`, payload);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useUpdateFilesCodeOutput = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: IUpdateFilesOutputRequest) => updateFilesCodeOutput(payload),
+    onSuccess: (_res, variable) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, variable.FileId, variable.Output],
+      });
+    },
+  });
+};
+
+// (PATCH) - Update Code
+export const updateFilesCode = async (
+  payload: IUpdateFilesCodeRequest
+): Promise<IFileCodeResponse> => {
+  const res = await axiosInstance.patch(`${URI}/update/code`, payload);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useUpdateFilesCode = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: IUpdateFilesCodeRequest) => updateFilesCode(payload),
+    onSuccess: (_res, variable) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, variable.FileId, variable.Code],
+      });
+    },
   });
 };
 

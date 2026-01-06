@@ -44,13 +44,25 @@ export interface IFileFolderModel {
   deleteTime?: Date;
 }
 
+export interface IFileCodeModel {
+  id: ObjectId;
+  fileId: ObjectId | string;
+  ownerId: string;
+  fileName: string;
+  code: string;
+  lang: string;
+  output: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IFilesModel extends IFileFolderModel {
   codeContent: ICodeContent;
 }
 
 export interface IFileFolder {
-    files: IFilesModel[];
-    folders: IFileFolderModel[];
+  files: IFilesModel[];
+  folders: IFileFolderModel[];
 }
 
 export interface IFilesListResponse extends IBaseReturn {
@@ -61,17 +73,35 @@ export interface IFilesListResponse extends IBaseReturn {
 export interface IFileDetailsResponse extends IBaseReturn {
   data: IFilesModel;
 }
+export interface IFileCodeResponse extends IBaseReturn {
+  data: IFileCodeModel;
+}
 
 export interface ISoftDeleteRequest {
   FileId: ObjectId;
   OwnerId: string;
 }
+export interface IFileRenameRequest {
+  FileId: ObjectId;
+  FileName: string;
+  OwnerId: string;
+}
+export interface IUpdateFilesCodeRequest {
+  FileId: ObjectId;
+  Code: string;
+  OwnerId: string;
+}
+export interface IUpdateFilesOutputRequest {
+  FileId: ObjectId;
+  OwnerId: string;
+  Output: string;
+}
 
 export interface IBreadcrumbData {
-    id: string,
-    name: string
+  id: string;
+  name: string;
 }
 
 export interface IBreadcrumbsRes extends IBaseReturn {
-  data: IBreadcrumbData[]
+  data: IBreadcrumbData[];
 }

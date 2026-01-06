@@ -12,6 +12,7 @@ export const QUERY_KEYS = {
 
     FILE: 'file',
     FOLDER: 'folder',
+    FILE_CODE: 'file-code',
     
     BREADCRUMB: 'breadcrumbs',
     

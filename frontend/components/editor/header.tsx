@@ -21,8 +21,6 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   const [open, setOpen] = useState(false);
   const currentCode = useSelector(selectedCode);
 
-  // console.log("Curr Code", currentCode);
-
   const theme = themeConfig(props.editorTheme);
 
   const { mutateAsync: runCode } = useRunCode();
@@ -30,8 +28,6 @@ const EditorHeaderComponent = (props: HeaderProps) => {
 
   const editorId = useSelector(selectedEditorId);
   const lastOpt = useRef("");
-
-  // console.log(editorId)
 
   // Ouput Header
   if (props.isOutput) {
@@ -54,23 +50,17 @@ const EditorHeaderComponent = (props: HeaderProps) => {
     props.setLoading(true);
     props.setError("");
 
-    console.log(currentCode);
-    console.log(props.p_lang);
-
     try {
       const res = await runCode({
         code: currentCode,
         lang: props.p_lang,
       });
-      console.log(res);
       const output = res.output ?? "";
-      console.log(lastOpt.current !== output)
       if (lastOpt.current !== output) {
         updateOutput(
           { editorId, output },
           {
             onSuccess: (res) => {
-              console.log("Updated", res);
               lastOpt.current = output;
               dispatch(setOutputRedux(output));
             },

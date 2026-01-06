@@ -30,6 +30,28 @@ namespace backend.DTO
         public string OwnerId { get; set; }
     }
 
+    // PATCHs
+    public class UpdateRenameRequest
+    {
+        public string FileId { get; set; }
+        public string OwnerId { get; set; }
+        public string FileName { get; set; }
+    }
+
+    public class UpdateOuputRequest
+    {
+        public string FileId { get; set; }
+        public string OwnerId { get; set; }
+        public string Output { get; set; }
+    }
+
+    public class UpdateCodeRequest
+    {
+        public string FileId { get; set; }
+        public string OwnerId { get; set; }
+        public string Code { get; set; }
+    }
+
 
     // Service DTOs
     public class FileWithCodeDTOTemp

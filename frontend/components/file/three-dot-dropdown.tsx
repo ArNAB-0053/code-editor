@@ -15,7 +15,7 @@ import {
 } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Dropdown } from "antd";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaExternalLinkAlt, FaFolderOpen } from "react-icons/fa";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { appUrls } from "@/config/navigation.config";
@@ -25,6 +25,9 @@ import { ISoftDeleteRequest } from "@/@types/files";
 import { toast } from "sonner";
 import { AModal } from "../ui/antd";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { setFolderId } from "@/redux/slices/fileFolderSlice";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const StyledAModal = styled(AModal)`
   .ant-modal-content {
@@ -36,12 +39,14 @@ interface ThreeDotDropdownProps {
   fileId: string;
   isTrash?: boolean;
   fileName?: string;
+  isFile?: boolean;
 }
 
 const ThreeDotDropdown = ({
   fileId,
   isTrash = false,
   fileName,
+  isFile = false,
 }: ThreeDotDropdownProps) => {
   const userId = useSelector(selectedUserId);
   const editorTheme = useSelector(selectEditorTheme);
@@ -59,6 +64,8 @@ const ThreeDotDropdown = ({
     OwnerId: userId,
     FileId: fileId,
   };
+
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -116,24 +123,65 @@ const ThreeDotDropdown = ({
                     </>
                   ) : (
                     <>
-                      <Link
-                        href={`${appUrls.FILE}/${fileId}`}
-                        className="w-full"
-                      >
-                        <CButton
-                          className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
-                          variant="transparent"
-                          hoverBgColor={`${theme.border15}`}
+                      {isFile ? (
+                        <>
+                          <Link
+                            href={`${appUrls.CODE}/${fileId}`}
+                            className="w-full"
+                          >
+                            <CButton
+                              className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
+                              variant="transparent"
+                              hoverBgColor={`${theme.border15}`}
+                            >
+                              <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
+                                <Eye size={16} className="" />
+                                Preview
+                              </div>
+                            </CButton>
+                          </Link>
+                          <Link
+                            href={`${appUrls.CODE}/${fileId}`}
+                            target="_blank"
+                            className="w-full"
+                          >
+                            <CButton
+                              className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
+                              variant="transparent"
+                              hoverBgColor={`${theme.border15}`}
+                            >
+                              <div className=" flex! items-center! justify-start! gap-x-3.5! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
+                                <FaExternalLinkAlt className="translate-x-0.5" />
+                                Open in new tab
+                              </div>
+                            </CButton>
+                          </Link>
+                        </>
+                      ) : (
+                        <div
+                          onClick={() => {
+                            dispatch(setFolderId(fileId));
+                          }}
+                          className="w-full"
                         >
-                          <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
-                            <Eye size={16} className="" />
-                            Preview
-                          </div>
-                        </CButton>
-                      </Link>
+                          <CButton
+                            className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
+                            variant="transparent"
+                            hoverBgColor={`${theme.border15}`}
+                          >
+                            <div className=" flex! items-center! justify-start! gap-x-3.5! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
+                              <FaFolderOpen size={16} className="translate-x-0.5" />
+                              Open
+                            </div>
+                          </CButton>
+                        </div>
+                      )}
 
-                      <Link
-                        href={`${appUrls.FILE}/${fileId}`}
+                      {/* <Link
+                        href={undefined}
+                        onClick={() => {
+                          dispatch(setFolderId(fileId));
+                        }}
                         target="_blank"
                         className="w-full"
                       >
@@ -147,7 +195,7 @@ const ThreeDotDropdown = ({
                             Open in new tab
                           </div>
                         </CButton>
-                      </Link>
+                      </Link> */}
 
                       <CDivider className="mt-1! mb-1!" />
 
@@ -233,8 +281,8 @@ const ThreeDotDropdown = ({
             Permanently delete this file?
           </h1>
           <span className=" my-4 text-sm opacity-80">
-            This action will permanently delete <b>{fileName}</b>.
-            You won’t be able to recover it later.
+            This action will permanently delete <b>{fileName}</b>. You won’t be
+            able to recover it later.
           </span>
 
           <div className="flex items-center justify-end gap-x-3 mt-2">

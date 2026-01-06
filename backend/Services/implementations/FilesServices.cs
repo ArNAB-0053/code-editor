@@ -40,10 +40,11 @@ namespace backend.Services.implementations
                 var fileCode = new FileCodesModel
                 {
                     FileId = file.Id!,
+                    FileName = file.FileName,
                     OwnerId = file.OwnerId,
                     Output = string.Empty,
                     Code = string.Empty,
-                    Lang = file.Lang,
+                    Lang = file.Lang ?? "python",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
@@ -113,7 +114,6 @@ namespace backend.Services.implementations
             return _files.Aggregate<FileWithCodeDTO>(pipeline).FirstOrDefault();
         }
 
-
         // GET file by Id - based on fileId + ownerId - (DETAILS)
         public FileWithCodeDTO GetById(string fileId, string ownerId)
         {
@@ -138,6 +138,46 @@ namespace backend.Services.implementations
                     };
             var result = _files.Aggregate<FileWithCodeDTO>(pipeline).FirstOrDefault();
             return result;
+        }
+
+        // GET files code using fileId
+        public FileCodesModel GetFilesCode(string fileId, string ownerId) => _filesCode.Find(x => x.FileId == fileId && x.OwnerId == ownerId).FirstOrDefault();
+
+        // PATCH - rename file name
+        public void Rename(string id, string ownerId, string fileName)
+        {
+            var updateCode = Builders<FileCodesModel>.Update
+                .Set(x => x.FileName, fileName)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            var updateFile = Builders<FilesModel>.Update
+                .Set(x => x.FileName, fileName)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            _filesCode.UpdateOne(x => x.FileId == id && x.OwnerId == ownerId, updateCode);
+            _files.UpdateOne(x => x.Id == id && x.OwnerId == ownerId, updateFile);
+        }
+
+        // PATCH - Update only Code
+        public FileCodesModel UpdateCode(string id, string ownerId, string code)
+        {
+            var update = Builders<FileCodesModel>.Update
+                .Set(x => x.Code, code)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            _filesCode.UpdateOne(x => x.FileId == id && x.OwnerId == ownerId, update);
+            return GetFilesCode(id, ownerId);
+        }
+
+        // PATCH - Update only Output
+        public bool UpdateOutput(string id, string ownerId, string output)
+        {
+            var update = Builders<FileCodesModel>.Update
+                .Set(x => x.Output, output)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            var res = _filesCode.UpdateOne(x => x.FileId == id && x.OwnerId == ownerId, update);
+            return res.ModifiedCount > 0;
         }
 
         // SOFT DELETE - Trash (Recycle Bin)

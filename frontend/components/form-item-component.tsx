@@ -2,7 +2,7 @@
 import { themeConfig } from "@/config/themeConfig";
 import { useTheme } from "@/context/ThemeContext";
 import { LuLoader } from "react-icons/lu";
-import { AFormItem, AInput, CFormLabel } from "@/components/ui/antd";
+import { AFormItem, AInput, ASelect, CFormLabel } from "@/components/ui/antd";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono } from "@/fonts";
 
@@ -20,12 +20,20 @@ type FormItemComponentType = {
   touched?: boolean;
   errorText?: string;
   formItemClassName?: string;
+
+  // For ASelect
+  isSelect?: boolean;
+  selectValue?: string;
+  onSelectChange?: any;
+  options?: any[];
 };
 
 export const FormItemComponent = ({
   name,
   formItemChildren,
   value,
+  selectValue,
+  onSelectChange,
   onChange,
   placeholder,
   placeholderIcon = null,
@@ -36,6 +44,8 @@ export const FormItemComponent = ({
   touched,
   errorText,
   formItemClassName = "my-3!",
+  options,
+  isSelect = false,
 }: FormItemComponentType) => {
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
@@ -53,18 +63,31 @@ export const FormItemComponent = ({
     >
       <>
         <div className="relative">
-          <AInput
-            value={value}
-            type={type}
-            onChange={onChange}
-            onFocus={onFocus}
-            className={cn(
-              "hover:border-none! border-none! border-l-2! placeholder:text-xs!",
-              placeholderIcon ? "pl-8!" : "pl-2!"
+          <div className="flex items-center justify-center">
+            <AInput
+              value={value}
+              type={type}
+              onChange={onChange}
+              onFocus={onFocus}
+              className={cn(
+                "hover:border-none! border-none! border-l-2! placeholder:text-xs!",
+                placeholderIcon ? "pl-8!" : "pl-2!"
+              )}
+              placeholder={placeholder}
+              onBlur={onBlur}
+            />
+
+            {isSelect && (
+              <ASelect
+                value={selectValue}
+                className="w-[1rem]! px-0! py-0! rounded-sm!"
+                rootClassName="px-0! pb-0! rounded-sm! w-[8rem]!"
+                onChange={onSelectChange}
+                options={options}
+                optionBorderRadius="2px"
+              />
             )}
-            placeholder={placeholder}
-            onBlur={onBlur}
-          />
+          </div>
 
           {/* PLACEHOLDER */}
           {placeholderIcon && (

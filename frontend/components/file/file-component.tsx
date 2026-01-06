@@ -68,7 +68,7 @@ const FileComponent = ({
     <div className={font?.className}>
       {/* {isLoading && <div>Loading files...</div>} */}
 
-      {!isTrash &&
+      {!isTrash && currentFolderId &&
         (isBreadcrumbLoading ? (
           <BreadcrumbLoader />
         ) : (

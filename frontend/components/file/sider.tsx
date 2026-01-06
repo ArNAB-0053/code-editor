@@ -149,7 +149,6 @@ const SideElements = {
 
 const Sider = () => {
   const pathname = usePathname();
-  console.log(pathname);
   const activeTab = useSelector(selectedActiveTabKey);
 
   return (

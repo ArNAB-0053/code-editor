@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { IFileFolder, IFilesModel } from "@/@types/files";
 import CodePreview from "./share/code-preview";
 import ThreeDotDropdown from "./three-dot-dropdown";
+import { langs } from "@/constants/lang";
 
 const FilesCard = ({
   data,
@@ -33,6 +34,8 @@ const FilesCard = ({
         "
     >
       {data?.files?.map((x: IFilesModel, i) => {
+        const ext = langs[x?.lang]?.ext;
+        const slicedExt = ext?.slice(1, ext?.length);
         return (
           <div
             key={i}
@@ -46,7 +49,7 @@ const FilesCard = ({
             {/* Header */}
             <section className="flex items-center justify-between">
               <div
-                className="flex items-center mb-1"
+                className="flex items-center mb-1 text-sm"
                 style={{
                   color: theme.disabledTextColor,
                 }}
@@ -57,9 +60,17 @@ const FilesCard = ({
                     backgroundColor: `${theme.activeColor}40`,
                     color: theme.activeColor,
                   }}
-                  className="text-base px-2 py-0 rounded-md"
+                  className=" h-4 px-1 py-0 rounded-md translate-x-[3px]  translate-y-0.5 "
                 >
-                  .<span className="text-xs">{x.lang}</span>
+                  <div className="-translate-y-1.5">
+                    <div
+                      className="h-[3px] w-[3px] rounded-full translate-y-3"
+                      style={{
+                        background: theme.activeColor,
+                      }}
+                    />
+                    <span className="text-sm ml-[4.5px] leading-0">{slicedExt}</span>
+                  </div>
                 </span>
               </div>
 
@@ -67,6 +78,7 @@ const FilesCard = ({
                 fileId={x.id}
                 isTrash={isTrash}
                 fileName={x.fileName}
+                isFile
               />
             </section>
 

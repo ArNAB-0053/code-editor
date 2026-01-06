@@ -10,7 +10,11 @@ import { SelectProps } from "antd";
 import { useSelector } from "react-redux";
 import BaseASelect from "../_Base/ASelect";
 
-const ASelect = ({ children, ...rest }: SelectProps) => {
+interface ASelectProps extends SelectProps {
+  optionBorderRadius?: string;
+}
+
+const ASelect = ({ children, optionBorderRadius, ...rest }: ASelectProps) => {
   const websiteFont = useSelector(selectWebsiteFont);
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -20,6 +24,7 @@ const ASelect = ({ children, ...rest }: SelectProps) => {
       theme={theme}
       font={websiteFont as WebsiteFontsKey}
       themeName={editorTheme}
+      optionBorderRadius={optionBorderRadius}
       {...rest}
     >
       {children}

@@ -1,5 +1,4 @@
 "use client";
-import EditorComponent from "../editor/editor";
 import { ReactElement } from "react";
 import { selectedLang } from "@/redux/slices/editorSlice";
 import { useSelector } from "react-redux";

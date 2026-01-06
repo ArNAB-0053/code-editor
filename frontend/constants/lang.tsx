@@ -13,7 +13,16 @@ export const languageLogo = (lang: string) => {
   );
 };
 
-export const langs = [
-  { link: "python", label: "Python", logo: languageLogo("python") },
-  { link: "javascript", label: "JavaScript", logo: languageLogo("javascript") },
-];
+export const langs = {
+  python: {
+    label: "Python",
+    logo: languageLogo("python"),
+    ext: ".py",
+  },
+  javascript: {
+    label: "JavaScript",
+    logo: languageLogo("javascript"),
+    ext: ".js",
+  },
+} as const;
+

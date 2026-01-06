@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 interface BaseASelectProps extends SelectProps, IExtraProps {
   themeName?: string;
+  optionBorderRadius?: string
 }
 
 const StyledBaseASelect = styled(Select)<{ $theme: ThemeTypes }>`
@@ -33,7 +34,8 @@ const DropdownGlobal = createGlobalStyle<{
   outputColor: string;
   border10: string;
   selectionBg: string;
-  border5: string
+  border5: string,
+  optionBorderRadius?: string
 }>`
   .${(p) => p.cls} .ant-select-dropdown {
     background: ${(p) => p.outputColor} !important;
@@ -48,7 +50,7 @@ const DropdownGlobal = createGlobalStyle<{
     color: ${(p) => p.outputColor} !important;
     margin-bottom: 6px !important;
     width: 100%;
-    border-radius: 12px !important;
+    border-radius: ${(p) => p.optionBorderRadius ? p.optionBorderRadius : '12px'} !important;
   }
 
   .${(p) => p.cls} .ant-select-item-option-active,
@@ -73,6 +75,7 @@ const BaseASelect = ({
   theme,
   font,
   themeName,
+  optionBorderRadius,
   ...rest
 }: BaseASelectProps) => {
   const dropdownClass = `a-select-dropdown-${themeName?.replace(
@@ -89,6 +92,7 @@ const BaseASelect = ({
         border10={theme.border10 ?? theme.border15 ?? theme.border}
         selectionBg={theme.editorSelectionBackground}
         border5={theme.border5}
+        optionBorderRadius={optionBorderRadius}
       />
 
       <StyledBaseASelect

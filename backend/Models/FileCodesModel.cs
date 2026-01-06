@@ -11,6 +11,7 @@ namespace backend.Models
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string FileId { get; set; }
+        public string FileName { get; set; }
         public string OwnerId { get; set; } // User Id - who owns this code file
         public string Code { get; set; }
         public string Lang { get; set; }

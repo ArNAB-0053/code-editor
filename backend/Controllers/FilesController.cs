@@ -78,6 +78,68 @@ namespace backend.Controllers
             }
         }
 
+        // (GET) - GET fileCode by fileId 
+        [HttpPost("details/code")]
+        public IActionResult GetFileCodeByFileId([FromBody] FileDetailsRequest req)
+        {
+            try
+            {
+                var res = _service.GetFilesCode(req.FileId, req.OwnerId);
+                if (res == null) return NotFound(new { status = "error", message = "File not found" });
+                return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        // (PATCH) - Rename
+        [HttpPatch("rename")]
+        public IActionResult Rename([FromBody] UpdateRenameRequest req)
+        {
+            try
+            {
+                _service.Rename(req.FileId, req.OwnerId, req.FileName);
+                return Ok(new { status = "success" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        // (PATCH) - Update Code
+        [HttpPatch("update/code")]
+        public IActionResult UpdateCode([FromBody] UpdateCodeRequest req)
+        {
+            try
+            {
+                var res = _service.UpdateCode(req.FileId, req.OwnerId, req.Code);
+                if (res == null) return NotFound(new { status = "error", message = "File not found" });
+                return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        // (PATCH) - Update Output
+        [HttpPatch("update/output")]
+        public IActionResult UpdateOutput([FromBody] UpdateOuputRequest req)
+        {
+            try
+            {
+                var res = _service.UpdateOutput(req.FileId, req.OwnerId, req.Output);
+                return Ok(new { status = "success" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
         // PATCH - Soft Delete - Trash(Recycle Bin)
         [HttpPatch("trash")]
         public async Task<IActionResult> SoftDelete([FromBody] SoftDeleteRequest req)

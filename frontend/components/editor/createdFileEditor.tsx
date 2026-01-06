@@ -11,27 +11,28 @@ import {
   selectEditorTheme,
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
-import EditorHeaderComponent from "./header";
-import Sider from "./sider";
 import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
-import { useAutoSaveCode } from "@/services/code";
-import { selectedUserId } from "@/redux/slices/userSlice";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useDispatch } from "react-redux";
-import {
-  selectedCode,
-  selectedLang,
-  selectedOutput,
-  setCodeRedux,
-  setEditorId,
-  setLangRedux,
-} from "@/redux/slices/editorSlice";
-import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
+
+import {
+  selectedCreatedFileCode,
+  selectedCreatedFileLang,
+  selectedCreatedFileOutput,
+  selectedfileId,
+  setCreatedFileCodeRedux,
+  setCreatedFileEditorId,
+  setCreatedFileLangRedux,
+} from "@/redux/slices/createdFilesEditorSlice";
+import CreatedFileEditorHeaderComponent from "./createdFileHeader";
+import { useDebounce } from "@/hooks/useDebounce";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { toast } from "sonner";
 import { messagesConfig } from "@/config/messages.config";
+import { useUpdateFilesCode } from "@/services/files";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -44,7 +45,7 @@ const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   }
 `;
 
-export default function EditorComponent({
+export default function CreatedEditorComponent({
   p_lang,
   isShared = false,
 }: {
@@ -55,13 +56,11 @@ export default function EditorComponent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const lang = useSelector(selectedLang);
-  // const [sharingDetails, setSharingDetails] = useState(null);
+  const lang = useSelector(selectedCreatedFileLang);
 
-  // console.log("___Editor___ (defaultCode)", defaultCode)
-
-  const currentCode = useSelector(selectedCode);
-  const currentOutput = useSelector(selectedOutput);
+  const currentCode = useSelector(selectedCreatedFileCode);
+  const currentOutput = useSelector(selectedCreatedFileOutput);
+  const fileId = useSelector(selectedfileId);
 
   const dispatch = useDispatch();
 
@@ -71,7 +70,7 @@ export default function EditorComponent({
   const websiteFont = useSelector(selectWebsiteFont);
   const userId = useSelector(selectedUserId);
 
-  const autoSaveCode = useAutoSaveCode();
+  const autoSaveCode = useUpdateFilesCode();
 
   const theme = themeConfig(editorTheme);
 
@@ -81,19 +80,10 @@ export default function EditorComponent({
 
   const debouncedCode = useDebounce(currentCode, 1000);
   const lastSaveRef = useRef("");
-  // const isAutoSaving = useRef(false);
-
-  // useEffect(() => {
-  //   if (currentCode !== debouncedCode) {
-  //     isAutoSaving.current = true;
-  //     toast.loading("Saving…", { id: "autoSave" });
-  //   }
-  // }, [currentCode, debouncedCode]);
 
   useEffect(() => {
-    if (isShared || !userId) return;
+    if (!userId) return;
     if (debouncedCode.trim() === lastSaveRef.current.trim()) {
-      // toast.dismiss("autoSave");
       return;
     }
 
@@ -101,16 +91,16 @@ export default function EditorComponent({
 
     autoSaveCode.mutate(
       {
-        userId: userId,
-        lang,
-        code: debouncedCode,
+        OwnerId: userId,
+        FileId: fileId,
+        Code: debouncedCode,
       },
       {
         onSuccess: (res) => {
           lastSaveRef.current = debouncedCode;
-          dispatch(setLangRedux(res?.lang));
-          dispatch(setCodeRedux(res?.code));
-          dispatch(setEditorId(res?.id));
+          dispatch(setCreatedFileLangRedux(res?.data?.lang));
+          dispatch(setCreatedFileCodeRedux(res?.data?.code));
+          dispatch(setCreatedFileEditorId(res?.data?.fileId));
           // isAutoSaving.current = false;
           toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
         },
@@ -120,7 +110,7 @@ export default function EditorComponent({
         },
       }
     );
-  }, [isShared, debouncedCode, userId, lang, dispatch]);
+  }, [debouncedCode, userId, fileId, dispatch]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -176,10 +166,6 @@ export default function EditorComponent({
     }
   }, [editorTheme]);
 
-  // Generate Shared Link
-
-  // console.log(sharingDetails)
-
   return (
     <div
       style={{
@@ -188,8 +174,6 @@ export default function EditorComponent({
       }}
       className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
-      {!isShared && <Sider p_lang={p_lang} />}
-
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
@@ -210,7 +194,7 @@ export default function EditorComponent({
                 websiteFonts[websiteFont as WebsiteFontsKey]?.className
               }`}
             >
-              <EditorHeaderComponent
+              <CreatedFileEditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={false}
                 p_lang={p_lang}
@@ -226,7 +210,7 @@ export default function EditorComponent({
                   key={lang}
                   value={currentCode}
                   onChange={(value) => {
-                    dispatch(setCodeRedux(value ?? ""));
+                    dispatch(setCreatedFileCodeRedux(value ?? ""));
                   }}
                   width="100%"
                   height="calc(95vh - 95px)"
@@ -245,10 +229,11 @@ export default function EditorComponent({
                 />
               </div>
             </div>
+            
           </Splitter.Panel>
           <Splitter.Panel defaultSize="40%" min="20%">
             <div
-              className={` overflow-y-auto border-r relative ${
+              className={`min-h-[95vh] overflow-y-auto border-r relative ${
                 websiteFonts[websiteFont as WebsiteFontsKey]?.className
               }`}
               style={{
@@ -256,10 +241,9 @@ export default function EditorComponent({
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
-                height: 'calc(100svh  - 120px)'
               }}
             >
-              <EditorHeaderComponent
+              <CreatedFileEditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={true}
                 loading={loading}

@@ -1,5 +1,5 @@
 import { FileTypeEnum } from "@/@types/_enums";
-import { AButton, AForm } from "@/components/ui/antd";
+import { AButton, AForm, ASelect } from "@/components/ui/antd";
 import { zodToFormik } from "@/lib/formik-zod-adapter";
 import { useFileCreation } from "@/services/files";
 import { CreateFilesFormType, filesSchema } from "@/zod/files.z";
@@ -11,27 +11,33 @@ import { FaFolderPlus } from "react-icons/fa";
 import { BsFileEarmarkPlusFill } from "react-icons/bs";
 import { toast } from "sonner";
 import { SetterFunctionTypesBool } from "@/@types/_base";
-import { useParams } from "next/navigation";
+import { selectFolderId } from "@/redux/slices/fileFolderSlice";
+import { langs } from "@/constants/lang";
 
 export const FilesCreationForm = ({
   setOpen,
 }: {
   setOpen: SetterFunctionTypesBool;
 }) => {
-  const params = useParams();
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
 
-  const isRoot = !Array.isArray(params.id);
-  const parentId = isRoot ? null : params?.id?.at(-1);
+  const currentFolderId = useSelector(selectFolderId);
 
   const initialValues: CreateFilesFormType = {
     OwnerId: userId,
     FileName: "",
     FileType: FileTypeEnum.FILE,
-    Lang: "",
-    ParentId: parentId,
+    Lang: "python",
+    ParentId: currentFolderId,
   };
+
+  const langOptions = Object.entries(langs).map(([key, lang]) => ({
+    value: key,
+    label: lang.ext,
+  }));
+
+  // console.log(langOptions);
 
   return (
     <Formik
@@ -42,9 +48,8 @@ export const FilesCreationForm = ({
         const toastId = toast.loading("Creating file...");
         await createFile(values, {
           onSuccess: (res) => {
-            console.log(res);
-            if (res?.status === "success")
-              toast.success("File created successfully!", { id: toastId });
+            // console.log(res);
+            if (res?.status === "success") toast.success("File created successfully!", { id: toastId });
             else toast.error("Error creating file", { id: toastId });
           },
           onError: () => {
@@ -65,18 +70,22 @@ export const FilesCreationForm = ({
       }) => {
         return (
           <AForm name="file-creation-form ">
-            <FormItemComponent
-              name="fileName"
-              value={values?.FileName}
-              onChange={handleChange("FileName")}
-              formItemChildren="File Name"
-              onBlur={handleBlur("FileName")}
-              placeholder="Enter file name"
-              errorText={errors?.FileName}
-              touched={touched?.FileName}
-              formItemClassName="my-0!"
-            />
-            <FormItemComponent
+              <FormItemComponent
+                name="fileName"
+                value={values?.FileName}
+                onChange={handleChange("FileName")}
+                formItemChildren="File Name"
+                onBlur={handleBlur("FileName")}
+                placeholder="Enter file name"
+                errorText={errors?.FileName}
+                touched={touched?.FileName}
+                formItemClassName="my-0!"
+                isSelect
+                onSelectChange={handleChange("Lang")}
+                options={langOptions}
+                selectValue={values?.Lang}
+              />
+              {/* <FormItemComponent
               name="fileName"
               value={values?.Lang || ""}
               onChange={handleChange("Lang")}
@@ -86,7 +95,7 @@ export const FilesCreationForm = ({
               errorText={errors?.Lang}
               touched={touched?.Lang}
               formItemClassName="my-0!"
-            />
+            /> */}
 
             <div className="flex items-center justify-end mt-6">
               <AButton
@@ -114,18 +123,16 @@ export const FolderCreationForm = ({
 }: {
   setOpen: SetterFunctionTypesBool;
 }) => {
-  const params = useParams();
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
 
-  const isRoot = !Array.isArray(params.id);
-  const parentId = isRoot ? null : params?.id?.at(-1);
+  const currentFolderId = useSelector(selectFolderId);
 
   const initialValues: CreateFilesFormType = {
     OwnerId: userId,
     FileName: "",
     FileType: FileTypeEnum.FOLDER,
-    ParentId: parentId,
+    ParentId: currentFolderId,
   };
 
   return (
@@ -136,7 +143,7 @@ export const FolderCreationForm = ({
         const toastId = toast.loading("Creating folder...");
         await createFile(values, {
           onSuccess: (res) => {
-            console.log(res);
+            // console.log(res);
             if (res?.status === "success")
               toast.success("Folder created successfully!", { id: toastId });
             else toast.error("Error creating folder", { id: toastId });
