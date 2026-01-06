@@ -57,7 +57,7 @@ const FileComponent = ({
 
   // breadcrumbs
   const currentFolderId = useSelector(selectFolderId);
-  console.log("currentFolderId", currentFolderId);
+  // console.log("currentFolderId", currentFolderId);
 
   const dispatch = useDispatch();
 
