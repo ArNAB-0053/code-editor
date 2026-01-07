@@ -36,7 +36,7 @@ export const useAuth = () => {
       const res: IAuthReturn = await loginMutate(values);
       const data: IUserDetails = res?.user;
 
-      console.log("__AUTH__ Login: ",data)
+      // console.log("__AUTH__ Login: ",data)
 
       if (res.status === "success") {
         dispatch(setUserId(data?.id));
@@ -64,7 +64,7 @@ export const useAuth = () => {
     try {
       const res: IAuthReturn = await registerMutate(values);
 
-      console.log("__AUTH__ Register: ",res.user)
+      // console.log("__AUTH__ Register: ",res.user)
 
       if (res?.status === "success") {
         toast.success(messagesConfig.SIGN_UP.SUCCESS, { id: toastId });

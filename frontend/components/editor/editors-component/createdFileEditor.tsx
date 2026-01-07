@@ -26,13 +26,14 @@ import {
   setCreatedFileCodeRedux,
   setCreatedFileEditorId,
   setCreatedFileLangRedux,
+  setCreatedFileNameRedux,
 } from "@/redux/slices/createdFilesEditorSlice";
-import CreatedFileEditorHeaderComponent from "./createdFileHeader";
 import { useDebounce } from "@/hooks/useDebounce";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { toast } from "sonner";
 import { messagesConfig } from "@/config/messages.config";
 import { useUpdateFilesCode } from "@/services/files";
+import CreatedFileEditorHeaderComponent from "../editor-headers/createdFileHeader";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -101,6 +102,7 @@ export default function CreatedEditorComponent({
           dispatch(setCreatedFileLangRedux(res?.data?.lang));
           dispatch(setCreatedFileCodeRedux(res?.data?.code));
           dispatch(setCreatedFileEditorId(res?.data?.fileId));
+          dispatch(setCreatedFileNameRedux(res?.data?.fileName));
           // isAutoSaving.current = false;
           toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
         },

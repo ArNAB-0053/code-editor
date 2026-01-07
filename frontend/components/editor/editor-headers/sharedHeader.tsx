@@ -1,40 +1,25 @@
+
 import { themeConfig } from "@/config/themeConfig";
-import { CopyButton, RunButton, TransparentButton } from "./header-buttons";
-import { useRunCode } from "@/services/code";
+import { CopyButton, RunButton, TransparentButton } from "../header-buttons";
+import { useRunCode, useUpdateOutput } from "@/services/code";
 import { useSelector } from "react-redux";
 import { HeaderProps } from "@/@types";
 import { useDispatch } from "react-redux";
-import { useRef } from "react";
-import {
-  selectedCreatedFileCode,
-  selectedCreatedFileLang,
-  selectedCreatedFileName,
-  selectedfileId,
-  setCreatedFileOutputRedux,
-} from "@/redux/slices/createdFilesEditorSlice";
-import { langs } from "@/constants/lang";
-import { useUpdateFilesCodeOutput } from "@/services/files";
-import { selectedUserId } from "@/redux/slices/userSlice";
+import { useRef, useState } from "react";
+import { selectedSharedCode, selectedSharedEditorId, setShareOutputRedux } from "@/redux/slices/sharedEditorSlice";
 
-const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
+const SharedEditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
-
-  const userId = useSelector(selectedUserId);
-  const currentCode = useSelector(selectedCreatedFileCode);
-  const fileName = useSelector(selectedCreatedFileName);
-  const lang = useSelector(selectedCreatedFileLang);
-
-  const ext = langs[lang]?.ext;
-
-  // console.log("Curr Code", currentCode);
+  const currentCode = useSelector(selectedSharedCode);
 
   const theme = themeConfig(props.editorTheme);
 
   const { mutateAsync: runCode } = useRunCode();
-  const { mutateAsync: updateOutput } = useUpdateFilesCodeOutput();
+  const { mutateAsync: updateOutput } = useUpdateOutput();
 
-  const fileId = useSelector(selectedfileId);
+  const editorId = useSelector(selectedSharedEditorId);
   const lastOpt = useRef("");
+
 
   // Ouput Header
   if (props.isOutput) {
@@ -62,17 +47,17 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
         code: currentCode,
         lang: props.p_lang,
       });
-      // console.log(res);
       const output = res.output ?? "";
-      const payload = { FileId: fileId, Output: output, OwnerId: userId };
-
       if (lastOpt.current !== output) {
-        updateOutput(payload, {
-          onSuccess: (res) => {
-            lastOpt.current = output;
-            dispatch(setCreatedFileOutputRedux(output));
-          },
-        });
+        updateOutput(
+          { editorId, output },
+          {
+            onSuccess: (res) => {
+              lastOpt.current = output;
+              dispatch(setShareOutputRedux(output));
+            },
+          }
+        );
       }
     } catch (err: any) {
       props.setError(err.message ?? String(err));
@@ -83,7 +68,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
 
   function clearOutput() {
     props.setError("");
-    dispatch(setCreatedFileOutputRedux(""));
+    dispatch(setShareOutputRedux(""));
   }
 
   const copyCode = () => {
@@ -96,8 +81,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
     // Editor Header
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
       <span className="font-medium text-center flex items-center justify-center gap-x-2 w-[100px]">
-        {fileName}
-        {ext}
+        main.py
         {/* <IoMdCloudDone className="opacity-40 size-3.5" /> */}
       </span>
 
@@ -122,4 +106,4 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   );
 };
 
-export default CreatedFileEditorHeaderComponent;
+export default SharedEditorHeaderComponent;

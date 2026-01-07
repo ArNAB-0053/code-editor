@@ -36,8 +36,6 @@ const CodePreview = ({
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
   const editorFont = useSelector(selectEditorFont);
-  const editorFontSize = useSelector(selectEditorFontSize);
-
   const syntaxRules = getEditorSytaxRules(theme);
 
   const handleBeforeMount = (monaco: Monaco) => {
@@ -77,9 +75,7 @@ const CodePreview = ({
           beforeMount={handleBeforeMount}
           options={{
             fontFamily: editorFonts[editorFont as EditorFontKey],
-            fontSize: editorFontSizeProp
-              ? editorFontSizeProp
-              : editorFontSize - 2,
+            fontSize: editorFontSizeProp ? editorFontSizeProp : "8px",
             minimap: { enabled: false },
             automaticLayout: true,
             readOnly: true,
@@ -95,6 +91,30 @@ const CodePreview = ({
           }}
           className=" blur-[0.5px] pointer-events-none  "
         />
+      </div>
+
+      <div
+        className="
+                    pointer-events-none
+                    absolute inset-0
+                    backdrop-blur-[1px]
+                    bg-black/10
+                    opacity-80
+                  "
+      />
+
+      <div className="absolute top-0 left-0 right-0 opacity-10 z-10 ">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+          <filter id="a">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency=".65"
+              numOctaves="3"
+              stitchTiles="stitch"
+            ></feTurbulence>
+          </filter>
+          <rect width="100%" height="100%" filter="url(#a)"></rect>
+        </svg>
       </div>
 
       <div className=" h-full w-full absolute bg-linear-to-b from-transparent via-white/10 to-white/15 blur-2xl" />

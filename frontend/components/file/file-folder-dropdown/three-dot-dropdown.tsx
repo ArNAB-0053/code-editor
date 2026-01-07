@@ -1,13 +1,8 @@
-import { WebsiteFontsKey } from "@/@types/font";
 import { themeConfig } from "@/config/themeConfig";
-import { websiteFonts } from "@/fonts";
-import {
-  selectEditorTheme,
-  selectWebsiteFont,
-} from "@/redux/slices/preferenceSlice";
-import React, { useState } from "react";
+import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { CButton, CDivider } from "../ui/custom";
+import { CButton, CDivider } from "@/components/ui/custom";
 import {
   MdDeleteForever,
   MdDriveFileRenameOutline,
@@ -23,22 +18,16 @@ import { useRestore, useSoftDelete } from "@/services/files";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { ISoftDeleteRequest } from "@/@types/files";
 import { toast } from "sonner";
-import { AModal } from "../ui/antd";
-import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { setFolderId } from "@/redux/slices/fileFolderSlice";
-import { FaArrowRightLong } from "react-icons/fa6";
-
-const StyledAModal = styled(AModal)`
-  .ant-modal-content {
-    padding: 0 !important;
-  }
-`;
+import { ConfirmDeleteModal, RenameModal } from "@/components/modals/three-dot";
+import { setCreatedFileIdRedux } from "@/redux/slices/createdFilesEditorSlice";
 
 interface ThreeDotDropdownProps {
   fileId: string;
   isTrash?: boolean;
   fileName?: string;
+  lang?: string;
   isFile?: boolean;
 }
 
@@ -47,15 +36,20 @@ const ThreeDotDropdown = ({
   isTrash = false,
   fileName,
   isFile = false,
+  lang,
 }: ThreeDotDropdownProps) => {
   const userId = useSelector(selectedUserId);
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
-  const websiteFont = useSelector(selectWebsiteFont);
-  const font = websiteFonts[websiteFont as WebsiteFontsKey];
-
   const [open, setOpen] = useState(false);
+  const [openRename, setOpenRename] = useState(false);
+
+  const [renameFile, setRenameFile] = useState("");
+
+  useEffect(() => {
+    setRenameFile(fileName!);
+  }, [fileName]);
 
   const { mutateAsync: moveToTrash } = useSoftDelete();
   const { mutateAsync: restore } = useRestore();
@@ -128,6 +122,9 @@ const ThreeDotDropdown = ({
                           <Link
                             href={`${appUrls.CODE}/${fileId}`}
                             className="w-full"
+                            onClick={() =>
+                              dispatch(setCreatedFileIdRedux(fileId))
+                            }
                           >
                             <CButton
                               className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
@@ -170,7 +167,10 @@ const ThreeDotDropdown = ({
                             hoverBgColor={`${theme.border15}`}
                           >
                             <div className=" flex! items-center! justify-start! gap-x-3.5! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
-                              <FaFolderOpen size={16} className="translate-x-0.5" />
+                              <FaFolderOpen
+                                size={16}
+                                className="translate-x-0.5"
+                              />
                               Open
                             </div>
                           </CButton>
@@ -203,6 +203,7 @@ const ThreeDotDropdown = ({
                         className="w-full! rounded-none! flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
                         variant="transparent"
                         hoverBgColor={`${theme.border15}`}
+                        onClick={() => setOpenRename(true)}
                       >
                         <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
                           <MdDriveFileRenameOutline size={18} />
@@ -256,61 +257,31 @@ const ThreeDotDropdown = ({
           backgroundColor: `${theme.border10}`,
         }}
       >
-        <button className="p-1.5 hover:bg-white/5 rounded-full cursor-pointer">
+        <div className="p-1.5 hover:bg-white/5 rounded-full cursor-pointer">
           <BsThreeDotsVertical
             size={14}
             style={{
               color: theme.textColor,
             }}
           />
-        </button>
+        </div>
       </Dropdown>
 
-      <StyledAModal
-        title={null}
+      <ConfirmDeleteModal
+        fileName={fileName as string}
         open={open}
-        closeIcon={null}
-        onCancel={() => setOpen(false)}
-        footer={null}
-        className="overflow-hidden! md:w-[25rem]! "
-        useSideIndicator={false}
-        centered
-      >
-        <div className="flex justify-center flex-col w-full px-5 py-3 ">
-          <h1 className=" font-semibold text-lg">
-            Permanently delete this file?
-          </h1>
-          <span className=" my-4 text-sm opacity-80">
-            This action will permanently delete <b>{fileName}</b>. You won’t be
-            able to recover it later.
-          </span>
+        setOpen={setOpen}
+      />
 
-          <div className="flex items-center justify-end gap-x-3 mt-2">
-            <CButton
-              className="flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
-              variant="transparent"
-              hoverBgColor={`${theme.border15}`}
-              onClick={() => setOpen(false)}
-            >
-              <div className=" flex! items-center! justify-start! gap-x-3! opacity-70 px-4.5 py-1.5 hover:opacity-100 w-full font-semibold">
-                {/* <MdDriveFileRenameOutline size={18} /> */}
-                Cancel
-              </div>
-            </CButton>
-
-            <CButton
-              className=" flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
-              // variant="transparent"
-              type="danger"
-            >
-              <div className=" flex! items-center! justify-start! gap-x-3! px-4.5 py-1.5 hover:opacity-80 w-full font-semibold transition-all duration-200 ease-linear">
-                <MdDeleteForever size={18} />
-                Delete
-              </div>
-            </CButton>
-          </div>
-        </div>
-      </StyledAModal>
+      <RenameModal
+        fileId={fileId}
+        openRename={openRename}
+        setOpenRename={setOpenRename}
+        renameFile={renameFile}
+        setRenameFile={setRenameFile}
+        isFile={isFile}
+        lang={lang}
+      />
     </>
   );
 };

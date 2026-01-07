@@ -10,14 +10,14 @@ const FileFolderLayout = ({ children }: { children: ReactNode }) => {
   const theme = themeConfig(editorTheme);
   return (
     <div
-      className="flex items-start gap-x-4 lg:gap-x-6 xl:gap-x-8"
+      className="flex items-start gap-x-4 lg:gap-x-6 xl:gap-x-8 "
       style={{
-        height: "calc(100svh - 120px)",
+        height: "calc(100svh - 68px)",
       }}
     >
       <Sider />
       <div
-        className="flex-1 h-full overflow-x-hidden overflow-y-auto custom-scrollbar px-4 py-5 lg:px-5 rounded-xl "
+        className="flex-1 h-full overflow-x-hidden overflow-y-auto custom-scrollbar px-4 py-5 lg:px-5 rounded-tl-2xl "
         style={{
           background: theme.border5,
         }}

@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import CreatedEditorComponent from "@/components/editor/createdFileEditor";
 import { useFileCode } from "@/services/files";
 import {
   selectedCreatedFileLang,
@@ -17,6 +16,7 @@ import {
   setCreatedFileOutputRedux,
 } from "@/redux/slices/createdFilesEditorSlice";
 import { IFileCodeModel } from "@/@types/files";
+import CreatedEditorComponent from "@/components/editor/editors-component/createdFileEditor";
 
 const Code = () => {
   const [codeDataState, setCodeDataState] = useState<IFileCodeModel>();

@@ -32,7 +32,7 @@ export default function ClientLayout({
           >
             <PageHeader />
             <section className="w-full mt-4">
-              <Breadcrumbs />
+              {/* <Breadcrumbs /> */}
               {children}
             </section>
           </main>

@@ -4,8 +4,21 @@ import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { IFileFolder, IFilesModel } from "@/@types/files";
 import CodePreview from "./share/code-preview";
-import ThreeDotDropdown from "./three-dot-dropdown";
 import { langs } from "@/constants/lang";
+import ThreeDotDropdown from "./file-folder-dropdown/three-dot-dropdown";
+import Link from "next/link";
+import { appUrls } from "@/config/navigation.config";
+import { setCreatedFileIdRedux } from "@/redux/slices/createdFilesEditorSlice";
+import { useDispatch } from "react-redux";
+import { ThemeTypes } from "@/@types/theme";
+import styled from "styled-components";
+
+const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
+  background: ${({ $theme }) => $theme.border10} !important;
+  &:hover {
+    background: ${({ $theme }) => $theme.border15} !important;
+  }
+`;
 
 const FilesCard = ({
   data,
@@ -19,6 +32,7 @@ const FilesCard = ({
   // const websiteFont = useSelector(selectWebsiteFont);
   // const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
+  const dispatch = useDispatch();
   return (
     <div
       className="
@@ -36,20 +50,23 @@ const FilesCard = ({
       {data?.files?.map((x: IFilesModel, i) => {
         const ext = langs[x?.lang]?.ext;
         const slicedExt = ext?.slice(1, ext?.length);
+
         return (
-          <div
+          <StyledLink
+            $theme={theme}
+            href={`${appUrls.CODE}/${x.id}`}
             key={i}
             style={{
-              backgroundColor: theme.border10,
               borderColor: theme.border10,
               borderWidth: "2px",
             }}
-            className="px-3 pt-2 pb-3 rounded-xl "
+            onClick={() => dispatch(setCreatedFileIdRedux(x.id))}
+            className="px-3 pt-2 pb-3 rounded-xl relative transition-all duration-200 ease-linear group"
           >
             {/* Header */}
             <section className="flex items-center justify-between">
               <div
-                className="flex items-center mb-1 text-sm"
+                className="flex items-center mb-1 text-sm "
                 style={{
                   color: theme.disabledTextColor,
                 }}
@@ -69,35 +86,55 @@ const FilesCard = ({
                         background: theme.activeColor,
                       }}
                     />
-                    <span className="text-sm ml-[4.5px] leading-0">{slicedExt}</span>
+                    <span className="text-sm ml-[4.5px] leading-0">
+                      {slicedExt}
+                    </span>
                   </div>
                 </span>
               </div>
 
-              <ThreeDotDropdown
-                fileId={x.id}
-                isTrash={isTrash}
-                fileName={x.fileName}
-                isFile
-              />
+              <div
+                className="absolute right-1.5 top-1.5"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <ThreeDotDropdown
+                  fileId={x.id}
+                  isTrash={isTrash}
+                  fileName={x.fileName}
+                  isFile
+                  lang={x.lang}
+                />
+              </div>
             </section>
 
             {/* Body */}
-            <div
-              className="group relative rounded-xl overflow-hidden transition-all duration-300"
-              style={{
-                backgroundColor: theme.editorBackground,
-                borderColor: theme.border15,
-                borderWidth: "2px",
-              }}
-            >
-              <CodePreview
-                code={x?.codeContent.code}
-                lang={x?.lang || x.codeContent.lang}
-                showLangBadge={false}
-              />
+            <div className="overflow-hidden rounded-xl relative">
+              <div
+                className="group relative rounded-xl transition-all duration-300 group-hover:scale-105 "
+                style={{
+                  backgroundColor: theme.editorBackground,
+                  borderColor: theme.border15,
+                  borderWidth: "2px",
+                }}
+              >
+                <CodePreview
+                  code={x?.codeContent.code}
+                  lang={x?.lang || x.codeContent.lang}
+                  showLangBadge={false}
+                  // editorFontSizeProp="8px"
+                />
+
+                
+
+                {/* <div className="grain-overlay pointer-events-none absolute inset-0" /> */}
+              </div>
+
+              
             </div>
-          </div>
+          </StyledLink>
         );
       })}
     </div>

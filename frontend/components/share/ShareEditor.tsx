@@ -12,7 +12,7 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { FaInfoCircle } from "react-icons/fa";
-import SharedEditorComponent from "../editor/sharedEditor";
+import SharedEditorComponent from "../editor/editors-component/sharedEditor";
 
 export const OWNER_WIDTH = "25rem";
 

@@ -3,9 +3,11 @@ import { IFilesListRequest, IFilesListResponse } from "@/@types/files";
 import FileComponent from "@/components/file/file-component";
 import ShareByMe from "@/components/file/share/by-me";
 import ShareToMe from "@/components/file/share/to-me";
-import { selectFolderId } from "@/redux/slices/fileFolderSlice";
+import { selectFolderId, setFolderId } from "@/redux/slices/fileFolderSlice";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useFileListByUserId } from "@/services/files";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 const Page = () => {
@@ -18,6 +20,13 @@ const Page = () => {
   };
   const { data: files, isLoading } = useFileListByUserId(payload);
   // console.log(files?.data);
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setFolderId(null))
+  }, [])
+
   return (
     <>
       <FileComponent

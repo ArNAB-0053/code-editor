@@ -6,6 +6,7 @@ import {
   ICreateFileRequest,
   IFileCodeResponse,
   IFileDetailsResponse,
+  IFileRenameRequest,
   IFilesDetailsRequest,
   IFilesListRequest,
   IFilesListResponse,
@@ -105,11 +106,11 @@ export const useFileCode = (payload: IFilesDetailsRequest) => {
   });
 };
 
-// (PATCH) - Update Output
-export const updateFilesCodeOutput = async (
-  payload: IUpdateFilesOutputRequest
+// (PATCH) - Rename
+export const renameFile = async (
+  payload: IFileRenameRequest
 ): Promise<IBaseReturn> => {
-  const res = await axiosInstance.patch(`${URI}/update/output`, payload);
+  const res = await axiosInstance.patch(`${URI}/rename`, payload);
 
   if (!res.data) {
     const txt = await res.statusText;
@@ -119,13 +120,13 @@ export const updateFilesCodeOutput = async (
   return res.data;
 };
 
-export const useUpdateFilesCodeOutput = () => {
+export const useRenameFile = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: IUpdateFilesOutputRequest) => updateFilesCodeOutput(payload),
-    onSuccess: (_res, variable) => {
+    mutationFn: (payload: IFileRenameRequest) => renameFile(payload),
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.FILE, variable.FileId, variable.Output],
+        queryKey: [QUERY_KEYS.FILE],
       });
     },
   });
@@ -151,11 +152,38 @@ export const useUpdateFilesCode = () => {
     mutationFn: (payload: IUpdateFilesCodeRequest) => updateFilesCode(payload),
     onSuccess: (_res, variable) => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.FILE, variable.FileId, variable.Code],
+        queryKey: [QUERY_KEYS.FILE, variable.FileId],
       });
     },
   });
 };
+
+// (PATCH) - Update Output
+export const updateFilesCodeOutput = async (
+  payload: IUpdateFilesOutputRequest
+): Promise<IBaseReturn> => {
+  const res = await axiosInstance.patch(`${URI}/update/output`, payload);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useUpdateFilesCodeOutput = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: IUpdateFilesOutputRequest) => updateFilesCodeOutput(payload),
+    onSuccess: (_res, variable) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, variable.FileId],
+      });
+    },
+  });
+};
+
 
 // (PATCH) - (SOFT DELETE) - Trash / Recycle Bin
 export const softDelete = async (

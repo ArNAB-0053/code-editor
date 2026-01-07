@@ -72,7 +72,7 @@ export const TabLabelTemplate = ({
       $isActiveTab={isActiveTab}
       $theme={theme}
       className={cn(
-        "flex items-center gap-x-2 px-6 py-2 my-1.5 rounded-[6px]",
+        "flex items-center gap-x-2 px-4 xl:px-6 py-2 my-1.5 rounded-[6px]",
         rootClassName
       )}
     >
@@ -152,7 +152,7 @@ const Sider = () => {
   const activeTab = useSelector(selectedActiveTabKey);
 
   return (
-    <div className="lg:w-60 xl:w-64 h-screen ">
+    <div className=" w-50 min-[1100px]:w-[220px] xl:w-64 h-screen ">
       <DisabledItemTemplate label="Files" labelClassName="uppercase" />
       {SideElements?.files?.map((x, i) => (
         <TabLabelTemplate

@@ -146,16 +146,24 @@ namespace backend.Services.implementations
         // PATCH - rename file name
         public void Rename(string id, string ownerId, string fileName)
         {
-            var updateCode = Builders<FileCodesModel>.Update
-                .Set(x => x.FileName, fileName)
-                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+            var triggeredFile = _files.Find(x => x.Id == id).FirstOrDefault();
 
             var updateFile = Builders<FilesModel>.Update
                 .Set(x => x.FileName, fileName)
                 .Set(x => x.UpdatedAt, DateTime.UtcNow);
 
-            _filesCode.UpdateOne(x => x.FileId == id && x.OwnerId == ownerId, updateCode);
+            // Always trigger
             _files.UpdateOne(x => x.Id == id && x.OwnerId == ownerId, updateFile);
+
+            // Trigger only when fileType is FILE
+            if (triggeredFile.FileType == FileType.FILE)
+            {
+                var updateCode = Builders<FileCodesModel>.Update
+                    .Set(x => x.FileName, fileName)
+                    .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+                _filesCode.UpdateOne(x => x.FileId == id && x.OwnerId == ownerId, updateCode);
+            }
         }
 
         // PATCH - Update only Code

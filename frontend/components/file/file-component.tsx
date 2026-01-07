@@ -13,18 +13,15 @@ import {
   IFilesListResponse,
 } from "@/@types/files";
 import { FaFolder } from "react-icons/fa";
-import { appUrls } from "@/config/navigation.config";
 import { cn } from "@/lib/utils";
 import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
-import ThreeDotDropdown from "./three-dot-dropdown";
-import CreateNew from "./create-new";
-import { useParams, usePathname } from "next/navigation";
 import FilesBreadcrumbs from "../files-breadcrumbs";
 import { useBreadcrumbs } from "@/services/files";
 import { selectFolderId, setFolderId } from "@/redux/slices/fileFolderSlice";
 import { useDispatch } from "react-redux";
 import BreadcrumbLoader from "../Loaders/breadcrumbs";
+import ThreeDotDropdown from "./file-folder-dropdown/three-dot-dropdown";
 
 interface FileComponentProps {
   files: IFilesListResponse;
@@ -68,7 +65,8 @@ const FileComponent = ({
     <div className={font?.className}>
       {/* {isLoading && <div>Loading files...</div>} */}
 
-      {!isTrash && currentFolderId &&
+      {!isTrash &&
+        currentFolderId &&
         (isBreadcrumbLoading ? (
           <BreadcrumbLoader />
         ) : (
@@ -115,58 +113,46 @@ const FileComponent = ({
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 w-full gap-2 lg:gap-3 ">
         {files?.data?.folders?.map((folder, i) => {
           return (
-            <div
+            <button
+              onClick={() => {
+                if (isTrash) return;
+                dispatch(setFolderId(folder.id));
+              }}
               key={i}
               style={{
                 backgroundColor: theme.border10,
                 color: theme.textColor,
               }}
               className={cn(
-                "flex items-center justify-between pl-2 pr-2 md:pl-4 lg:pl-5 xl:pl-6  opacity-90 gap-x-2 rounded-xl text-sm ",
+                "flex items-center justify-between pl-2 pr-2 md:pl-4 lg:pl-5 xl:pl-6  opacity-90 gap-x-2 rounded-xl text-sm cursor-pointer",
                 isTrash
                   ? ""
                   : "hover:opacity-70 transition-all duration-200 ease-linear "
               )}
             >
-              {isTrash ? (
-                <>
-                  <div
-                    className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3"
-                    style={{
-                      color: theme.textColor,
-                    }}
-                  >
-                    <FaFolder className="w-6" />
-                    <p className="truncate">{folder.fileName}</p>
-                  </div>
-                  <ThreeDotDropdown
-                    fileId={folder.id}
-                    isTrash={isTrash}
-                    fileName={folder.fileName}
-                  />
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => {
-                      dispatch(setFolderId(folder.id));
-                    }}
-                    className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3 cursor-pointer"
-                    style={{
-                      color: theme.textColor,
-                    }}
-                  >
-                    <FaFolder className="w-6" />
-                    <p className="truncate">{folder.fileName}</p>
-                  </button>
-                  <ThreeDotDropdown
-                    fileId={folder.id}
-                    isTrash={isTrash}
-                    fileName={folder.fileName}
-                  />
-                </>
-              )}
-            </div>
+              <div
+                className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3"
+                style={{
+                  color: theme.textColor,
+                }}
+              >
+                <FaFolder className="w-6" />
+                <p className="truncate">{folder.fileName}</p>
+              </div>
+
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <ThreeDotDropdown
+                  fileId={folder.id}
+                  isTrash={isTrash}
+                  fileName={folder.fileName}
+                />
+              </div>
+            </button>
           );
         })}
       </div>

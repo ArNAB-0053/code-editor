@@ -1,25 +1,33 @@
-
 import { themeConfig } from "@/config/themeConfig";
-import { CopyButton, RunButton, TransparentButton } from "./header-buttons";
+import { CopyButton, RunButton, TransparentButton } from "../header-buttons";
 import { useRunCode, useUpdateOutput } from "@/services/code";
 import { useSelector } from "react-redux";
 import { HeaderProps } from "@/@types";
+import {
+  selectedCode,
+  selectedEditorId,
+  setOutputRedux,
+} from "@/redux/slices/editorSlice";
 import { useDispatch } from "react-redux";
 import { useRef, useState } from "react";
-import { selectedSharedCode, selectedSharedEditorId, setShareOutputRedux } from "@/redux/slices/sharedEditorSlice";
+import { IoMdShare } from "react-icons/io";
+import { cn } from "@/lib/utils";
+import { AButton } from "@/components/ui/antd";
+import ShareModal from "@/components/modals/share";
 
-const SharedEditorHeaderComponent = (props: HeaderProps) => {
+const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
-  const currentCode = useSelector(selectedSharedCode);
+
+  const [open, setOpen] = useState(false);
+  const currentCode = useSelector(selectedCode);
 
   const theme = themeConfig(props.editorTheme);
 
   const { mutateAsync: runCode } = useRunCode();
   const { mutateAsync: updateOutput } = useUpdateOutput();
 
-  const editorId = useSelector(selectedSharedEditorId);
+  const editorId = useSelector(selectedEditorId);
   const lastOpt = useRef("");
-
 
   // Ouput Header
   if (props.isOutput) {
@@ -54,7 +62,7 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
           {
             onSuccess: (res) => {
               lastOpt.current = output;
-              dispatch(setShareOutputRedux(output));
+              dispatch(setOutputRedux(output));
             },
           }
         );
@@ -68,7 +76,7 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
 
   function clearOutput() {
     props.setError("");
-    dispatch(setShareOutputRedux(""));
+    dispatch(setOutputRedux(""));
   }
 
   const copyCode = () => {
@@ -99,11 +107,25 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
           }}
         /> */}
 
+        <AButton
+          onClick={() => setOpen(true)}
+          className={cn(
+            props.isShared && "hidden! opacity-0!",
+            "aspect-square! p-0!"
+          )}
+        >
+          <IoMdShare size={18} />
+        </AButton>
+
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />
       </div>
+
+      {!props.isShared && (
+        <ShareModal theme={theme} setOpen={setOpen} open={open} />
+      )}
     </div>
   );
 };
 
-export default SharedEditorHeaderComponent;
+export default EditorHeaderComponent;

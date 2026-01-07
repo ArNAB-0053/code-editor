@@ -11,14 +11,27 @@ import {
   selectEditorTheme,
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
+import Sider from "../sider";
 import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
 import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
+import { useAutoSaveCode } from "@/services/code";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useDispatch } from "react-redux";
+import {
+  selectedCode,
+  selectedLang,
+  selectedOutput,
+  setCodeRedux,
+  setEditorId,
+  setLangRedux,
+} from "@/redux/slices/editorSlice";
+import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
-import { selectedSharedCode, selectedSharedLang, selectedSharedOutput, setShareCodeRedux } from "@/redux/slices/sharedEditorSlice";
-import SharedEditorHeaderComponent from "./sharedHeader";
+import { messagesConfig } from "@/config/messages.config";
+import EditorHeaderComponent from "../editor-headers/header";
 
 const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -31,7 +44,7 @@ const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   }
 `;
 
-export default function SharedEditorComponent({
+export default function EditorComponent({
   p_lang,
   isShared = false,
 }: {
@@ -42,15 +55,13 @@ export default function SharedEditorComponent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const lang = useSelector(selectedSharedLang);
+  const lang = useSelector(selectedLang);
   // const [sharingDetails, setSharingDetails] = useState(null);
 
   // console.log("___Editor___ (defaultCode)", defaultCode)
 
-  const currentCode = useSelector(selectedSharedCode);
-  const currentOutput = useSelector(selectedSharedOutput);
-
-  // console.log("currentCode", currentCode);
+  const currentCode = useSelector(selectedCode);
+  const currentOutput = useSelector(selectedOutput);
 
   const dispatch = useDispatch();
 
@@ -58,12 +69,58 @@ export default function SharedEditorComponent({
   const editorFontSize = useSelector(selectEditorFontSize);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
+  const userId = useSelector(selectedUserId);
+
+  const autoSaveCode = useAutoSaveCode();
 
   const theme = themeConfig(editorTheme);
 
   // refs for monaco editor
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
+
+  const debouncedCode = useDebounce(currentCode, 1000);
+  const lastSaveRef = useRef("");
+  // const isAutoSaving = useRef(false);
+
+  // useEffect(() => {
+  //   if (currentCode !== debouncedCode) {
+  //     isAutoSaving.current = true;
+  //     toast.loading("Saving…", { id: "autoSave" });
+  //   }
+  // }, [currentCode, debouncedCode]);
+
+  useEffect(() => {
+    if (isShared || !userId) return;
+    if (debouncedCode.trim() === lastSaveRef.current.trim()) {
+      // toast.dismiss("autoSave");
+      return;
+    }
+
+    toast.loading(messagesConfig.AUTOSAVE.LOADING, { id: "autoSave" });
+
+    autoSaveCode.mutate(
+      {
+        userId: userId,
+        lang,
+        code: debouncedCode,
+      },
+      {
+        onSuccess: (res) => {
+          lastSaveRef.current = debouncedCode;
+          dispatch(setLangRedux(res?.lang));
+          dispatch(setCodeRedux(res?.code));
+          dispatch(setEditorId(res?.id));
+          // isAutoSaving.current = false;
+          toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
+        },
+        onError: (e) => {
+          // isAutoSaving.current = false;
+          toast.error(messagesConfig.AUTOSAVE.FAILED, { id: "autoSave" });
+        },
+      }
+    );
+  }, [isShared, debouncedCode, userId, lang, dispatch]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -119,6 +176,8 @@ export default function SharedEditorComponent({
     }
   }, [editorTheme]);
 
+  // Generate Shared Link
+
   // console.log(sharingDetails)
 
   return (
@@ -129,6 +188,8 @@ export default function SharedEditorComponent({
       }}
       className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
+      {!isShared && <Sider p_lang={p_lang} />}
+
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
@@ -149,7 +210,7 @@ export default function SharedEditorComponent({
                 websiteFonts[websiteFont as WebsiteFontsKey]?.className
               }`}
             >
-              <SharedEditorHeaderComponent
+              <EditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={false}
                 p_lang={p_lang}
@@ -165,7 +226,7 @@ export default function SharedEditorComponent({
                   key={lang}
                   value={currentCode}
                   onChange={(value) => {
-                    dispatch(setShareCodeRedux(value ?? ""));
+                    dispatch(setCodeRedux(value ?? ""));
                   }}
                   width="100%"
                   height="calc(95vh - 95px)"
@@ -187,7 +248,7 @@ export default function SharedEditorComponent({
           </Splitter.Panel>
           <Splitter.Panel defaultSize="40%" min="20%">
             <div
-              className={`min-h-[95vh] overflow-y-auto border-r relative ${
+              className={` overflow-y-auto border-r relative ${
                 websiteFonts[websiteFont as WebsiteFontsKey]?.className
               }`}
               style={{
@@ -195,9 +256,10 @@ export default function SharedEditorComponent({
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
+                height: 'calc(100svh  - 120px)'
               }}
             >
-              <SharedEditorHeaderComponent
+              <EditorHeaderComponent
                 editorTheme={editorTheme}
                 isOutput={true}
                 loading={loading}
