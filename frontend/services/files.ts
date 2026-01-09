@@ -18,7 +18,8 @@ import {
 } from "@/@types/files";
 import { IBaseReturn } from "@/@types/_base";
 import { useDispatch } from "react-redux";
-import { refreshTree } from "@/redux/slices/fileFolderSlice";
+import { refreshTree, selectFolderId } from "@/redux/slices/fileFolderSlice";
+import { useSelector } from "react-redux";
 
 const URI = "api/files";
 
@@ -34,7 +35,8 @@ export const fileCreation = async (payload: ICreateFileRequest) => {
 
 export const useFileCreation = () => {
   const queryClient = useQueryClient();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
   return useMutation({
     mutationFn: (payload: ICreateFileRequest) => fileCreation(payload),
     onSuccess: (_res, variable) => {
@@ -66,7 +68,12 @@ export const getFileListByUserId = async (
 
 export const useFileListByUserId = (payload: IFilesListRequest) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.FILE, payload?.OwnerId, payload?.IsDeleted, payload?.ParentId],
+    queryKey: [
+      QUERY_KEYS.FILE,
+      payload?.OwnerId,
+      payload?.IsDeleted,
+      payload?.ParentId,
+    ],
     queryFn: () => getFileListByUserId(payload),
     enabled: !!payload?.OwnerId,
   });
@@ -122,8 +129,8 @@ export const getChildren = async (
 ): Promise<IChildrenResponce> => {
   const res = await axiosInstance.get(`${URI}/children`, {
     params: {
-      parentId
-    }
+      parentId,
+    },
   });
 
   if (!res.data) {
@@ -142,13 +149,11 @@ export const useChilren = (parentId: string | null) => {
 };
 
 // (GET) - file folder tree
-export const getParentId = async (
-  childId: string
-): Promise<IParentId> => {
+export const getParentId = async (childId: string): Promise<IParentId> => {
   const res = await axiosInstance.get(`${URI}/parentId`, {
     params: {
-      childId
-    }
+      childId,
+    },
   });
 
   if (!res.data) {
@@ -166,7 +171,6 @@ export const useParentId = (childId: string) => {
   });
 };
 
-
 // (PATCH) - Rename
 export const renameFile = async (
   payload: IFileRenameRequest
@@ -183,12 +187,15 @@ export const renameFile = async (
 
 export const useRenameFile = () => {
   const queryClient = useQueryClient();
+  const parentId = useSelector(selectFolderId);
+  const dispatch = useDispatch();
   return useMutation({
     mutationFn: (payload: IFileRenameRequest) => renameFile(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE],
       });
+      dispatch(refreshTree(parentId === null ? "root" : parentId));
     },
   });
 };
@@ -236,7 +243,8 @@ export const updateFilesCodeOutput = async (
 export const useUpdateFilesCodeOutput = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: IUpdateFilesOutputRequest) => updateFilesCodeOutput(payload),
+    mutationFn: (payload: IUpdateFilesOutputRequest) =>
+      updateFilesCodeOutput(payload),
     onSuccess: (_res, variable) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE, variable.FileId],
@@ -244,7 +252,6 @@ export const useUpdateFilesCodeOutput = () => {
     },
   });
 };
-
 
 // (PATCH) - (SOFT DELETE) - Trash / Recycle Bin
 export const softDelete = async (
@@ -262,6 +269,8 @@ export const softDelete = async (
 
 export const useSoftDelete = () => {
   const queryClient = useQueryClient();
+  const parentId = useSelector(selectFolderId);
+  const dispatch = useDispatch();
   return useMutation({
     mutationFn: (payload: ISoftDeleteRequest) => softDelete(payload),
     onSuccess: (_res, variable) => {
@@ -271,6 +280,10 @@ export const useSoftDelete = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE, variable.OwnerId, true],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, parentId],
+      });
+      dispatch(refreshTree(parentId === null ? "root" : parentId));
     },
   });
 };
@@ -310,8 +323,8 @@ export const getBreadcrumbs = async (
 ): Promise<IBreadcrumbsRes> => {
   const res = await axiosInstance.get(`${URI}/get-breadcrumbs`, {
     params: {
-      folderId: folderId
-    }
+      folderId: folderId,
+    },
   });
 
   if (!res.data) {
@@ -330,4 +343,3 @@ export const useBreadcrumbs = (folderId?: string) => {
     staleTime: 5 * 60 * 1000,
   });
 };
-

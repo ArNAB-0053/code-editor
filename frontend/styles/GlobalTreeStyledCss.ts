@@ -32,6 +32,11 @@ export const GlobalTreeStyles = createGlobalStyle<{
     // padding-top: 6px !important;
   }
 
+  .ant-tree-title {
+    width: 100% !important;
+    position: relative !important;
+  }
+
   .ant-tree-title,  .ant-tree-treenode, .ant-tree-node-content-wrapper {
     display: flex !important;
     align-items: center !important;
@@ -52,6 +57,32 @@ export const GlobalTreeStyles = createGlobalStyle<{
 //   .ant-tree, .ant-tree-node-content-wrapper {
 //     padding: 2px 0 0 !important;
 //   }
+
+  .ant-tree-switcher {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+  }
+
+  .ant-tree-list-holder-inner   
+    > .ant-tree-treenode:first-child
+    > .ant-tree-node-content-wrapper {
+     height: 100% !important;
+  } 
+
+  .ant-tree-list-holder-inner   
+    > .ant-tree-treenode:first-child
+    > .ant-tree-node-content-wrapper > .ant-tree-title {
+     height: 36px !important;
+  } 
+
+  .ant-tree-list-holder-inner   
+    > .ant-tree-treenode:first-child {
+      // margin: 5px 0 0 0 !important;
+      // padding: 5px 0 !important;
+      background-color: ${({ $theme }) => $theme.border10} !important;
+  } 
+
 
   .ant-tree-switcher-noop {
     opacity: 0.5 !important;

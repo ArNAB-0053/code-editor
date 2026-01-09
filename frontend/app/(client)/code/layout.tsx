@@ -26,8 +26,8 @@ const CodeLayout = ({
         }}
       >
         <Splitter.Panel
-          defaultSize="20%"
-          min="20%"
+          defaultSize={300}
+          min={250}
           max="50%"
           style={{
             height: "calc(100svh - 68px)",
