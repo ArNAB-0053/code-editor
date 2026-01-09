@@ -1,3 +1,4 @@
+import { LangDefinition } from "@/@types/langs";
 import { getDataUrls } from "@/helper/dataUrls";
 
 export const languageLogo = (lang: string) => {
@@ -13,16 +14,17 @@ export const languageLogo = (lang: string) => {
   );
 };
 
-export const langs = {
+export const langs: Record<string, LangDefinition> = {
   python: {
     label: "Python",
     logo: languageLogo("python"),
     ext: ".py",
+    fileIcon: "py",
   },
   javascript: {
     label: "JavaScript",
     logo: languageLogo("javascript"),
     ext: ".js",
+    fileIcon: "js",
   },
 } as const;
-

@@ -143,6 +143,16 @@ namespace backend.Services.implementations
         // GET files code using fileId
         public FileCodesModel GetFilesCode(string fileId, string ownerId) => _filesCode.Find(x => x.FileId == fileId && x.OwnerId == ownerId).FirstOrDefault();
 
+        // GET children - for tree structure
+        public List<FilesModel> GetChildren(string? parentId) => _files.Find(x => x.ParentId == parentId && x.IsDeleted == false).ToList();
+
+        // GET parentId from children
+        public string? GetParentId(string id)
+        {
+            var result = _files.Find(x => x.Id == id).FirstOrDefault();
+            return result.ParentId;
+        }
+
         // PATCH - rename file name
         public void Rename(string id, string ownerId, string fileName)
         {

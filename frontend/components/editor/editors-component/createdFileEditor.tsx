@@ -35,7 +35,7 @@ import { messagesConfig } from "@/config/messages.config";
 import { useUpdateFilesCode } from "@/services/files";
 import CreatedFileEditorHeaderComponent from "../editor-headers/createdFileHeader";
 
-const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
+export const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
     background: ${({ $theme }) => $theme.splitterColor} !important;
     width: 4px !important;

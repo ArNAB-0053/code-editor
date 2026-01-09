@@ -93,6 +93,7 @@ const CodePreview = ({
         />
       </div>
 
+      {/* For a little backdrop blur effect */}
       <div
         className="
                     pointer-events-none
@@ -103,6 +104,7 @@ const CodePreview = ({
                   "
       />
 
+      {/* grain texture svg */}
       <div className="absolute top-0 left-0 right-0 opacity-10 z-10 ">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
           <filter id="a">
@@ -117,7 +119,8 @@ const CodePreview = ({
         </svg>
       </div>
 
-      <div className=" h-full w-full absolute bg-linear-to-b from-transparent via-white/10 to-white/15 blur-2xl" />
+      {/* A lighting or shadow effect from below */}
+      {/* <div className=" h-full w-full absolute bg-linear-to-b from-transparent via-white/10 to-white/15 blur-2xl" /> */}
 
       {/* Gradient Overlay */}
       <div

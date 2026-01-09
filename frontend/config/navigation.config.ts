@@ -1,7 +1,13 @@
+/* 
+    ------------------------------------------------------------------------------------
+     NOTE: If any protected route names change, make sure to update `proxy.ts` as well.
+    ------------------------------------------------------------------------------------
+*/
+
 export const appUrls = {
     HOME: '/',
 
-    // auth
+    // auth - (protected)
     LOGIN: '/auth/sign-in',
     REGISTER: '/auth/sign-up',
 
@@ -10,10 +16,10 @@ export const appUrls = {
     PYTHON: '/lang/python',
 
     // pages
-    PROFILE: '/profile',
+    PROFILE: '/profile', // - (protected)
     ABOUT: '/about',
 
-    // pages for files and folders
+    // pages for files and folders - (protected)
     ALL: '/all',
     FILE: '/folders-and-files',
     // for code files, that is being created by user

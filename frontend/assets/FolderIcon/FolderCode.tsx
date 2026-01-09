@@ -1,7 +1,7 @@
 import { IBaseLogoProps } from "@/@types/_base";
 import { cn } from "@/lib/utils";
 
-const FolderCodeIcon = ({ size = 24, style, className }: IBaseLogoProps) => {
+export const FolderCodeIcon = ({ size = 24, style, className }: IBaseLogoProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -26,5 +26,3 @@ const FolderCodeIcon = ({ size = 24, style, className }: IBaseLogoProps) => {
     </svg>
   );
 };
-
-export default FolderCodeIcon;

@@ -3,6 +3,7 @@ import { QUERY_KEYS } from ".";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   IBreadcrumbsRes,
+  IChildrenResponce,
   ICreateFileRequest,
   IFileCodeResponse,
   IFileDetailsResponse,
@@ -10,11 +11,14 @@ import {
   IFilesDetailsRequest,
   IFilesListRequest,
   IFilesListResponse,
+  IParentId,
   ISoftDeleteRequest,
   IUpdateFilesCodeRequest,
   IUpdateFilesOutputRequest,
 } from "@/@types/files";
 import { IBaseReturn } from "@/@types/_base";
+import { useDispatch } from "react-redux";
+import { refreshTree } from "@/redux/slices/fileFolderSlice";
 
 const URI = "api/files";
 
@@ -30,12 +34,18 @@ export const fileCreation = async (payload: ICreateFileRequest) => {
 
 export const useFileCreation = () => {
   const queryClient = useQueryClient();
+  const dispatch = useDispatch()
   return useMutation({
     mutationFn: (payload: ICreateFileRequest) => fileCreation(payload),
     onSuccess: (_res, variable) => {
+      const parentId = variable.ParentId ?? null;
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, variable.ParentId ?? null],
+      });
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE, variable.OwnerId, false],
       });
+      dispatch(refreshTree(parentId === null ? "root" : parentId));
     },
   });
 };
@@ -105,6 +115,57 @@ export const useFileCode = (payload: IFilesDetailsRequest) => {
     enabled: !!payload?.FileId && !!payload?.OwnerId,
   });
 };
+
+// (GET) - file folder tree
+export const getChildren = async (
+  parentId: string | null
+): Promise<IChildrenResponce> => {
+  const res = await axiosInstance.get(`${URI}/children`, {
+    params: {
+      parentId
+    }
+  });
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useChilren = (parentId: string | null) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.FILE, parentId],
+    queryFn: () => getChildren(parentId),
+  });
+};
+
+// (GET) - file folder tree
+export const getParentId = async (
+  childId: string
+): Promise<IParentId> => {
+  const res = await axiosInstance.get(`${URI}/parentId`, {
+    params: {
+      childId
+    }
+  });
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useParentId = (childId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.FILE, childId],
+    queryFn: () => getParentId(childId),
+  });
+};
+
 
 // (PATCH) - Rename
 export const renameFile = async (
