@@ -19,6 +19,7 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { IFileRenameRequest } from "@/@types/files";
 import { useRename } from "@/hooks/useRenameFileFolder";
+import { setEditorLayout } from "@/redux/slices/editorLayout";
 
 const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
@@ -184,6 +185,13 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
             dispatch(setCodeRedux(""));
           }}
         /> */}
+
+        <button onClick={() => dispatch(setEditorLayout("horizontal"))}>
+          A
+        </button>
+        <button onClick={() => dispatch(setEditorLayout("vertical"))}>
+          B
+        </button>
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />

@@ -1,10 +1,4 @@
-import Code from '@/components/file/code'
-import React from 'react'
+import Code from "@/components/file/code";
+const page = () => <Code />;
 
-const page = () => {
-  return (
-    <Code/>
-  )
-}
-
-export default page
+export default page;

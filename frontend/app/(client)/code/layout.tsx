@@ -26,16 +26,16 @@ const CodeLayout = ({
         }}
       >
         <Splitter.Panel
-          defaultSize={300}
-          min={250}
-          max="50%"
+          defaultSize={250}
+          min={200}
+          max="40%"
           style={{
             height: "calc(100svh - 68px)",
-            paddingBottom: "10px",
+            // paddingBottom: "10px",
           }}
           className="relative!"
         >
-          <FileCodeSider />          
+          <FileCodeSider />      
         </Splitter.Panel>
         <Splitter.Panel>{children}</Splitter.Panel>
       </StyledSplitter>
