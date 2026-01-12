@@ -9,7 +9,7 @@ import activeTabReducer from "./slices/activeTab";
 import sharedEditorCodeReducer from "./slices/sharedEditorSlice";
 import fileFolderReducer from "./slices/fileFolderSlice"
 import createdFileEditorReducer from "./slices/createdFilesEditorSlice"
-import editorLayout from "./slices/editorLayout"
+import editorLayoutReducer from "./slices/editorLayout"
 
 const persistPreferenceConfig = {
   key: "preference",
@@ -26,6 +26,11 @@ const activeTabConfig = {
   storage,
 };
 
+const editorLayoutConfig = {
+  key: "editorLayout",
+  storage,
+};
+
 // const persistEditorConfig_temp = {
 //   key: "editor",
 //   storage
@@ -37,8 +42,8 @@ const persistedPreference = persistReducer(
 );
 
 const persistedUserDetails = persistReducer(persistUserConfig, userReducer);
-
 const persistedActiveTab = persistReducer(activeTabConfig, activeTabReducer)
+const persistededitorLayout = persistReducer(editorLayoutConfig, editorLayoutReducer)
 
 // const persistedEditor_temp =  persistReducer(persistEditorConfig_temp, editorCodeReducer)
 
@@ -52,7 +57,7 @@ export const store = configureStore({
     activeTab: persistedActiveTab,
     folderId: fileFolderReducer,
     createdFileEditorCode: createdFileEditorReducer,
-    editorLayout: editorLayout
+    editorLayout: persistededitorLayout
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

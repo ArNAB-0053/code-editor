@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { setLangRedux } from "@/redux/slices/editorSlice";
 import { langs } from "@/constants/lang";
+import { appUrls } from "@/config/navigation.config";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   &:hover {
@@ -16,7 +17,7 @@ const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   }
 `;
 
-const Sider = ({ p_lang }: { p_lang: string }) => {
+export const LangSider = ({ p_lang }: { p_lang?: string }) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -24,7 +25,7 @@ const Sider = ({ p_lang }: { p_lang: string }) => {
 
   return (
     <div
-      className="w-16 bg-white/10 px-2 py-3 flex flex-col gap-y-3 border border-r-0 "
+      className="w-16 bg-white/10 px-2 py-3 flex flex-col gap-y-3 border "
       style={{
         height: "calc(100vh - 75px)",
         background: theme?.outputBackground,
@@ -41,7 +42,7 @@ const Sider = ({ p_lang }: { p_lang: string }) => {
           <StyledLink
             $theme={theme}
             $isActive={p_lang === key}
-            href={key}
+            href={`${appUrls.LANG}/${key}`}
             className="border p-2.5 text-center rounded-sm uppercase transition-all ease-linear duration-10"
             style={{
               backgroundColor:
@@ -60,4 +61,3 @@ const Sider = ({ p_lang }: { p_lang: string }) => {
   );
 };
 
-export default Sider;

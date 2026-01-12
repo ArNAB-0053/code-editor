@@ -26,7 +26,7 @@ const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   }
 `;
 
-const Lang = () => {
+export const AllLangs = () => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -35,56 +35,36 @@ const Lang = () => {
 
   const dispatch = useDispatch();
   return (
+    <div className="mb-8 grid grid-cols-3">
+      {Object.entries(langs).map(([key, x], i) => (
+        <StyledLink
+          key={i}
+          $theme={theme}
+          href={`${appUrls.LANG}/${key}`}
+          className={cn(
+            "text-sm text-center opacity-80 hover:opacity-100 rounded-md transition-all ease-linear duration-100 flex items-center justify-center  gap-3",
+            font?.className
+          )}
+          onClick={() => {
+            dispatch(setLangRedux(key));
+          }}
+        >
+          <div className="w-5 aspect-square">{x.logo}</div>
+          <p className="truncate w-full text-start">{x.label}</p>
+        </StyledLink>
+      ))}
+    </div>
+  );
+};
+
+const Lang = () => {
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
+
+  return (
     <>
       <GlobalEditorStyles />
-      <HeaderLangTitle
-        title="Select programming language"
-        Icon={
-          <Code
-            size={20}
-            style={{ color: theme.activeColor }}
-            strokeWidth={2.5}
-          />
-        }
-      />
-      <div
-        className="mb-8 grid max-[350px]:grid-cols-1 grid-cols-2 min-[400px]:grid-cols-3 min-[600px]:grid-cols-4 min-[768px]:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 gap-4 flex-wrap rounded-xl relative p-4 "
-        style={{
-          background: `${theme?.activeColor}10`,
-          borderColor: theme?.border10,
-        }}
-      >
-        {Object.entries(langs).map(([key, x], i) => (
-          <StyledLink
-            key={i}
-            $theme={theme}
-            href={`${appUrls.LANG}/${key}`}
-            className={cn(
-              "border px-2 py-3 text-sm text-center opacity-80 hover:opacity-100 rounded-md transition-all ease-linear duration-100 flex items-center justify-center flex-col gap-3",
-              font?.className
-            )}
-            style={{
-              backgroundColor: `${theme.activeColor}20`,
-              borderColor: theme.border20,
-            }}
-            onClick={() => {
-              dispatch(setLangRedux(key));
-            }}
-          >
-            <div className="w-7 aspect-square">{x.logo}</div>
-            <p className="truncate w-full">{x.label}</p>
-          </StyledLink>
-        ))}
-      </div>
-
-      <CDivider
-        style={{
-          background: theme.activeColor,
-          width: "10rem",
-          height: "2px",
-        }}
-        className="my-20"
-      />
+      <AllLangs />
     </>
   );
 };

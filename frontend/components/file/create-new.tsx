@@ -78,12 +78,7 @@ const CreateNew = ({ files }: { files: any }) => {
                   transitionString
                 )}
               />
-              <span
-                className={cn(
-                  "-translate-x-0.5",
-                  transitionString
-                )}
-              >
+              <span className={cn("-translate-x-0.5", transitionString)}>
                 Editor
                 <b className={cn("group-hover:hidden", transitionString)}> </b>
                 Mode
@@ -160,8 +155,10 @@ const CreateNew = ({ files }: { files: any }) => {
               }}
               className="cursor-pointer "
               rootClassName=" backdrop-blur-xl rounded-xl p-0! "
-              overlayStyle={{
-                backgroundColor: `${theme.border10}`,
+              styles={{
+                root: {
+                  backgroundColor: `${theme.border10}`,
+                },
               }}
             >
               <div

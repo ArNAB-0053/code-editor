@@ -1,45 +1,26 @@
 "use client";
 import { CheckIcon, CrossIcon } from "@/assets/CheckCrossIcon";
-import Logo from "@/components/Logo";
+import Lang from "@/components/lang";
 import { themeConfig } from "@/config/themeConfig";
 import {
-  asimovian,
-  geo,
-  jetBrainsMono,
-  quicksand,
-  sora,
-  spaceGrotesk,
-  yanone,
-} from "@/fonts";
+  accountBenefitsNote,
+  features,
+  guestFeatures,
+} from "@/constants/welcome/lang";
+import { asimovian, sora, spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
+import { selectedUserId } from "@/redux/slices/userSlice";
 import { transitionString } from "@/styles";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const features = [
-  { featureAvailable: true, featureHeading: "Create files & folders" },
-  { featureAvailable: true, featureHeading: "Edit and save files" },
-  {
-    featureAvailable: true,
-    featureHeading: "Folder-based project structure",
-  },
-  {
-    featureAvailable: false,
-    featureHeading: "Import / export resolution between files",
-  },
-  {
-    featureAvailable: false,
-    featureHeading: "Multi-file dependency tracking",
-  },
-  { featureAvailable: false, featureHeading: "Build or run configurations" },
-  { featureAvailable: false, featureHeading: "Git integration" },
-];
-
 const Page = () => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
+
+  const userId = useSelector(selectedUserId);
 
   const [isHoveringLang, setIsHoveringLang] = useState(false);
 
@@ -93,7 +74,7 @@ const Page = () => {
 
   return (
     <div
-      className="h-full w-full custom-scrollbar overflow-y-auto overflow-x-hidden flex items-center justify-center border-2 border-l-0 border-b-0 "
+      className="h-full w-full px-6 custom-scrollbar overflow-y-auto overflow-x-hidden flex items-center justify-center border-2 border-l-0 border-b-0 "
       style={{
         height: "calc(100svh - 68px)",
         borderColor: theme.border15,
@@ -126,7 +107,9 @@ const Page = () => {
               onBlur={() => setIsHoveringLang(false)}
               tabIndex={0}
             >
-              <p className={cn("group-hover:opacity-80", transitionString)}>{currWelcome.text}</p>
+              <p className={cn("group-hover:opacity-80", transitionString)}>
+                {currWelcome.text}
+              </p>
               <p
                 className={cn(
                   "text-[10px] pl-1 opacity-40 tracking-widest uppercase font-normal",
@@ -155,26 +138,46 @@ const Page = () => {
         </div>
 
         <p className="text-xs leading-relaxed opacity-50">
-          Select a file from the sidebar to start editing. Coditor currently
-          focuses on lightweight, file-based editing.
+          Select a programming language from the sidebar to start coding.
         </p>
 
         <div className="space-y-2 text-xs opacity-50">
-          {features.map((feat, i) => (
-            <span className="flex items-center gap-x-2" key={i}>
-              {feat.featureAvailable ? (
-                <CheckIcon size={17} />
-              ) : (
-                <CrossIcon size={17} />
-              )}
-              <p>{feat.featureHeading}</p>
-            </span>
-          ))}
-        </div>
+          {userId ? (
+            features.map((feat, i) => (
+              <span className="flex items-start gap-x-2" key={i}>
+                {feat.featureAvailable ? (
+                  <CheckIcon size={17} />
+                ) : (
+                  <CrossIcon size={17} />
+                )}
+                <p>{feat.featureHeading}</p>
+              </span>
+            ))
+          ) : (
+            <>
+              {guestFeatures.map((feat, i) => (
+                <span className="flex items-start gap-x-2" key={i}>
+                  {feat.featureAvailable ? (
+                    <CheckIcon size={17} />
+                  ) : (
+                    <CrossIcon size={17} />
+                  )}
+                  <p>{feat.featureHeading}</p>
+                </span>
+              ))}
 
-        {/* <p className="text-[11px] opacity-70 mt-4">
-          Tip: Use the sidebar to manage files and folders.
-        </p> */}
+              <div className="mt-4 rounded-md border border-dashed p-3 text-xs text-muted-foreground">
+                <p className="font-medium mb-1">{accountBenefitsNote.title}</p>
+                <ul className="list-disc pl-4 space-y-1">
+                  {accountBenefitsNote.points.map((p, i) => (
+                    <li key={i}>Save your code automatically</li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
+        <Lang />
       </div>
     </div>
   );

@@ -64,7 +64,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   if (props.isOutput) {
     return (
       <div
-        className="flex items-center justify-between gap-8 text-xs bg-[#43434354] border-b  px-2 py-1.5 h-[50px]"
+        className="flex items-center justify-between text-xs bg-[#43434354] border-b  px-2 py-1.5 h-[50px]"
         style={{
           borderBottomColor: `${theme?.border10}`,
         }}

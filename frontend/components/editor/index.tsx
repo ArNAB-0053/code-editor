@@ -44,11 +44,7 @@ const MainEditor = ({ p_lang }: { p_lang: string }) => {
 
   if (isLoading) return <LuLoader className="animate-spin" />;
 
-  return (
-    <div>
-      <EditorComponent p_lang={p_lang} />
-    </div>
-  );
+  return <EditorComponent p_lang={p_lang} />;
 };
 
 export default MainEditor;
