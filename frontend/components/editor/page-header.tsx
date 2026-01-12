@@ -12,23 +12,73 @@ import { AButton } from "../ui/antd";
 import Logo from "../Logo";
 import PreferenceModal from "../modals/preference";
 import { AvatarDropdown } from "../profile/avatar";
+import { LayoutHorizontalIcon, LayoutVerticalIcon } from "@/assets/LayoutIcons";
+import {
+  selectEditorLayout,
+  setEditorLayout,
+} from "@/redux/slices/editorLayout";
+import { useDispatch } from "react-redux";
+import { cn } from "@/lib/utils";
+import { transitionString } from "@/styles";
 
 const PageHeader = () => {
   const [open, setOpen] = useState(false);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
+  const layout = useSelector(selectEditorLayout);
+
+  const dispatch = useDispatch();
 
   const theme = themeConfig(editorTheme);
   return (
     <>
       <div className="w-full flex items-center justify-between mb-2">
-        <Logo/>
+        <Logo />
 
         <div
           className={`flex items-center justify-end gap-x-3 ${
             websiteFonts[websiteFont as WebsiteFontsKey]?.className
           }`}
         >
+          {/* <div
+            className="flex items-center justify-center rounded-md opacity-90"
+            style={{
+              // backgroundColor: `${theme.activeColor}80`,
+              color: theme.textColor,
+            }}
+          >
+            <button
+              className={cn(
+                "w-full h-full px-1.5 py-1 cursor-pointer group rounded-md relative overflow-hidden ",
+                transitionString
+              )}
+              onClick={() =>
+                dispatch(
+                  setEditorLayout(
+                    layout === "vertical" ? "horizontal" : "vertical"
+                  )
+                )
+              }
+              style={{
+                color: theme.activeColor
+              }}
+            >
+              {layout === "vertical" ? (
+                <LayoutHorizontalIcon />
+              ) : (
+                <LayoutVerticalIcon />
+              )}
+
+              <div
+                className={cn(
+                  "absolute left-0 top-0 w-full h-full -z-10 opacity-0 group-hover:opacity-40",
+                  transitionString
+                )}
+                style={{ background: theme.activeColor }}
+              />
+            </button>
+          </div> */}
+
           <AButton
             btntype="sameBg"
             onClick={() => setOpen(true)}
@@ -46,7 +96,7 @@ const PageHeader = () => {
             </div>
             Preference
           </AButton>
-          <AvatarDropdown/>
+          <AvatarDropdown />
         </div>
       </div>
 

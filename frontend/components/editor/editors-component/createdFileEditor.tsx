@@ -35,6 +35,7 @@ import { messagesConfig } from "@/config/messages.config";
 import { useUpdateFilesCode } from "@/services/files";
 import CreatedFileEditorHeaderComponent from "../editor-headers/createdFileHeader";
 import { selectEditorLayout } from "@/redux/slices/editorLayout";
+import { cn } from "@/lib/utils";
 
 export const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -72,7 +73,7 @@ export default function CreatedEditorComponent({
   const currentCode = useSelector(selectedCreatedFileCode);
   const currentOutput = useSelector(selectedCreatedFileOutput);
   const fileId = useSelector(selectedfileId);
-  const layout = useSelector(selectEditorLayout)
+  const layout = useSelector(selectEditorLayout);
 
   const dispatch = useDispatch();
 
@@ -80,6 +81,7 @@ export default function CreatedEditorComponent({
   const editorFontSize = useSelector(selectEditorFontSize);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
+  const font = websiteFonts[websiteFont as WebsiteFontsKey]
   const userId = useSelector(selectedUserId);
 
   const autoSaveCode = useUpdateFilesCode();
@@ -210,9 +212,10 @@ export default function CreatedEditorComponent({
                 background: theme.editorBackground,
                 height: "100%",
               }}
-              className={`border border-t-0 border-b-0 overflow-hidden! text-white ${
-                websiteFonts[websiteFont as WebsiteFontsKey]?.className
-              }`}
+              className={cn(
+                "border border-t-0 border-b-0 overflow-hidden! text-white",
+                font?.className
+              )}
             >
               <CreatedFileEditorHeaderComponent
                 editorTheme={editorTheme}
@@ -253,20 +256,21 @@ export default function CreatedEditorComponent({
           <Splitter.Panel
             defaultSize={layout === "vertical" ? "" : "40%"}
             min={layout === "vertical" ? "" : "20%"}
+            className="overflow-hidden!"
           >
             <div
-              className={`overflow-y-auto pb-4 custom-scrollbar h-full border-r relative ${
-                websiteFonts[websiteFont as WebsiteFontsKey]?.className
+              className={`overflow-hidden pb-4  border-r relative ${
+                font?.className
               }`}
               style={{
                 background: theme.outputBackground,
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
-                height: 'calc(100vh - 65px)'
+                height: layout === "horizontal" ? "calc(100vh - 65px)" : "100%",
               }}
             >
-              <div className="sticky top-0 left-0 w-full backdrop-blur-2xl">
+              <div className="w-full backdrop-blur-2xl">
                 <CreatedFileEditorHeaderComponent
                   editorTheme={editorTheme}
                   isOutput={true}
@@ -275,7 +279,13 @@ export default function CreatedEditorComponent({
                 />
               </div>
 
-              <div className="p-2 ">
+              {/* Scrolling enable for output here */}
+              <div
+                className={cn("p-2 overflow-y-auto custom-scrollbar overflow-x-hidden text-wrap ", font?.className)}
+                style={{
+                  height: "calc(100% - 40px)",
+                }}
+              >
                 {error ? (
                   <span style={{ color: "#ffb4b4" }}>{error}</span>
                 ) : (
