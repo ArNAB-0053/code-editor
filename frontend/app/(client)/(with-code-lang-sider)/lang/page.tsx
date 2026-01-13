@@ -82,12 +82,6 @@ const Page = () => {
       }}
     >
       <div className={cn("max-w-md space-y-4", spaceGrotesk.className)}>
-        {/* <Logo
-          className="opacity-50 justify-start"
-          textColor={`${theme.activeColor}80`}
-          dotColor={`${theme.activeColor}80`}
-        /> */}
-
         <div className=" mt-10 relative w-fit ">
           <AnimatePresence mode="wait">
             <motion.h2
@@ -177,7 +171,11 @@ const Page = () => {
             </>
           )}
         </div>
-        <Lang />
+
+        <div className="mt-8">
+          <h3 className="font-semibold mb-1 opacity-90 ">Get Started With</h3>
+          <Lang />
+        </div>
       </div>
     </div>
   );

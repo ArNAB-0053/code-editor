@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setLangRedux } from "@/redux/slices/editorSlice";
 import { langs } from "@/constants/lang";
 import { appUrls } from "@/config/navigation.config";
+import ATooltip from "../ui/antd/tooltip";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActive: boolean }>`
   &:hover {
@@ -27,17 +28,18 @@ export const LangSider = ({ p_lang }: { p_lang?: string }) => {
     <div
       className="w-16 bg-white/10 px-2 py-3 flex flex-col gap-y-3 border "
       style={{
-        height: "calc(100vh - 75px)",
+        height: "calc(100vh - 65px)",
         background: theme?.outputBackground,
         borderColor: theme?.border,
       }}
     >
       {Object.entries(langs).map(([key, x], i) => (
-        <Tooltip
+        <ATooltip
           key={key}
           placement="right"
           title={x.label}
-          color={theme.activeColor}
+          color={`${theme.activeColor}80`}
+          offset={[7,20]}
         >
           <StyledLink
             $theme={theme}
@@ -55,7 +57,7 @@ export const LangSider = ({ p_lang }: { p_lang?: string }) => {
           >
             {x.logo}
           </StyledLink>
-        </Tooltip>
+        </ATooltip>
       ))}
     </div>
   );

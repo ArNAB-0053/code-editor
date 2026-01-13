@@ -209,7 +209,7 @@ export default function CreatedEditorComponent({
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
-          layout={layout}
+          orientation={layout}
           style={{
             height: layout === "vertical" ? "calc(100vh - 68px)" : "100%",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
