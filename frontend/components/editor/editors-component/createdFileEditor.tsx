@@ -37,40 +37,8 @@ import CreatedFileEditorHeaderComponent from "../editor-headers/createdFileHeade
 import { selectEditorLayout } from "@/redux/slices/editorLayout";
 import { cn } from "@/lib/utils";
 import { useScreenWidth } from "@/hooks/useScreenWidth";
-
-export const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
-  .ant-splitter-bar {
-    background: ${({ $theme }) => $theme.splitterColor} !important;
-  }
-
-  &[data-layout="vertical"] .ant-splitter-bar {
-    height: 4px !important;
-    cursor: row-resize;
-  }
-
-  &[data-layout="horizontal"] .ant-splitter-bar {
-    width: 4px !important;
-    cursor: col-resize;
-  }
-
-  .ant-splitter-bar-dragger::before {
-    background: ${({ $theme }) => $theme.splitterColor} !important;
-  }
-
-  .ant-splitter-horizontal > .ant-splitter-bar,
-  .ant-splitter-bar-collapse-bar-start,
-  .ant-splitter-bar-collapse-bar-end {
-    &:hover {
-      background-color: ${({ $theme }) => $theme.border10}20 !important;
-      opacity: 0.6 !important;
-    }
-    background-color: ${({ $theme }) => $theme.border15} !important;
-    color: ${({ $theme }) => $theme.textColor} !important;
-    padding: 10px !important;
-    opacity: 1 !important;
-    transition: all 0.2s ease-in-out;
-  }
-`;
+import { StyledSplitter } from ".";
+import { EDITOR_HEIGHT, eHEIGHT } from "@/helper/_base.helper";
 
 export default function CreatedEditorComponent({
   p_lang,
@@ -202,7 +170,7 @@ export default function CreatedEditorComponent({
     <div
       style={{
         fontFamily: "Inter, Roboto, system-ui",
-        height: "calc(100vh - 25px)",
+        height: EDITOR_HEIGHT,
       }}
       className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
@@ -211,7 +179,7 @@ export default function CreatedEditorComponent({
           $theme={theme}
           orientation={layout}
           style={{
-            height: layout === "vertical" ? "calc(100vh - 68px)" : "100%",
+            height: layout === "vertical" ? EDITOR_HEIGHT : "100%",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
             width: "100%",
           }}
@@ -259,7 +227,7 @@ export default function CreatedEditorComponent({
                     dispatch(setCreatedFileCodeRedux(value ?? ""));
                   }}
                   width="100%"
-                  height={layout === "vertical" ? "100%" : "calc(95vh - 95px)"}
+                  height={layout === "vertical" ? "100%" : eHEIGHT}
                   defaultLanguage={p_lang}
                   language={lang}
                   // defaultValue={defaultCode}
@@ -276,7 +244,8 @@ export default function CreatedEditorComponent({
               </div>
             </div>
           </Splitter.Panel>
-          <Splitter.Panel
+          
+          <StyledSplitter.Panel
             defaultSize={
               layout === "vertical" ? "" : screenWidth >= 1000 ? "40%" : "50%"
             }
@@ -299,7 +268,7 @@ export default function CreatedEditorComponent({
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
-                height: layout === "horizontal" ? "calc(100vh - 65px)" : "100%",
+                height: layout === "horizontal" ? EDITOR_HEIGHT : "100%",
               }}
             >
               <div className="w-full backdrop-blur-2xl">
@@ -341,7 +310,7 @@ export default function CreatedEditorComponent({
                 )}
               </div>
             </div>
-          </Splitter.Panel>
+          </StyledSplitter.Panel>
         </StyledSplitter>
       </div>
     </div>

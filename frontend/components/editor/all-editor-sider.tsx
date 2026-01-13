@@ -15,6 +15,7 @@ import { ShareByMeIcon, ShareWithMeIcon } from "@/assets/ShareIcons";
 import { cn } from "@/lib/utils";
 import { transitionString } from "@/styles";
 import { FaTrash } from "react-icons/fa";
+import ATooltip from "../ui/antd/tooltip";
 
 const links = [
   { link: appUrls.FILE, icon: <FolderCodeIcon />, tooltip: "Folder & File" },
@@ -50,31 +51,34 @@ const AllEditorSider = () => {
     <div
       className="w-14 flex items-center flex-col border-t border-l "
       style={{
-        height: "calc(100svh - 68px)",
+        height: "100svh",
         backgroundColor: `${theme.border10}`,
         borderLeftColor: theme.border10,
         borderTopColor: theme.border10,
       }}
     >
       {sidebarItems.map((x, i) => (
-        <div
-          key={i}
-          className={cn(
-            " w-full flex items-center justify-center py-3  border-l-2",
-            activeTab(x.link) ? "opacity-100" : "opacity-60 hover:opacity-100",
-            transitionString
-          )}
-          style={{
-            borderColor: activeTab(x.link) ? theme.textColor : "transparent",
-          }}
-        >
-          <Link
-            href={x.link}
-            className="w-full h-full  flex items-center justify-center"
+        <ATooltip key={i} title={x.tooltip} placement="right" offset={[-5,20]}>
+          <div
+            className={cn(
+              " w-full flex items-center justify-center border-l-2",
+              activeTab(x.link)
+                ? "opacity-100"
+                : "opacity-60 hover:opacity-100",
+              transitionString
+            )}
+            style={{
+              borderColor: activeTab(x.link) ? theme.textColor : "transparent",
+            }}
           >
-            {x.icon}
-          </Link>
-        </div>
+            <Link
+              href={x.link}
+              className="w-full h-full py-3 flex items-center justify-center"
+            >
+              {x.icon}
+            </Link>
+          </div>
+        </ATooltip>
       ))}
 
       <div className="mt-8 mb-2 w-full flex items-center justify-center flex-col">
@@ -106,20 +110,21 @@ const AllEditorSider = () => {
       </div>
 
       {links.map((x, i) => (
+        <ATooltip key={i} title={x.tooltip} placement="right" offset={[-5,20]}>
         <div
-          key={i}
           className={cn(
-            " w-full flex items-center justify-center py-3 opacity-60 hover:opacity-100",
+            " w-full flex items-center justify-center  opacity-60 hover:opacity-100",
             transitionString
           )}
         >
           <Link
             href={x.link}
-            className="w-full h-full  flex items-center justify-center"
+            className="w-full h-full py-3 flex items-center justify-center"
           >
             {x.icon}
           </Link>
         </div>
+        </ATooltip>
       ))}
     </div>
   );

@@ -77,7 +77,7 @@ const Page = () => {
     <div
       className="h-full w-full px-6 custom-scrollbar overflow-y-auto overflow-x-hidden flex items-center justify-center border-2 border-l-0 border-b-0 "
       style={{
-        height: "calc(100svh - 68px)",
+        height: "100svh",
         borderColor: theme.border15,
         color: theme.textColor,
       }}
