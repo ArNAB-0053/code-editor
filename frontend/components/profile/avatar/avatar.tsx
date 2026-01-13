@@ -1,6 +1,6 @@
 "use client";
 import { fallbackAvatar, fallbackProfileDetails } from "@/constants/base.const";
-import { AvatarTemplate } from "./avatar-template";
+import { AvatarTemplate, ExtraProps } from "./avatar-template";
 import { spaceGrotesk, websiteFonts } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { FiLogOut } from "react-icons/fi";
@@ -11,17 +11,34 @@ import {
 } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
-import { selectedUserEmail, selectedUserName, selectedUserUsername } from "@/redux/slices/userSlice";
+import {
+  selectedUserEmail,
+  selectedUserName,
+  selectedUserUsername,
+} from "@/redux/slices/userSlice";
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
 import { CAvatar, CButton } from "@/components/ui/custom";
+import { transitionString } from "@/styles";
 
-export const AvatarDropdown = () => {
+interface AvatarDropdownProps extends ExtraProps {
+  color?: string;
+  background?: string;
+  borderColor?: string;
+}
+
+export const AvatarDropdown = ({
+  offset,
+  color,
+  background,
+  borderColor,
+  ...rest
+}: AvatarDropdownProps) => {
   // const { data: profileDetails, isLoading } = useMyProfile();
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const nameObj = useSelector(selectedUserName);
   const email = useSelector(selectedUserEmail);
-  const username = useSelector(selectedUserUsername)
+  const username = useSelector(selectedUserUsername);
 
   const fullname = getFullnameFromNameObj(nameObj);
   // console.log("nameObj", fullname);
@@ -32,15 +49,18 @@ export const AvatarDropdown = () => {
   return (
     <>
       <AvatarTemplate
+        offset={offset}
+        {...rest}
         dropdownContent={
           <a onClick={(e) => e.preventDefault()}>
             <CAvatar
               name={nameObj || fallbackAvatar}
-              className="border-1.5!"
+              className={cn("border-1.5! hover:opacity-90", transitionString)}
               characters={1}
               style={{
-                borderColor: theme.activeColor,
-                background: `${theme.activeColor}50`,
+                borderColor: borderColor ? borderColor : theme.activeColor,
+                background: background ? background : `${theme.activeColor}50`,
+                color: color ? color : theme.activeColor,
               }}
             />
           </a>

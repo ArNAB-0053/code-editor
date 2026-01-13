@@ -5,6 +5,7 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalTreeStyles = createGlobalStyle<{
   $theme: ThemeTypes;
   $font?: NextFont;
+  $antModalStyleInHover?: boolean;
 }>`
     .ant-tree {
         background: transparent !important;
@@ -80,7 +81,10 @@ export const GlobalTreeStyles = createGlobalStyle<{
     > .ant-tree-treenode:first-child {
       // margin: 5px 0 0 0 !important;
       // padding: 5px 0 !important;
-      background-color: ${({ $theme }) => $theme.border10} !important;
+      background-color: ${({ $antModalStyleInHover, $theme }) =>
+      $antModalStyleInHover
+        ? $theme.border10
+        : "transparent"};
   } 
 
 
@@ -96,9 +100,11 @@ export const GlobalTreeStyles = createGlobalStyle<{
 
   .ant-tree-treenode-selected {
     background-color: ${({ $theme }) => $theme.border10} !important;
-    box-shadow:
-      inset 0 1px 0 ${({ $theme }) => $theme.border15},
-      inset 0 -1px 0 ${({ $theme }) => $theme.border15} !important;
+    box-shadow: ${({ $antModalStyleInHover, $theme }) =>
+      $antModalStyleInHover
+        ? `inset 0 1px 0 ${$theme.border15},
+       inset 0 -1px 0 ${$theme.border15}`
+        : "none"};
 
     border-radius: 0 !important;
   }
@@ -106,7 +112,10 @@ export const GlobalTreeStyles = createGlobalStyle<{
 
   .ant-tree-treenode:hover {
   color: ${({ $theme }) => $theme.textColor} !important;
-      background-color: ${({ $theme }) => $theme.border5} !important;
+      background-color: ${({ $antModalStyleInHover, $theme }) =>
+      $antModalStyleInHover
+        ? $theme.border5
+        : "transparent"};
       transition-property: all;
       transition-duration: 150ms;
       transition-timing-function: linear;

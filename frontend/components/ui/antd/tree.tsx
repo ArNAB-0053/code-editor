@@ -13,7 +13,11 @@ import { useSelector } from "react-redux";
 
 const { DirectoryTree } = Tree;
 
-const ATree = ({ style, ...rest }: TreeProps) => {
+interface ATreeProps extends TreeProps {
+  hoverStyle?: boolean;
+}
+
+const ATree = ({ hoverStyle = false, style, ...rest }: ATreeProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -21,7 +25,7 @@ const ATree = ({ style, ...rest }: TreeProps) => {
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
   return (
     <>
-      <GlobalTreeStyles $theme={theme} />
+      <GlobalTreeStyles $theme={theme} $antModalStyleInHover={hoverStyle} />
       <DirectoryTree
         style={{
           background: "transparent",
