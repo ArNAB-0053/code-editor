@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { AButton } from "../ui/antd";
 import { WebsiteFontsKey } from "@/@types/font";
 import ATooltip from "../ui/antd/tooltip";
+import { cn } from "@/lib/utils";
 
 // Clear Button
 export const TransparentButton = ({
@@ -80,26 +81,40 @@ export const CopyButton = ({
 export const RunButton = ({
   onClick,
   loading,
+  showTooltip = true,
+  disabled,
 }: {
   onClick: () => void;
   loading: boolean;
+  showTooltip?: boolean;
+  disabled?: boolean;
 }) => {
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
-  return (
+
+  const theBtn = () => (
+    <AButton
+      onClick={onClick}
+      btntype="run"
+      disabled={loading}
+      className={cn(
+        "font-semibold! tracking-[1.2px]! flex! items-center!  aspect-square p-0!",
+        font?.className,
+        disabled ? "bg-green-300/80! cursor-not-allowed!" : ""
+      )}
+    >
+      {loading ? (
+        <AiOutlineLoading3Quarters className="animate-spin" />
+      ) : (
+        <FaPlay />
+      )}
+    </AButton>
+  );
+  return showTooltip ? (
     <ATooltip title="Run Code" color="#00a63e60">
-      <AButton
-        onClick={onClick}
-        btntype="run"
-        disabled={loading}
-        className={`font-semibold! tracking-[1.2px]! flex! items-center! disabled:bg-green-300/80!  aspect-square p-0! ${font?.className}`}
-      >
-        {loading ? (
-          <AiOutlineLoading3Quarters className="animate-spin" />
-        ) : (
-          <FaPlay />
-        )}
-      </AButton>
+      {theBtn()}
     </ATooltip>
+  ) : (
+    theBtn()
   );
 };

@@ -41,5 +41,15 @@ export const messagesConfig = {
             FALSE: "This email address is already in use."
         }
     },
+    CREATION: {
+        FILE: {
+            SUCCESS: "File created successfully!",
+            ERROR: "Error creating file"
+        },
+        FOLDER: {
+            SUCCESS: "Folder created successfully!",
+            ERROR: "Error creating folder"
+        }
+    }, 
     RENAME: "Renamed Successfully"
 };

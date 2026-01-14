@@ -12,13 +12,13 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-const LayoutButton = ({ theme }: { theme: ThemeTypes }) => {
+const LayoutButton = ({ theme, dividerColor }: { theme: ThemeTypes; dividerColor?: string }) => {
   const dispatch = useDispatch();
   const layout = useSelector(selectEditorLayout);
   return (
     <>
       <div
-        className="flex items-center justify-center rounded-md opacity-90 "
+        className="flex items-center justify-center rounded-md overflow-hidden opacity-90 "
         style={{
           backgroundColor: `${theme.activeColor}80`,
           color: theme.textColor,
@@ -39,7 +39,7 @@ const LayoutButton = ({ theme }: { theme: ThemeTypes }) => {
                 className="flex items-center justify-evenly h-10 text-[10px] rounded-md mt-1 opacity-80 "
                 style={{
                   backgroundColor: `${theme.activeColor}30`,
-                  color: theme.activeColor
+                  color: theme.activeColor,
                 }}
               >
                 <div className="p-1">Code</div>
@@ -94,7 +94,7 @@ const LayoutButton = ({ theme }: { theme: ThemeTypes }) => {
                 className="flex flex-col items-center justify-center text-[10px] rounded-md mt-1 opacity-80 "
                 style={{
                   backgroundColor: `${theme.activeColor}30`,
-                  color: theme.activeColor
+                  color: theme.activeColor,
                 }}
               >
                 <div className="p-1 h-9 flex items-center justify-center">
@@ -139,7 +139,10 @@ const LayoutButton = ({ theme }: { theme: ThemeTypes }) => {
         </ATooltip>
       </div>
 
-      <div className="w-0.5 h-6 " style={{ backgroundColor: theme.border }} />
+      <div
+        className="w-0.5 h-6 "
+        style={{ backgroundColor: dividerColor ? dividerColor : theme.border }}
+      />
     </>
   );
 };

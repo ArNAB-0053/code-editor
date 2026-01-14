@@ -10,6 +10,8 @@ export interface EditorHeaderProps {
   isOutput: false;
   editorTheme: string;
   p_lang: string;
+  code?: string;
+  output?: string;
   isCopied: boolean;
   setIsCopied: SetterFunctionTypesBool;
   loading: boolean;

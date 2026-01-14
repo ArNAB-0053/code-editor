@@ -1,26 +1,39 @@
-
 import { themeConfig } from "@/config/themeConfig";
 import { CopyButton, RunButton, TransparentButton } from "../header-buttons";
-import { useRunCode, useUpdateOutput } from "@/services/code";
 import { useSelector } from "react-redux";
 import { HeaderProps } from "@/@types";
 import { useDispatch } from "react-redux";
-import { useRef } from "react";
-import { selectedSharedCode, selectedSharedEditorId, setShareOutputRedux } from "@/redux/slices/sharedEditorSlice";
+import {
+  selectedSharedCode,
+  setShareOutputRedux,
+} from "@/redux/slices/sharedEditorSlice";
 import LayoutButton from "./layout-btn";
+import { useState } from "react";
+import ReadOnlyInfoModal from "@/components/modals/share/readOnlyInfoModal";
+import { AButton } from "@/components/ui/antd";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { FileTypeEnum } from "@/@types/_enums";
+import { ICreateFileRequest } from "@/@types/files";
+import { useFileCreation } from "@/services/files";
+import { toast } from "sonner";
+import { FilesModal } from "@/components/modals/files";
+import { MakeACopyModal } from "@/components/modals/share/makeACopyModal";
+import { CButton } from "@/components/ui/custom";
+import { cn } from "@/lib/utils";
+import { transitionString } from "@/styles";
+import { FaCopy } from "react-icons/fa";
 
 const SharedEditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
   const currentCode = useSelector(selectedSharedCode);
+  const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const openReadOnlyModal = () => {
+    setShowModal(true);
+  };
 
   const theme = themeConfig(props.editorTheme);
-
-  const { mutateAsync: runCode } = useRunCode();
-  const { mutateAsync: updateOutput } = useUpdateOutput();
-
-  const editorId = useSelector(selectedSharedEditorId);
-  const lastOpt = useRef("");
-
 
   // Ouput Header
   if (props.isOutput) {
@@ -38,34 +51,6 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
       </div>
     );
   }
-
-  const handleRunCode = async () => {
-    props.setLoading(true);
-    props.setError("");
-
-    try {
-      const res = await runCode({
-        code: currentCode,
-        lang: props.p_lang,
-      });
-      const output = res.output ?? "";
-      if (lastOpt.current !== output) {
-        updateOutput(
-          { editorId, output },
-          {
-            onSuccess: (res) => {
-              lastOpt.current = output;
-              dispatch(setShareOutputRedux(output));
-            },
-          }
-        );
-      }
-    } catch (err: any) {
-      props.setError(err.message ?? String(err));
-    } finally {
-      props.setLoading(false);
-    }
-  };
 
   function clearOutput() {
     props.setError("");
@@ -100,11 +85,39 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
           }}
         /> */}
 
-        <LayoutButton theme={theme} />
-
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
-        <RunButton onClick={handleRunCode} loading={props.loading} />
+        <RunButton
+          showTooltip={false}
+          disabled
+          onClick={openReadOnlyModal}
+          loading={props.loading}
+        />
+
+        <div
+          className="w-0.5 h-6 "
+          style={{
+            backgroundColor: theme.border,
+          }}
+        />
+
+        <CButton
+          onClick={() => setOpen(true)}
+          className={cn("text-[13px]! hover:opacity-80! h-9/10 rounded-md! px-4! flex! items-center! justify-center! gap-x-2!", transitionString)}
+          style={{ backgroundColor: theme.activeColor }}
+        >
+          <FaCopy />
+          Make a Copy
+        </CButton>
       </div>
+
+      <MakeACopyModal
+        open={open}
+        setOpen={setOpen}
+        code={props.code ?? ""}
+        output={props.output ?? ""}
+        lang={props.p_lang}
+      />
+      {showModal && <ReadOnlyInfoModal setShowModal={setShowModal} />}
     </div>
   );
 };

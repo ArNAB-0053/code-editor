@@ -18,6 +18,8 @@ export interface ICreateFileRequest {
   FileType: FileTypeEnum;
   Lang?: string;
   ParentId?: ObjectId;
+  Code?: string;
+  Output?: string;
 }
 
 export interface ICodeContent {

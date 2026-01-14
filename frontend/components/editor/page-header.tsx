@@ -25,6 +25,7 @@ import ATooltip from "../ui/antd/tooltip";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appUrls } from "@/config/navigation.config";
+import LayoutButton from "./editor-headers/layout-btn";
 
 const PageHeader = () => {
   const pathname = usePathname();
@@ -99,6 +100,7 @@ const PageHeader = () => {
             websiteFonts[websiteFont as WebsiteFontsKey]?.className
           }`}
         >
+          {showLinks && <LayoutButton theme={theme} dividerColor={`${theme.activeColor}80`} />}
           <AButton
             btntype="sameBg"
             onClick={() => setOpen(true)}
