@@ -1,10 +1,9 @@
-import { WebsiteFontsKey, WebsiteFontsMap } from "@/@types/font";
 import { ThemeTypes } from "@/@types/theme";
 import { cn } from "@/lib/utils";
 import { Card, CardProps } from "antd";
 import { NextFont } from "next/dist/compiled/@next/font";
 import React from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled from "styled-components";
 
 export interface IACardProps extends CardProps {
   style?: React.CSSProperties;

@@ -19,6 +19,16 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { IFileRenameRequest } from "@/@types/files";
 import { useRename } from "@/hooks/useRenameFileFolder";
+import {
+  selectEditorLayout,
+  setEditorLayout,
+} from "@/redux/slices/editorLayout";
+import { LayoutHorizontalIcon, LayoutVerticalIcon } from "@/assets/LayoutIcons";
+import { transitionString } from "@/styles";
+import { cn } from "@/lib/utils";
+import { Tooltip } from "antd";
+import { spaceGrotesk } from "@/fonts";
+import ATooltip from "@/components/ui/antd/tooltip";
 
 const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
@@ -28,6 +38,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const userId = useSelector(selectedUserId);
   const currentCode = useSelector(selectedCreatedFileCode);
   const fileName = useSelector(selectedCreatedFileName);
+  const layout = useSelector(selectEditorLayout);
 
   const lang = useSelector(selectedCreatedFileLang);
 
@@ -139,35 +150,39 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
         )}
 
         {isRenaming ? (
-          <button
-            className="w-6 px-1.5 py-1 rounded-md cursor-pointer hover:opacity-100 opacity-80 transition-all duration-200 ease-linear "
-            style={{
-              backgroundColor: theme.border20,
-            }}
-            onClick={() => {
-              const payload: IFileRenameRequest = {
-                FileId: fileId,
-                OwnerId: userId,
-                FileName: inputValue,
-              };
-              rename(payload);
-              setIsRenaming(false);
-            }}
-          >
-            <FaCheck size={13} className="opacity-90" />
-          </button>
+          <ATooltip title="Save">
+            <button
+              className="w-6 px-1.5 py-1 rounded-md cursor-pointer hover:opacity-100 opacity-80 transition-all duration-200 ease-linear "
+              style={{
+                backgroundColor: theme.border20,
+              }}
+              onClick={() => {
+                const payload: IFileRenameRequest = {
+                  FileId: fileId,
+                  OwnerId: userId,
+                  FileName: inputValue,
+                };
+                rename(payload);
+                setIsRenaming(false);
+              }}
+            >
+              <FaCheck size={13} className="opacity-90" />
+            </button>
+          </ATooltip>
         ) : (
-          <button
-            onClick={() => {
-              setIsRenaming(true);
-            }}
-            className="p-1  opacity-80 hover:opacity-100 transition-all duration-200 ease-linear cursor-pointer rounded-md"
-            style={{
-              backgroundColor: theme.border15,
-            }}
-          >
-            <MdDriveFileRenameOutline />
-          </button>
+          <ATooltip title="Rename">
+            <button
+              onClick={() => {
+                setIsRenaming(true);
+              }}
+              className="p-1  opacity-80 hover:opacity-100 transition-all duration-200 ease-linear cursor-pointer rounded-md"
+              style={{
+                backgroundColor: theme.border15,
+              }}
+            >
+              <MdDriveFileRenameOutline />
+            </button>
+          </ATooltip>
         )}
       </span>
 
@@ -184,6 +199,130 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
             dispatch(setCodeRedux(""));
           }}
         /> */}
+
+        <div
+          className="flex items-center justify-center rounded-md opacity-90 "
+          style={{
+            backgroundColor: `${theme.activeColor}80`,
+            color: theme.textColor,
+          }}
+        >
+          <ATooltip
+            titleIsString={false}
+            title={
+              <div className="text-xs py-2 px-2">
+                <p
+                  style={{ color: theme.textColor }}
+                  className={cn(
+                    spaceGrotesk.className,
+                    "text-center leading-5"
+                  )}
+                >
+                  Horizontal Layout
+                </p>
+
+                <div
+                  className="flex items-center justify-evenly h-10 text-[10px] rounded-md mt-1 opacity-80 "
+                  style={{
+                    backgroundColor: `${theme.activeColor}30`,
+                  }}
+                >
+                  <div className="p-1">Code</div>
+                  <div
+                    className="h-full w-px opacity-80 "
+                    style={{
+                      backgroundColor: `${theme.activeColor}`,
+                    }}
+                  />
+                  <div className="p-1">Output</div>
+                </div>
+              </div>
+            }
+          >
+            <button
+              className={cn(
+                "w-full h-full px-1.5 py-1 cursor-pointer group rounded-md relative overflow-hidden ",
+                transitionString
+              )}
+              onClick={() => dispatch(setEditorLayout("horizontal"))}
+              style={{
+                color: theme.textColor,
+              }}
+            >
+              <LayoutHorizontalIcon />
+
+              <div
+                className={cn(
+                  "absolute left-0 top-0 w-full h-full -z-10 ",
+                  layout === "horizontal"
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-40",
+                  transitionString
+                )}
+                style={{ background: theme.activeColor }}
+              />
+            </button>
+          </ATooltip>
+
+          <ATooltip
+            titleIsString={false}
+            title={
+              <div className="text-xs py-2 px-2">
+                <p
+                  style={{ color: theme.textColor }}
+                  className={cn(
+                    spaceGrotesk.className,
+                    "text-center leading-5"
+                  )}
+                >
+                  Vertical Layout
+                </p>
+
+                <div
+                  className="flex flex-col items-center justify-center text-[10px] rounded-md mt-1 opacity-80 "
+                  style={{
+                    backgroundColor: `${theme.activeColor}30`,
+                  }}
+                >
+                  <div className="p-1 h-9 flex items-center justify-center">Code</div>
+                  <div
+                    className="w-full h-px opacity-80 "
+                    style={{
+                      backgroundColor: `${theme.activeColor}`,
+                    }}
+                  />
+                  <div className="p-1 h-7 flex items-center justify-center">Output</div>
+                </div>
+              </div>
+            }
+          >
+            <button
+              className={cn(
+                "w-full h-full px-1.5 py-1 cursor-pointer group rounded-md relative overflow-hidden ",
+                transitionString
+              )}
+              onClick={() => dispatch(setEditorLayout("vertical"))}
+              style={{
+                color: theme.textColor,
+              }}
+            >
+              <LayoutVerticalIcon />
+
+              <div
+                className={cn(
+                  "absolute left-0 top-0 w-full h-full -z-10 opacity-0",
+                  layout === "vertical"
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-40",
+                  transitionString
+                )}
+                style={{ background: theme.activeColor }}
+              />
+            </button>
+          </ATooltip>
+        </div>
+
+        <div className="w-0.5 h-6 " style={{ backgroundColor: theme.border }} />
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />

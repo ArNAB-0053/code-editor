@@ -17,6 +17,7 @@ import {
 } from "@/redux/slices/createdFilesEditorSlice";
 import { IFileCodeModel } from "@/@types/files";
 import CreatedEditorComponent from "@/components/editor/editors-component/createdFileEditor";
+import FileCodeSider from "./file-code-sider";
 
 const Code = () => {
   const [codeDataState, setCodeDataState] = useState<IFileCodeModel>();
@@ -46,7 +47,7 @@ const Code = () => {
 
     codeDataRef.current = codeData?.data;
     setCodeDataState(codeDataRef.current);
-    console.log(codeData);
+    // console.log(codeData);
   }, [codeData, dispatch, isLoading]);
 
   return (

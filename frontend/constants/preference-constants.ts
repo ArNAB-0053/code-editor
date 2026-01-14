@@ -27,6 +27,43 @@ export const settingsData = [
   },
 ];
 
+export const fileFolderDataTemp = [
+  {
+    title: "fol1",
+    key: "fol1",
+    children: [
+      {
+        title: "file",
+        key: "file",
+      },
+      {
+        title: "child-fol",
+        key: "child-fol",
+        children: [
+          {
+            title: "inside-file",
+            key: "inside-file",
+            children: [
+              {
+                title: "inside-file-2",
+                key: "inside-file-2",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "file1",
+    key: "file1",
+    children: [
+      // { title: "Theme Mode", key: "appearance-theme", parentKey: "appearance" },
+      { title: "Font Family", key: "appearance-font", parentKey: "appearance" },
+    ],
+  },
+];
+
 export const editorThemes: EditorThemeOptionsTypes = {
   dracula: "Dracula",
   "purple-night": "Purple Night",
@@ -39,4 +76,3 @@ export const editorThemes: EditorThemeOptionsTypes = {
   "zinc-dark": "Zinc Dark",
   "app-dark": "App Dark (Default)",
 } as const;
-

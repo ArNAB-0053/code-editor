@@ -41,6 +41,11 @@ export const GlobalStyles = createGlobalStyle<{
     align-items: center !important;
     justify-content: center !important;
   }
+
+  .ant-tooltip, .ant-tooltip-inner {
+        min-height: 0px !important;
+        padding: 0px !important;
+    }
    
 
   // -----------------------------------------------------------------------------------

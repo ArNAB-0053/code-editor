@@ -1,0 +1,1 @@
+export const transitionString: string = "transition-all duration-200 ease-linear"

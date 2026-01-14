@@ -105,3 +105,11 @@ export interface IBreadcrumbData {
 export interface IBreadcrumbsRes extends IBaseReturn {
   data: IBreadcrumbData[];
 }
+
+export interface IChildrenResponce extends IBaseReturn {
+  data: IFilesModel[]
+}
+
+export interface IParentId extends IBaseReturn {
+  data: string
+}
