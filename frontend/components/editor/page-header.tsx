@@ -43,6 +43,7 @@ const PageHeader = () => {
     appUrls.TRASH,
     appUrls.SHARE.BY_ME,
     appUrls.SHARE.WITH_ME,
+    appUrls.PROFILE
   ];
 
   const showLinks = !cantShowLinksPages.includes(pathname);
