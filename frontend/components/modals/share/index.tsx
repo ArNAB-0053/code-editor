@@ -208,8 +208,10 @@ const ShareModal = ({
                       }}
                       className="cursor-pointer "
                       rootClassName=" backdrop-blur-xl rounded-xl p-0! "
-                      overlayStyle={{
-                        backgroundColor: `${theme.border10}`,
+                      styles={{
+                        root: {
+                          backgroundColor: `${theme.border10}`,
+                        },
                       }}
                     >
                       <span

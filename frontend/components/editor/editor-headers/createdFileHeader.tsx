@@ -19,6 +19,16 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { IFileRenameRequest } from "@/@types/files";
 import { useRename } from "@/hooks/useRenameFileFolder";
+import {
+  selectEditorLayout,
+  setEditorLayout,
+} from "@/redux/slices/editorLayout";
+import { LayoutHorizontalIcon, LayoutVerticalIcon } from "@/assets/LayoutIcons";
+import { transitionString } from "@/styles";
+import { cn } from "@/lib/utils";
+import { spaceGrotesk } from "@/fonts";
+import ATooltip from "@/components/ui/antd/tooltip";
+import LayoutButton from "./layout-btn";
 
 const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
@@ -28,6 +38,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const userId = useSelector(selectedUserId);
   const currentCode = useSelector(selectedCreatedFileCode);
   const fileName = useSelector(selectedCreatedFileName);
+  const layout = useSelector(selectEditorLayout);
 
   const lang = useSelector(selectedCreatedFileLang);
 
@@ -53,7 +64,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   if (props.isOutput) {
     return (
       <div
-        className="flex items-center justify-between gap-8 text-xs bg-[#43434354] border-b  px-2 py-1.5 h-[50px]"
+        className="flex items-center justify-between text-xs bg-[#43434354] border-b  px-2 py-1.5 h-[50px]"
         style={{
           borderBottomColor: `${theme?.border10}`,
         }}
@@ -139,35 +150,39 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
         )}
 
         {isRenaming ? (
-          <button
-            className="w-6 px-1.5 py-1 rounded-md cursor-pointer hover:opacity-100 opacity-80 transition-all duration-200 ease-linear "
-            style={{
-              backgroundColor: theme.border20,
-            }}
-            onClick={() => {
-              const payload: IFileRenameRequest = {
-                FileId: fileId,
-                OwnerId: userId,
-                FileName: inputValue,
-              };
-              rename(payload);
-              setIsRenaming(false);
-            }}
-          >
-            <FaCheck size={13} className="opacity-90" />
-          </button>
+          <ATooltip title="Save">
+            <button
+              className="w-6 px-1.5 py-1 rounded-md cursor-pointer hover:opacity-100 opacity-80 transition-all duration-200 ease-linear "
+              style={{
+                backgroundColor: theme.border20,
+              }}
+              onClick={() => {
+                const payload: IFileRenameRequest = {
+                  FileId: fileId,
+                  OwnerId: userId,
+                  FileName: inputValue,
+                };
+                rename(payload);
+                setIsRenaming(false);
+              }}
+            >
+              <FaCheck size={13} className="opacity-90" />
+            </button>
+          </ATooltip>
         ) : (
-          <button
-            onClick={() => {
-              setIsRenaming(true);
-            }}
-            className="p-1  opacity-80 hover:opacity-100 transition-all duration-200 ease-linear cursor-pointer rounded-md"
-            style={{
-              backgroundColor: theme.border15,
-            }}
-          >
-            <MdDriveFileRenameOutline />
-          </button>
+          <ATooltip title="Rename">
+            <button
+              onClick={() => {
+                setIsRenaming(true);
+              }}
+              className="p-1  opacity-80 hover:opacity-100 transition-all duration-200 ease-linear cursor-pointer rounded-md"
+              style={{
+                backgroundColor: theme.border15,
+              }}
+            >
+              <MdDriveFileRenameOutline />
+            </button>
+          </ATooltip>
         )}
       </span>
 
@@ -184,6 +199,8 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
             dispatch(setCodeRedux(""));
           }}
         /> */}
+
+        <LayoutButton theme={theme} />        
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />

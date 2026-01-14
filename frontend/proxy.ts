@@ -38,10 +38,9 @@ export default async function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Protect only certain routes
+// Protect only certain routes - these are all protected routes
 export const config = {
   matcher: [
-    // "/lang/:path*",
-     "/auth/:path*"
-    ],
+    "/(auth|code|folders-and-files|all|shared-by-me|shared-with-me|trash)/:path*",
+  ],
 };

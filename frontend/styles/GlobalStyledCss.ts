@@ -12,7 +12,6 @@ import { ThemeTypes } from "@/@types/theme";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { createGlobalStyle } from "styled-components";
 
-
 // THIS IS FOR GLOBAL STYLED PROPERTISE - ALL (stared with "A" or Normal antd) `antd` PROPERTISE ARE DESIGN FROM HERE
 export const GlobalStyles = createGlobalStyle<{
   $theme: ThemeTypes;
@@ -40,6 +39,62 @@ export const GlobalStyles = createGlobalStyle<{
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+
+  .ant-tooltip, .ant-tooltip-inner {
+        min-height: 0px !important;
+        padding: 0px !important;
+    }
+
+  .ant-segmented, .ant-segmented-item-selected {
+    background: ${({ $theme }) => $theme?.border20} !important;
+  }
+
+  .ant-segmented-item-label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .css-var-root.ant-segmented {
+    --ant-segmented-track-bg: ${({ $theme }) => $theme?.border20} !important;
+    --ant-segmented-item-selected-bg: ${({ $theme }) =>
+      $theme?.border20} !important;
+  }
+
+  .ant-select-selector,
+  .ant-select {
+    background: ${({ $theme }) => $theme.editorBackground} !important;
+    color: ${({ $theme }) => $theme.outputColor} !important;
+    border-color: ${({ $theme }) => $theme.border} !important;
+  }
+
+  .ant-select-open, .ant-select-content-value {
+    color: ${({ $theme }) => $theme.textColor} !important;
+  }
+
+  .rc-virtual-list-scrollbar, .rc-virtual-list-scrollbar-vertical {
+    width: 4px !important;
+  }
+
+  .rc-virtual-list-scrollbar-thumb {
+    background: ${({ $theme }) => $theme.activeColor} !important;
+  }
+
+  .ant-tag, .ant-tag a, .ant-tag a:hover {
+    color: ${({ $theme }) => $theme.disabledTextColor} !important;
+  }
+
+  .ant-select, .ant-select-suffix, .ant-select-placeholder {
+    color: ${({ $theme }) => $theme.disabledTextColor} !important;
+  }
+  
+  .ant-select-placeholder {
+    font-size: 12px !important;
+  }
+  .ant-select {
+    display: flex !important;
+    align-items: center !important;
   }
    
 

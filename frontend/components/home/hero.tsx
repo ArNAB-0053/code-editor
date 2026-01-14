@@ -59,7 +59,7 @@ const Hero = ({ profileDetails, isLoading }: AccountProps) => {
               title={
                 <p
                   style={{ color: theme.textColor }}
-                  className={`${spaceGrotesk.className} text-center text-base leading-5 py-2`}
+                  className={`${spaceGrotesk.className} text-center text-base! leading-5 py-2`}
                 >
                   For share you need to create an account
                 </p>

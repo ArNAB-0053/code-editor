@@ -22,6 +22,9 @@ import { selectFolderId, setFolderId } from "@/redux/slices/fileFolderSlice";
 import { useDispatch } from "react-redux";
 import BreadcrumbLoader from "../Loaders/breadcrumbs";
 import ThreeDotDropdown from "./file-folder-dropdown/three-dot-dropdown";
+import Link from "next/link";
+import { appUrls } from "@/config/navigation.config";
+import { IoMdCodeWorking } from "react-icons/io";
 
 interface FileComponentProps {
   files: IFilesListResponse;
@@ -62,7 +65,7 @@ const FileComponent = ({
     useBreadcrumbs(currentFolderId as string);
 
   return (
-    <div className={font?.className}>
+    <div className={cn(font?.className)}>
       {/* {isLoading && <div>Loading files...</div>} */}
 
       {!isTrash &&
@@ -124,20 +127,21 @@ const FileComponent = ({
                 color: theme.textColor,
               }}
               className={cn(
-                "flex items-center justify-between pl-2 pr-2 md:pl-4 lg:pl-5 xl:pl-6  opacity-90 gap-x-2 rounded-xl text-sm cursor-pointer",
+                "flex items-center justify-between pl-2 pr-2 md:pl-4 lg:pl-5 xl:pl-6  opacity-90 rounded-xl text-sm cursor-pointer",
                 isTrash
                   ? ""
                   : "hover:opacity-70 transition-all duration-200 ease-linear "
               )}
             >
               <div
-                className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3"
+                className="flex items-center justify-start opacity-90 text-sm gap-x-2 py-2 lg:py-3 "
                 style={{
                   color: theme.textColor,
+                  width: 'calc(100% - 24px)'
                 }}
               >
                 <FaFolder className="w-6" />
-                <p className="truncate">{folder.fileName}</p>
+                <p className="truncate ">{folder.fileName}</p>
               </div>
 
               <div
@@ -145,6 +149,7 @@ const FileComponent = ({
                   e.preventDefault();
                   e.stopPropagation();
                 }}
+                className="w-6"
               >
                 <ThreeDotDropdown
                   fileId={folder.id}

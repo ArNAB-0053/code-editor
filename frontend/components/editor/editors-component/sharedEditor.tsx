@@ -17,19 +17,17 @@ import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
 import { useDispatch } from "react-redux";
 import { LuLoader } from "react-icons/lu";
-import { selectedSharedCode, selectedSharedLang, selectedSharedOutput, setShareCodeRedux } from "@/redux/slices/sharedEditorSlice";
+import {
+  selectedSharedCode,
+  selectedSharedLang,
+  selectedSharedOutput,
+  setShareCodeRedux,
+} from "@/redux/slices/sharedEditorSlice";
 import SharedEditorHeaderComponent from "../editor-headers/sharedHeader";
-
-const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
-  .ant-splitter-bar {
-    background: ${({ $theme }) => $theme.splitterColor} !important;
-    width: 4px !important;
-  }
-
-  .ant-splitter-bar-dragger::before {
-    background: ${({ $theme }) => $theme.splitterColor} !important;
-  }
-`;
+import { selectEditorLayout } from "@/redux/slices/editorLayout";
+import { useScreenWidth } from "@/hooks/useScreenWidth";
+import { cn } from "@/lib/utils";
+import { StyledSplitter } from ".";
 
 export default function SharedEditorComponent({
   p_lang,
@@ -42,6 +40,9 @@ export default function SharedEditorComponent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+
+  const screenWidth = useScreenWidth();
+
   const lang = useSelector(selectedSharedLang);
   // const [sharingDetails, setSharingDetails] = useState(null);
 
@@ -49,6 +50,7 @@ export default function SharedEditorComponent({
 
   const currentCode = useSelector(selectedSharedCode);
   const currentOutput = useSelector(selectedSharedOutput);
+  const layout = useSelector(selectEditorLayout);
 
   // console.log("currentCode", currentCode);
 
@@ -58,6 +60,8 @@ export default function SharedEditorComponent({
   const editorFontSize = useSelector(selectEditorFontSize);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
+
+  const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   const theme = themeConfig(editorTheme);
 
@@ -125,29 +129,43 @@ export default function SharedEditorComponent({
     <div
       style={{
         fontFamily: "Inter, Roboto, system-ui",
-        height: "calc(100vh - 25px)",
+        height: "calc(100svh - 25px)",
       }}
       className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
-      <div className="flex w-full overflow-hidden border-t border-t-white/20">
+      <div className="flex w-full overflow-hidden border-l border-t border-l-white/20 border-t-white/20">
         <StyledSplitter
           $theme={theme}
+          orientation={layout}
           style={{
-            height: "100%",
+            height: layout === "vertical" ? "calc(100svh - 68px)" : "100%",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
             width: "100%",
           }}
         >
-          <Splitter.Panel defaultSize="60%" min="40%">
+          <StyledSplitter.Panel
+            defaultSize={
+              layout === "vertical"
+                ? "80%"
+                : screenWidth >= 1000
+                  ? "60%"
+                  : "50%"
+            }
+            min={screenWidth >= 1000 ? "40%" : "50%"}
+            max="80%"
+            className="overflow-hidden!"
+          >
             <div
               style={{
                 marginBottom: 8,
                 borderColor: theme?.border20,
                 background: theme.editorBackground,
+                height: "100%",
               }}
-              className={`border border-t-0 border-r-0 overflow-hidden text-white ${
-                websiteFonts[websiteFont as WebsiteFontsKey]?.className
-              }`}
+              className={cn(
+                "border-r overflow-hidden! text-white",
+                font?.className
+              )}
             >
               <SharedEditorHeaderComponent
                 editorTheme={editorTheme}
@@ -160,7 +178,7 @@ export default function SharedEditorComponent({
                 setError={setError}
                 isShared={isShared}
               />
-              <div className="pt-2">
+              <div className="h-full overflow-hidden">
                 <Editor
                   key={lang}
                   value={currentCode}
@@ -168,7 +186,7 @@ export default function SharedEditorComponent({
                     dispatch(setShareCodeRedux(value ?? ""));
                   }}
                   width="100%"
-                  height="calc(95vh - 95px)"
+                  height={layout === "vertical" ? "100%" : "calc(95vh - 95px)"}
                   defaultLanguage={p_lang}
                   language={lang}
                   // defaultValue={defaultCode}
@@ -181,29 +199,56 @@ export default function SharedEditorComponent({
                     minimap: { enabled: false },
                     automaticLayout: true,
                   }}
+                  className="py-2!"
                 />
               </div>
             </div>
-          </Splitter.Panel>
-          <Splitter.Panel defaultSize="40%" min="20%">
+          </StyledSplitter.Panel>
+          <StyledSplitter.Panel
+            defaultSize={
+              layout === "vertical" ? "" : screenWidth >= 1000 ? "40%" : "50%"
+            }
+            min={
+              layout === "vertical" ? "" : screenWidth >= 1000 ? "20%" : "40%"
+            }
+            max={
+              layout === "vertical"
+                ? "60%"
+                : screenWidth >= 1000
+                  ? "40%"
+                  : "50%"
+            }
+            className="overflow-hidden!"
+          >
             <div
-              className={`min-h-[95vh] overflow-y-auto border-r relative ${
-                websiteFonts[websiteFont as WebsiteFontsKey]?.className
-              }`}
+              className={`overflow-hidden pb-4  border-r relative ${font?.className}`}
               style={{
                 background: theme.outputBackground,
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
+                height: layout === "horizontal" ? "calc(100svh - 65px)" : "100%",
               }}
             >
-              <SharedEditorHeaderComponent
-                editorTheme={editorTheme}
-                isOutput={true}
-                loading={loading}
-                setError={setError}
-              />
-              <div className="p-2 ">
+
+              <div className="w-full backdrop-blur-2xl">
+                <SharedEditorHeaderComponent
+                  editorTheme={editorTheme}
+                  isOutput={true}
+                  loading={loading}
+                  setError={setError}
+                />
+              </div>
+
+              <div
+                className={cn(
+                  "p-2 overflow-y-auto custom-scrollbar overflow-x-hidden text-wrap ",
+                  font?.className
+                )}
+                style={{
+                  height: "calc(100% - 40px)",
+                }}
+              >
                 {error ? (
                   <span style={{ color: "#ffb4b4" }}>{error}</span>
                 ) : (
@@ -224,7 +269,7 @@ export default function SharedEditorComponent({
                 )}
               </div>
             </div>
-          </Splitter.Panel>
+          </StyledSplitter.Panel>
         </StyledSplitter>
       </div>
     </div>

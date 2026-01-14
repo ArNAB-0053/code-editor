@@ -34,17 +34,11 @@ import { toast } from "sonner";
 import { messagesConfig } from "@/config/messages.config";
 import { useUpdateFilesCode } from "@/services/files";
 import CreatedFileEditorHeaderComponent from "../editor-headers/createdFileHeader";
-
-const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
-  .ant-splitter-bar {
-    background: ${({ $theme }) => $theme.splitterColor} !important;
-    width: 4px !important;
-  }
-
-  .ant-splitter-bar-dragger::before {
-    background: ${({ $theme }) => $theme.splitterColor} !important;
-  }
-`;
+import { selectEditorLayout } from "@/redux/slices/editorLayout";
+import { cn } from "@/lib/utils";
+import { useScreenWidth } from "@/hooks/useScreenWidth";
+import { StyledSplitter } from ".";
+import { EDITOR_HEIGHT, eHEIGHT } from "@/helper/_base.helper";
 
 export default function CreatedEditorComponent({
   p_lang,
@@ -57,13 +51,14 @@ export default function CreatedEditorComponent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const lang = useSelector(selectedCreatedFileLang);
 
+  const screenWidth = useScreenWidth();
+
+  const lang = useSelector(selectedCreatedFileLang);
   const currentCode = useSelector(selectedCreatedFileCode);
   const currentOutput = useSelector(selectedCreatedFileOutput);
   const fileId = useSelector(selectedfileId);
-
-  const dispatch = useDispatch();
+  const layout = useSelector(selectEditorLayout);
 
   const editorFont = useSelector(selectEditorFont);
   const editorFontSize = useSelector(selectEditorFontSize);
@@ -71,9 +66,12 @@ export default function CreatedEditorComponent({
   const websiteFont = useSelector(selectWebsiteFont);
   const userId = useSelector(selectedUserId);
 
+  const dispatch = useDispatch();
+
   const autoSaveCode = useUpdateFilesCode();
 
   const theme = themeConfig(editorTheme);
+  const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   // refs for monaco editor
   const editorRef = useRef<any>(null);
@@ -172,29 +170,43 @@ export default function CreatedEditorComponent({
     <div
       style={{
         fontFamily: "Inter, Roboto, system-ui",
-        height: "calc(100vh - 25px)",
+        height: EDITOR_HEIGHT,
       }}
       className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
     >
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
+          orientation={layout}
           style={{
-            height: "100%",
+            height: layout === "vertical" ? EDITOR_HEIGHT : "100%",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
             width: "100%",
           }}
         >
-          <Splitter.Panel defaultSize="60%" min="40%">
+          <Splitter.Panel
+            defaultSize={
+              layout === "vertical"
+                ? "80%"
+                : screenWidth >= 1000
+                ? "60%"
+                : "50%"
+            }
+            min={screenWidth >= 1000 ? "40%" : "50%"}
+            max="80%"
+            className="overflow-hidden!"
+          >
             <div
               style={{
                 marginBottom: 8,
                 borderColor: theme?.border20,
                 background: theme.editorBackground,
+                height: "100%",
               }}
-              className={`border border-t-0 border-r-0 overflow-hidden text-white ${
-                websiteFonts[websiteFont as WebsiteFontsKey]?.className
-              }`}
+              className={cn(
+                "border-r overflow-hidden! text-white",
+                font?.className
+              )}
             >
               <CreatedFileEditorHeaderComponent
                 editorTheme={editorTheme}
@@ -207,7 +219,7 @@ export default function CreatedEditorComponent({
                 setError={setError}
                 isShared={isShared}
               />
-              <div className="pt-2">
+              <div className="h-full overflow-hidden">
                 <Editor
                   key={lang}
                   value={currentCode}
@@ -215,7 +227,7 @@ export default function CreatedEditorComponent({
                     dispatch(setCreatedFileCodeRedux(value ?? ""));
                   }}
                   width="100%"
-                  height="calc(95vh - 95px)"
+                  height={layout === "vertical" ? "100%" : eHEIGHT}
                   defaultLanguage={p_lang}
                   language={lang}
                   // defaultValue={defaultCode}
@@ -228,30 +240,57 @@ export default function CreatedEditorComponent({
                     minimap: { enabled: false },
                     automaticLayout: true,
                   }}
+                  className="py-2!"
                 />
               </div>
             </div>
-            
           </Splitter.Panel>
-          <Splitter.Panel defaultSize="40%" min="20%">
+          
+          <StyledSplitter.Panel
+            defaultSize={
+              layout === "vertical" ? "" : screenWidth >= 1000 ? "40%" : "50%"
+            }
+            min={
+              layout === "vertical" ? "" : screenWidth >= 1000 ? "20%" : "40%"
+            }
+            max={
+              layout === "vertical"
+                ? "60%"
+                : screenWidth >= 1000
+                ? "40%"
+                : "50%"
+            }
+            className="overflow-hidden!"
+          >
             <div
-              className={`min-h-[95vh] overflow-y-auto border-r relative ${
-                websiteFonts[websiteFont as WebsiteFontsKey]?.className
-              }`}
+              className={`overflow-hidden pb-4  border-r relative ${font?.className}`}
               style={{
                 background: theme.outputBackground,
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
+                height: layout === "horizontal" ? EDITOR_HEIGHT : "100%",
               }}
             >
-              <CreatedFileEditorHeaderComponent
-                editorTheme={editorTheme}
-                isOutput={true}
-                loading={loading}
-                setError={setError}
-              />
-              <div className="p-2 ">
+              <div className="w-full backdrop-blur-2xl">
+                <CreatedFileEditorHeaderComponent
+                  editorTheme={editorTheme}
+                  isOutput={true}
+                  loading={loading}
+                  setError={setError}
+                />
+              </div>
+
+              {/* Scrolling enable for output here */}
+              <div
+                className={cn(
+                  "p-2 overflow-y-auto custom-scrollbar overflow-x-hidden text-wrap ",
+                  font?.className
+                )}
+                style={{
+                  height: "calc(100% - 40px)",
+                }}
+              >
                 {error ? (
                   <span style={{ color: "#ffb4b4" }}>{error}</span>
                 ) : (
@@ -272,7 +311,7 @@ export default function CreatedEditorComponent({
                 )}
               </div>
             </div>
-          </Splitter.Panel>
+          </StyledSplitter.Panel>
         </StyledSplitter>
       </div>
     </div>

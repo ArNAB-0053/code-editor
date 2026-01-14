@@ -21,6 +21,9 @@ import { RiLayoutGrid2Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { CDivider } from "../ui/custom";
+import { AllLangs } from "../lang";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { transitionString } from "@/styles";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActiveTab: boolean }>`
   &:hover {
@@ -51,6 +54,8 @@ type DisabledItemTemplateProps = {
   labelClassName?: string;
   rootClassName?: string;
   label: string;
+  isLink?: boolean;
+  linkClassName?: string;
 };
 
 export const TabLabelTemplate = ({
@@ -86,6 +91,8 @@ const DisabledItemTemplate = ({
   label,
   rootClassName,
   labelClassName,
+  isLink,
+  linkClassName,
 }: DisabledItemTemplateProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -99,7 +106,23 @@ const DisabledItemTemplate = ({
         color: theme.disabledTextColor,
       }}
     >
-      <span className={cn("pl-1", labelClassName)}>{label}</span>
+      <span className={cn("pl-1", labelClassName)}>
+        {label}
+        {isLink && (
+          <span
+            className={cn(
+              "text-[10px] px-1 py-0.5 rounded-full",
+              linkClassName
+            )}
+            style={{
+              backgroundColor: `${theme.activeColor}60`,
+              color: theme.activeColor,
+            }}
+          >
+            link
+          </span>
+        )}
+      </span>
       <CDivider
         style={{
           backgroundColor: theme.disabledTextColor,
@@ -151,6 +174,9 @@ const Sider = () => {
   const pathname = usePathname();
   const activeTab = useSelector(selectedActiveTabKey);
 
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
+
   return (
     <div className=" w-50 min-[1100px]:w-[220px] xl:w-64 h-screen ">
       <DisabledItemTemplate label="Files" labelClassName="uppercase" />
@@ -170,7 +196,7 @@ const Sider = () => {
           label={x.title}
           labelClassName={cn(
             x.id === 1 ? "translate-y-0.5 translate-x-0.5" : "",
-            pathname === x.href ? "font-medium": ""
+            pathname === x.href ? "font-medium" : ""
           )}
           isActiveTab={pathname === x.href}
           link={x.href}
@@ -178,11 +204,41 @@ const Sider = () => {
         />
       ))}
 
+      <div className="relative">
+        <DisabledItemTemplate
+          label="Langs"
+          rootClassName="mt-6"
+          labelClassName="uppercase"
+          isLink
+          linkClassName="text-[8.5px]"
+        />
+
+        <Link
+          href={appUrls.LANG}
+          className={cn(
+            "absolute -top-1 right-0 py-0.5 px-2 rounded-md backdrop-blur-2xl text-xs flex items-center justify-center gap-x-1 opacity-80 hover:opacity-100",
+            transitionString
+          )}
+          style={{
+            background: `${theme.activeColor}50`,
+            color: theme.activeColor,
+          }}
+        >
+          Go
+          <FaArrowRightLong size={12} />
+        </Link>
+      </div>
+
+      <div className="px-4 xl:px-6 pt-2">
+        <AllLangs dir="vertical" showArrow />
+      </div>
+
       <DisabledItemTemplate
         label="Recycle Bin"
         rootClassName="mt-6"
         labelClassName="uppercase"
       />
+
       {SideElements?.other?.map((x, i) => (
         <TabLabelTemplate
           Icon={<>{x.icon}</>}

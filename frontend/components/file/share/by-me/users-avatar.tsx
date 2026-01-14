@@ -37,7 +37,7 @@ const UsersAvatar = ({
   return (
     <div className="flex items-center -space-x-2">
       {sharedWith
-        .slice(0, MAX_SHARE_VISIBLE_NUMBER)
+        ?.slice(0, MAX_SHARE_VISIBLE_NUMBER)
         .map((u: IUserDetails, idx: number) => (
           <div
             key={idx}

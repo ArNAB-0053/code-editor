@@ -1,9 +1,11 @@
 import { EditorFontsMap, WebsiteFontsMap } from "@/@types/font";
 import {
   Amarante,
+  Asap,
   Asimovian,
   Cascadia_Code,
   Cookie,
+  Exo,
   Fira_Code,
   Geo,
   Inconsolata,
@@ -56,6 +58,7 @@ export const editorFonts: EditorFontsMap = {
   robotomono: "Roboto Mono",
   ubuntumono: "Ubuntu Mono",
   inconsolata: "Inconsolata",
+  lilex: "Lilex",
 };
 
 // Webiste fonts -> used like websiteFonts[websiteFont].className
@@ -115,3 +118,5 @@ export const play_cu = Playwrite_CU({ weight: ["400"] });
 export const play_us_modern = Playwrite_US_Modern({ weight: ["400"] });
 export const cookie = Cookie({weight: ["400"] });
 export const lora = Lora({weight: ["400", "500", "600"], subsets: ["latin"], style: "italic" });
+export const asap = Asap({ subsets: ["latin"],  weight: ["400", "500", "600", "700"], style:"italic" });
+export const exo = Exo({ subsets: ["latin"],  weight: ["400", "500", "600", "700"], style:"italic" });

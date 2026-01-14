@@ -14,12 +14,22 @@ import { IoMdShare } from "react-icons/io";
 import { cn } from "@/lib/utils";
 import { AButton } from "@/components/ui/antd";
 import ShareModal from "@/components/modals/share";
+import { transitionString } from "@/styles";
+import { LayoutHorizontalIcon, LayoutVerticalIcon } from "@/assets/LayoutIcons";
+import { spaceGrotesk } from "@/fonts";
+import ATooltip from "@/components/ui/antd/tooltip";
+import {
+  selectEditorLayout,
+  setEditorLayout,
+} from "@/redux/slices/editorLayout";
+import LayoutButton from "./layout-btn";
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
   const currentCode = useSelector(selectedCode);
+  const layout = useSelector(selectEditorLayout);
 
   const theme = themeConfig(props.editorTheme);
 
@@ -33,7 +43,7 @@ const EditorHeaderComponent = (props: HeaderProps) => {
   if (props.isOutput) {
     return (
       <div
-        className="flex items-center justify-between gap-8 text-xs bg-[#43434354] border-b  px-2 py-1.5 h-[50px]"
+        className="flex items-center justify-between xl:gap-8 text-xs bg-[#43434354] border-b  px-2 py-1.5 h-[50px]"
         style={{
           borderBottomColor: `${theme?.border10}`,
         }}
@@ -106,6 +116,8 @@ const EditorHeaderComponent = (props: HeaderProps) => {
             dispatch(setCodeRedux(""));
           }}
         /> */}
+
+        <LayoutButton theme={theme} />
 
         <AButton
           onClick={() => setOpen(true)}

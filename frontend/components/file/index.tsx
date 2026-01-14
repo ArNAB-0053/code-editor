@@ -1,5 +1,5 @@
 "use client";
-import { Tabs, TabsProps, theme } from "antd";
+import { Tabs, TabsProps } from "antd";
 import FileComponent from "./file-component";
 import ShareToMe from "./share/to-me";
 import ShareByMe from "./share/by-me";
@@ -13,7 +13,7 @@ import {
 import { useSelector } from "react-redux";
 import { WebsiteFontsKey } from "@/@types/font";
 import { FaTrash } from "react-icons/fa";
-import FolderCodeIcon from "@/assets/FolderCode";
+import { FolderCodeIcon } from "@/assets/FolderIcon";
 import { ShareByMeIcon, ShareWithMeIcon } from "@/assets/ShareIcons";
 import Trash from "./trash";
 import { ReactElement, useState } from "react";

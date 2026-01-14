@@ -80,7 +80,7 @@ export const FormItemComponent = ({
             {isSelect && (
               <ASelect
                 value={selectValue}
-                className="w-[1rem]! px-0! py-0! rounded-sm!"
+                className="w-[1rem]! ml-1! px-2! pb-0.5! rounded-sm! border-none! "
                 rootClassName="px-0! pb-0! rounded-sm! w-[8rem]!"
                 onChange={onSelectChange}
                 options={options}

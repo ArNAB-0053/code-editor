@@ -94,6 +94,38 @@ namespace backend.Controllers
             }
         }
 
+        // (GET) - GET children for tree structure 
+        [HttpGet("children")]
+        public IActionResult GetChildren([FromQuery] string? parentId)
+        {
+            try
+            {
+                var res = _service.GetChildren(parentId);
+                if (res == null) return NotFound(new { status = "error", message = "File not found" });
+                return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        // (GET) - ParentId from children
+        [HttpGet("parentId")]
+        public IActionResult GetParentId([FromQuery] string childId)
+        {
+            try
+            {
+                var res = _service.GetParentId(childId);
+                if (res == null) return NotFound(new { status = "error", message = "File not found" });
+                return Ok(new { status = "success", data = res  });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
         // (PATCH) - Rename
         [HttpPatch("rename")]
         public IActionResult Rename([FromBody] UpdateRenameRequest req)

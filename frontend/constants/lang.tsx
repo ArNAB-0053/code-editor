@@ -1,28 +1,31 @@
-import { getDataUrls } from "@/helper/dataUrls";
+import { LangDefinition } from "@/@types/langs";
+import { getProgLangLogos } from "@/helper/getPLogos";
+import Image from "next/image";
 
 export const languageLogo = (lang: string) => {
-  const uri = getDataUrls(lang);
+  const logo = getProgLangLogos(lang)
   return (
-    <img
-      src={uri}
+    <Image
+      src={logo}
       alt={lang}
-      width={110}
-      height={110}
+      width={1200}
+      height={1200}
       className="rounded-sm grayscale-100 brightness-[400]"
     />
   );
 };
 
-export const langs = {
+export const langs: Record<string, LangDefinition> = {
   python: {
     label: "Python",
     logo: languageLogo("python"),
     ext: ".py",
+    fileIcon: "py",
   },
   javascript: {
     label: "JavaScript",
     logo: languageLogo("javascript"),
     ext: ".js",
+    fileIcon: "js",
   },
 } as const;
-

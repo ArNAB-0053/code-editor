@@ -6,6 +6,7 @@ import { IoCopy } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { AButton } from "../ui/antd";
 import { WebsiteFontsKey } from "@/@types/font";
+import ATooltip from "../ui/antd/tooltip";
 
 // Clear Button
 export const TransparentButton = ({
@@ -23,7 +24,7 @@ export const TransparentButton = ({
       onClick={onClick}
       type="default"
       disabled={loading}
-      className={`h-full! text-white! font-medium! border-none! ${font?.className}`}
+      className={`h-full! text-white/60! hover:text-white/90! font-medium! border-none! ${font?.className}`}
     >
       Clear
     </AButton>
@@ -59,17 +60,19 @@ export const CopyButton = ({
     //     </span>
     //   )}
     // </AButton>
-    <AButton
-      onClick={onClick}
-      btntype="copy"
-      className={` text-white! p-0! aspect-square font-medium! border-none! ${font?.className}`}
-    >
-      {isCopied ? (
-        <FaCheckCircle className="text-green-500" />
-      ) : (
-        <IoCopy className="opacity-80" size={16} />
-      )}
-    </AButton>
+    <ATooltip title="Copy Code">
+      <AButton
+        onClick={onClick}
+        btntype="copy"
+        className={` text-white! p-0! aspect-square font-medium! border-none! ${font?.className}`}
+      >
+        {isCopied ? (
+          <FaCheckCircle className="text-green-500" />
+        ) : (
+          <IoCopy className="opacity-80" size={16} />
+        )}
+      </AButton>
+    </ATooltip>
   );
 };
 
@@ -84,17 +87,19 @@ export const RunButton = ({
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
   return (
-    <AButton
-      onClick={onClick}
-      btntype="run"
-      disabled={loading}
-      className={`font-semibold! tracking-[1.2px]! flex! items-center! disabled:bg-green-300/80!  aspect-square p-0! ${font?.className}`}
-    >
-      {loading ? (
-        <AiOutlineLoading3Quarters className="animate-spin" />
-      ) : (
-        <FaPlay />
-      )}
-    </AButton>
+    <ATooltip title="Run Code" color="#00a63e60">
+      <AButton
+        onClick={onClick}
+        btntype="run"
+        disabled={loading}
+        className={`font-semibold! tracking-[1.2px]! flex! items-center! disabled:bg-green-300/80!  aspect-square p-0! ${font?.className}`}
+      >
+        {loading ? (
+          <AiOutlineLoading3Quarters className="animate-spin" />
+        ) : (
+          <FaPlay />
+        )}
+      </AButton>
+    </ATooltip>
   );
 };

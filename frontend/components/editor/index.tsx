@@ -11,6 +11,7 @@ import { selectedUserId } from "@/redux/slices/userSlice";
 import { useSelector } from "react-redux";
 import { getDefaultCode } from "@/helper/defaultCode";
 import EditorComponent from "./editors-component/editor";
+import { LuLoader } from "react-icons/lu";
 
 const MainEditor = ({ p_lang }: { p_lang: string }) => {
   const dispatch = useDispatch();
@@ -41,13 +42,9 @@ const MainEditor = ({ p_lang }: { p_lang: string }) => {
     }
   }, [codeData, isLoading, p_lang, defaultCode, dispatch]);
 
-  if (isLoading) return <p>Loading ...</p>;
+  if (isLoading) return <LuLoader className="animate-spin" />;
 
-  return (
-    <div>
-      <EditorComponent p_lang={p_lang} />
-    </div>
-  );
+  return <EditorComponent p_lang={p_lang} />;
 };
 
 export default MainEditor;

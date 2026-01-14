@@ -11,8 +11,9 @@ import { FaFolderPlus } from "react-icons/fa";
 import { BsFileEarmarkPlusFill } from "react-icons/bs";
 import { toast } from "sonner";
 import { SetterFunctionTypesBool } from "@/@types/_base";
-import { selectFolderId } from "@/redux/slices/fileFolderSlice";
+import { refreshTree, selectFolderId } from "@/redux/slices/fileFolderSlice";
 import { langs } from "@/constants/lang";
+import { useDispatch } from "react-redux";
 
 export const FilesCreationForm = ({
   setOpen,
@@ -21,8 +22,9 @@ export const FilesCreationForm = ({
 }) => {
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
-
   const currentFolderId = useSelector(selectFolderId);
+
+  const dispatch = useDispatch()
 
   const initialValues: CreateFilesFormType = {
     OwnerId: userId,
@@ -101,8 +103,8 @@ export const FilesCreationForm = ({
               <AButton
                 type="primary"
                 disabled={isSubmitting}
-                onClick={() => {
-                  handleSubmit();
+                onClick={async () =>  {
+                  await handleSubmit();
                   setOpen(false);
                 }}
                 className="flex! items-center! justify-center!"
@@ -125,8 +127,9 @@ export const FolderCreationForm = ({
 }) => {
   const { mutateAsync: createFile } = useFileCreation();
   const userId = useSelector(selectedUserId);
-
   const currentFolderId = useSelector(selectFolderId);
+
+    const dispatch = useDispatch()
 
   const initialValues: CreateFilesFormType = {
     OwnerId: userId,
@@ -183,8 +186,8 @@ export const FolderCreationForm = ({
               <AButton
                 type="primary"
                 disabled={isSubmitting}
-                onClick={() => {
-                  handleSubmit();
+                onClick={async () => {
+                  await handleSubmit();
                   setOpen(false);
                 }}
                 className="flex! items-center! justify-center!"

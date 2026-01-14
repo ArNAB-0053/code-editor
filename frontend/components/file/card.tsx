@@ -12,6 +12,7 @@ import { setCreatedFileIdRedux } from "@/redux/slices/createdFilesEditorSlice";
 import { useDispatch } from "react-redux";
 import { ThemeTypes } from "@/@types/theme";
 import styled from "styled-components";
+import { setFolderId } from "@/redux/slices/fileFolderSlice";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   background: ${({ $theme }) => $theme.border10} !important;
@@ -60,7 +61,10 @@ const FilesCard = ({
               borderColor: theme.border10,
               borderWidth: "2px",
             }}
-            onClick={() => dispatch(setCreatedFileIdRedux(x.id))}
+            onClick={() => {
+              dispatch(setCreatedFileIdRedux(x.id));
+              dispatch(setFolderId(x.parentId));
+            }}
             className="px-3 pt-2 pb-3 rounded-xl relative transition-all duration-200 ease-linear group"
           >
             {/* Header */}
@@ -127,12 +131,8 @@ const FilesCard = ({
                   // editorFontSizeProp="8px"
                 />
 
-                
-
                 {/* <div className="grain-overlay pointer-events-none absolute inset-0" /> */}
               </div>
-
-              
             </div>
           </StyledLink>
         );

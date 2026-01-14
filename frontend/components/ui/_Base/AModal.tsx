@@ -10,7 +10,7 @@ import { RxCross2 } from "react-icons/rx";
 import BaseCButton from "./CButton";
 
 const StyledModal = styled(Modal)<{ $theme: ThemeTypes }>`
-  .ant-modal-content,
+  .ant-modal-container,
   .ant-modal-title {
     background-color: ${({ $theme }) => $theme.modalBg} !important;
     color: ${({ $theme }) => $theme.textColor} !important;

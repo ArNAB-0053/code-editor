@@ -92,7 +92,7 @@ const createTagRender = (theme: ThemeTypes, font: NextFont) => {
         closable={closable}
         onClose={onClose}
         className={cn(
-          " flex! items-center! justify-center! h-full! gap-x-2! mr-1! text-xs! px-1! ",
+          " flex! items-center! justify-center! h-full! gap-x-2! mr-1! text-xs! px-1! py-0.5! ",
           font?.className
         )}
         style={{
@@ -167,7 +167,7 @@ const SearchUsername = ({
         const data: ISearchResultEach = option.data;
         return (
           <>
-            <div className="flex items-center gap-3 px-3 py-2">
+            <div className="flex items-center gap-3 px-3 py-0">
               <CAvatar
                 name={data.name || fallbackAvatar}
                 variant="default"
