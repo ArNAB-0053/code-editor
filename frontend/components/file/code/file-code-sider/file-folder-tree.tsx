@@ -152,7 +152,7 @@ const FileFolderTree = ({
   };
 
   return (
-    <div className="border border-r-0 border-white/20 w-full pr-4 h-full overflow-y-auto custom-scrollbar-sider pb-3">
+    <div className="border border-r-0 border-b-0 border-white/20 w-full pr-4 h-full overflow-y-auto custom-scrollbar-sider pb-3">
       <ATree
         loadData={onLoadData}
         treeData={treeData}

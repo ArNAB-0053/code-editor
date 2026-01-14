@@ -23,8 +23,11 @@ import { transitionString } from "@/styles";
 import getFileRelatedLinks from "@/helper/file-related-links";
 import ATooltip from "../ui/antd/tooltip";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { appUrls } from "@/config/navigation.config";
 
 const PageHeader = () => {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
@@ -32,51 +35,65 @@ const PageHeader = () => {
   const fileRelatedLinks = getFileRelatedLinks({ size: 20 });
 
   const theme = themeConfig(editorTheme);
+
+  const cantShowLinksPages = [
+    appUrls.ALL,
+    appUrls.FILE,
+    appUrls.TRASH,
+    appUrls.SHARE.BY_ME,
+    appUrls.SHARE.WITH_ME,
+  ];
+
+  const showLinks = !cantShowLinksPages.includes(pathname);
+
   return (
     <>
       <div className="w-full flex items-center justify-between mb-2">
         <Logo />
-        <div
-          className="flex overflow-hidden rounded-full "
-          style={{
-            backgroundColor: `${theme.border10}`,
-            borderColor: theme.border15,
-          }}
-        >
-          {fileRelatedLinks.map((x, i) => (
-            <ATooltip
-              key={i}
-              placement="bottom"
-              title={x.tooltip}
-              color={`${theme.activeColor}90`}
-            >
-              <Link href={x.link}>
-                <div
-                  className={cn(
-                    "flex px-4 py-2 items-center gap-x-1 text-xs group hover:bg-white/10 relative  ",
-                    transitionString
-                  )}
-                >
-                  <span
+        {showLinks && (
+          <div
+            className="flex overflow-hidden rounded-full "
+            style={{
+              backgroundColor: `${theme.border10}`,
+              borderColor: theme.border15,
+            }}
+          >
+            {fileRelatedLinks.map((x, i) => (
+              <ATooltip
+                key={i}
+                placement="bottom"
+                title={x.tooltip}
+                color={`${theme.activeColor}90`}
+              >
+                <Link href={x.link}>
+                  <div
                     className={cn(
-                      "opacity-80 group-hover:opacity-100 scale-85 group-hover:scale-95",
+                      "flex px-4 py-2 items-center gap-x-1 text-xs group hover:bg-white/10 relative  ",
                       transitionString
                     )}
                   >
-                    {x.icon}
-                  </span>
+                    <span
+                      className={cn(
+                        "opacity-80 group-hover:opacity-100 scale-85 group-hover:scale-95",
+                        transitionString
+                      )}
+                    >
+                      {x.icon}
+                    </span>
 
-                  {i !== fileRelatedLinks.length - 1 && (
-                    <div
-                      className="h-6 w-px absolute right-0 top-1/2 -translate-y-1/2"
-                      style={{ backgroundColor: theme.border20 }}
-                    />
-                  )}
-                </div>
-              </Link>
-            </ATooltip>
-          ))}
-        </div>
+                    {i !== fileRelatedLinks.length - 1 && (
+                      <div
+                        className="h-6 w-px absolute right-0 top-1/2 -translate-y-1/2"
+                        style={{ backgroundColor: theme.border20 }}
+                      />
+                    )}
+                  </div>
+                </Link>
+              </ATooltip>
+            ))}
+          </div>
+        )}
+
         <div
           className={`flex items-center justify-end gap-x-3 ${
             websiteFonts[websiteFont as WebsiteFontsKey]?.className
