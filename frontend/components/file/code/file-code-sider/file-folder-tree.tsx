@@ -154,7 +154,6 @@ const FileFolderTree = ({
   return (
     <div className="border border-r-0 border-white/20 w-full pr-4 h-full overflow-y-auto custom-scrollbar-sider pb-3">
       <ATree
-        hoverStyle
         loadData={onLoadData}
         treeData={treeData}
         showIcon={false}

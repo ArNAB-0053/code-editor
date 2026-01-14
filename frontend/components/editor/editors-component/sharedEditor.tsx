@@ -199,6 +199,7 @@ export default function SharedEditorComponent({
                     minimap: { enabled: false },
                     automaticLayout: true,
                   }}
+                  className="py-2!"
                 />
               </div>
             </div>

@@ -240,6 +240,7 @@ export default function CreatedEditorComponent({
                     minimap: { enabled: false },
                     automaticLayout: true,
                   }}
+                  className="py-2!"
                 />
               </div>
             </div>

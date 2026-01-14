@@ -8,7 +8,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         headerColor: "#282a36",
         baseTextColor: "#f8f8f2",
         outputBackground: "#1e1f29",
-        editorBackground: "#282a36",
+        editorBackground: "#0F0221",
         border: "#44475a",
         border20: "rgba(255,255,255,0.20)",
         border15: "rgba(255,255,255,0.15)",
@@ -23,7 +23,7 @@ export const themeConfig = (theme?: string): ThemeTypes => {
         disabledTextColor: '#A9A9A9',
         hoverTextColor: '#cccccc',
 
-        background:"#2b066080",
+        background:"#2b066040",
         
         editorSelectionBackground: "#44475a",
         editorLineNumberForeground: "#6272a4",
