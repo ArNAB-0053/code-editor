@@ -33,7 +33,7 @@ export const useCreateShare = () => {
   });
 };
 
-// GET the snapshot data
+// GET the snapshot data - shareWithMeDetails
 export const getSharedWithMeDataDetails = async (
   payload: IGetShareWithMeDataRequest
 ): Promise<IShareWithMeRes> => {
@@ -95,6 +95,7 @@ export const useShareByMeList = (userId: string) => {
   });
 };
 
+// GET - shareByMeDetails
 export const getSharedByMeDataDetails = async (
   payload: IGetShareByMeDataRequest
 ): Promise<IShareByMeRes> => {

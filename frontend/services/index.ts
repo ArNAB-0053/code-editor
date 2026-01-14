@@ -10,6 +10,12 @@ export const QUERY_KEYS = {
     SHARE_TO_ME: 'share-to-me',
     SHARE_BY_ME: 'share-by-me',
 
+    FILE: 'file',
+    FOLDER: 'folder',
+    FILE_CODE: 'file-code',
+    
+    BREADCRUMB: 'breadcrumbs',
+    
     CONNECTION: 'connection',
     NOTIFICATION: 'notification',
     CHAT: 'chat',

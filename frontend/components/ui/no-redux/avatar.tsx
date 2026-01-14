@@ -2,15 +2,9 @@
 import { BaseCAvatar } from "../_Base";
 import { useTheme } from "@/context/ThemeContext";
 import { themeConfig } from "@/config/themeConfig";
-import { IBaseStylingProps, NameObjType } from "@/@types/_base";
 import { useFont } from "@/context/FontProvider";
 import { WebsiteFontsKey } from "@/@types/font";
-
-export interface NRCAvatarProps extends IBaseStylingProps {
-  variant?: "transparent" | "default" | "noBorder" | "none";
-  name: NameObjType;
-  characters?: number;
-}
+import { BaseAvatarProps } from "../_Base/CAvatar";
 
 const NRCAvatar = ({
   name,
@@ -18,7 +12,9 @@ const NRCAvatar = ({
   style,
   variant = "default",
   characters,
-}: NRCAvatarProps) => {
+  initials,
+  type
+}: BaseAvatarProps) => {
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
 
@@ -32,6 +28,8 @@ const NRCAvatar = ({
       style={style}
       variant={variant}
       characters={characters}
+      initials={initials}
+      type={type}
     />
   );
 };

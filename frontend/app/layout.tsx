@@ -6,13 +6,13 @@ import { CookieProvider } from "@/providers/cookie";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { FontProvider } from "@/context/FontProvider";
-import { defaultColorConfig } from "@/config/default-colors.config";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { spaceGrotesk, websiteFonts } from "@/fonts";
 import CQueryClientProvider from "@/providers/queryClientProvider";
 import BackgroundProvider from "@/providers/bgProvider";
 import { WebsiteFontsKey } from "@/@types/font";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +44,7 @@ export default async function RootLayout({
   const fontName = await getCookiesServer("font");
   // console.log(" SERVER ---> ", theme, font);
 
-  const fontClass = websiteFonts[fontName as WebsiteFontsKey]
+  const fontClass = websiteFonts[fontName as WebsiteFontsKey];
 
   return (
     <html lang="en" data-theme={theme} suppressHydrationWarning>
@@ -52,26 +52,28 @@ export default async function RootLayout({
         className={`${fontClass?.className} ${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden h-screen`}
         style={{ background: "black" }}
       >
-        <CQueryClientProvider>
-          <ThemeProvider initialTheme={theme!}>
-            <FontProvider initialFont={fontName!}>
-              <BackgroundProvider>
-                <CookieProvider>
-                  {children}
-                  <Toaster
-                    position="bottom-right"
-                    toastOptions={{
-                      className: cn(
-                        "px-4! py-2! text-[12px]! backdrop-blur-[4px] max-w-[400px]! w-fit! ",
-                        spaceGrotesk.className
-                      ),
-                    }}
-                  />
-                </CookieProvider>
-              </BackgroundProvider>
-            </FontProvider>
-          </ThemeProvider>
-        </CQueryClientProvider>
+        <AntdRegistry>
+          <CQueryClientProvider>
+            <ThemeProvider initialTheme={theme!}>
+              <FontProvider initialFont={fontName!}>
+                <BackgroundProvider>
+                  <CookieProvider>
+                    {children}
+                    <Toaster
+                      position="bottom-right"
+                      toastOptions={{
+                        className: cn(
+                          "px-4! py-2! text-[12px]! backdrop-blur-[4px] max-w-[400px]! w-fit! ",
+                          spaceGrotesk.className
+                        ),
+                      }}
+                    />
+                  </CookieProvider>
+                </BackgroundProvider>
+              </FontProvider>
+            </ThemeProvider>
+          </CQueryClientProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

@@ -69,6 +69,7 @@ export const selectedCode = (state: RootState) => {
 
 export const selectedOutput = (state: RootState) => {
   const lang = state.editorCode.currentLang;
+  console.log(state.editorCode.content[lang]?.output)
   return state.editorCode.content[lang]?.output || "";
 };
 

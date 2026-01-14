@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import EditorComponent from "./editor";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useGetCode } from "@/services/code";
 import {
@@ -11,6 +10,7 @@ import {
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useSelector } from "react-redux";
 import { getDefaultCode } from "@/helper/defaultCode";
+import EditorComponent from "./editors-component/editor";
 
 const MainEditor = ({ p_lang }: { p_lang: string }) => {
   const dispatch = useDispatch();

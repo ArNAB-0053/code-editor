@@ -3,13 +3,14 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { websiteFonts } from "@/fonts";
 import { cn } from "@/lib/utils";
 
-export interface AvatarProps extends IBaseStylingProps, IExtraProps {
+export interface BaseAvatarProps extends IBaseStylingProps {
   variant?: "transparent" | "default" | "noBorder" | "none";
   name?: NameObjType;
   characters?: number;
   type?: "string" | "object";
   initials?: string;
 }
+export interface AvatarProps extends BaseAvatarProps, IExtraProps {}
 
 const BaseCAvatar = ({
   name,

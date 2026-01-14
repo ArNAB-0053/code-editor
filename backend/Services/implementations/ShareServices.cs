@@ -81,7 +81,7 @@ namespace backend.Services.implementations
                         new BsonArray
                                 {
                                     new BsonDocument("$match",
-                                    new BsonDocument("UserId", "69383151691997054ab69989")),
+                                    new BsonDocument("UserId", userId)),
                                     new BsonDocument("$lookup",
                                     new BsonDocument
                                         {
@@ -100,8 +100,8 @@ namespace backend.Services.implementations
                                     new BsonDocument("$match",
                                     new BsonDocument
                                         {
-                                            { "UserId", "69383151691997054ab69989" },
-                                            { "SharedId", "30297d525d09" }
+                                            { "UserId", userId},
+                                            { "SharedId", shareId}
                                         }),
                                     new BsonDocument("$lookup",
                                     new BsonDocument

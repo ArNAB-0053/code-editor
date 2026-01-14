@@ -21,11 +21,21 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter()
+        );
+    });
+
 builder.Services.AddControllers();
 builder.Services.AddSingleton<AuthServices>();
 builder.Services.AddSingleton<CodeSaveService>();
 builder.Services.AddSingleton<ShareServices>();
 builder.Services.AddSingleton<RedisService>();
+builder.Services.AddSingleton<FilesServices>();
 builder.Services.Configure<DockerSettings>(
     builder.Configuration.GetSection("DockerSettings")
 );

@@ -40,5 +40,6 @@ export const messagesConfig = {
             TRUE: "This email address is available.",
             FALSE: "This email address is already in use."
         }
-    }
+    },
+    RENAME: "Renamed Successfully"
 };

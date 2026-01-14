@@ -35,8 +35,6 @@ export const NRCFormLabel = ({
   style,
   className,
 }: IBaseCustomProps) => {
-  const { font } = useFont();
-
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
 

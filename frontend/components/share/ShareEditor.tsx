@@ -1,5 +1,4 @@
 "use client";
-import EditorComponent from "../editor/editor";
 import { ReactElement } from "react";
 import { selectedLang } from "@/redux/slices/editorSlice";
 import { useSelector } from "react-redux";
@@ -13,7 +12,7 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { FaInfoCircle } from "react-icons/fa";
-import SharedEditorComponent from "../editor/sharedEditor";
+import SharedEditorComponent from "../editor/editors-component/sharedEditor";
 
 export const OWNER_WIDTH = "25rem";
 
@@ -47,7 +46,7 @@ const ShareEditor = ({
     <div className="w-full flex gap-x-2">
       <SharedEditorComponent p_lang={sharedData?.lang?.trim() || lang} isShared />
       <div
-        className=" text-wrap text-white overflow-x-hidden overflow-y-auto pb-4 custom-scrollbar"
+        className=" text-wrap text-white overflow-x-hidden overflow-y-auto pb-9 custom-scrollbar"
         style={{
           width: OWNER_WIDTH,
           height: "calc(100vh - 50px - 20px)",
