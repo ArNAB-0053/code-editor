@@ -21,8 +21,10 @@ import { useSelector } from "react-redux";
 
 export const AllLangs = ({
   dir = "horizontal",
+  showArrow,
 }: {
   dir?: "vertical" | "horizontal";
+  showArrow?: boolean;
 }) => {
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
@@ -57,7 +59,14 @@ export const AllLangs = ({
             <p className="truncate w-full text-start">{x.label}</p>
           </div>
 
-          <FaArrowRightLong className={cn("group-hover:opacity-100 opacity-0 -translate-x-5 group-hover:translate-x-0", transitionString)} />
+          {showArrow && (
+            <FaArrowRightLong
+              className={cn(
+                "group-hover:opacity-100 opacity-0 -translate-x-5 group-hover:translate-x-0",
+                transitionString
+              )}
+            />
+          )}
         </Link>
       ))}
     </div>

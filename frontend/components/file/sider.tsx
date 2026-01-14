@@ -22,6 +22,8 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { CDivider } from "../ui/custom";
 import { AllLangs } from "../lang";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { transitionString } from "@/styles";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActiveTab: boolean }>`
   &:hover {
@@ -172,6 +174,9 @@ const Sider = () => {
   const pathname = usePathname();
   const activeTab = useSelector(selectedActiveTabKey);
 
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
+
   return (
     <div className=" w-50 min-[1100px]:w-[220px] xl:w-64 h-screen ">
       <DisabledItemTemplate label="Files" labelClassName="uppercase" />
@@ -199,16 +204,33 @@ const Sider = () => {
         />
       ))}
 
-      <DisabledItemTemplate
-        label="Langs"
-        rootClassName="mt-6"
-        labelClassName="uppercase"
-        isLink
-        linkClassName="text-[8.5px]"
-      />
+      <div className="relative">
+        <DisabledItemTemplate
+          label="Langs"
+          rootClassName="mt-6"
+          labelClassName="uppercase"
+          isLink
+          linkClassName="text-[8.5px]"
+        />
+
+        <Link
+          href={appUrls.LANG}
+          className={cn(
+            "absolute -top-1 right-0 py-0.5 px-2 rounded-md backdrop-blur-2xl text-xs flex items-center justify-center gap-x-1 opacity-80 hover:opacity-100",
+            transitionString
+          )}
+          style={{
+            background: `${theme.activeColor}50`,
+            color: theme.activeColor,
+          }}
+        >
+          Go
+          <FaArrowRightLong size={12} />
+        </Link>
+      </div>
 
       <div className="px-4 xl:px-6 pt-2">
-        <AllLangs dir="vertical" />
+        <AllLangs dir="vertical" showArrow />
       </div>
 
       <DisabledItemTemplate

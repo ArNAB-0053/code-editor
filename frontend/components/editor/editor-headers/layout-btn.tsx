@@ -39,6 +39,7 @@ const LayoutButton = ({ theme }: { theme: ThemeTypes }) => {
                 className="flex items-center justify-evenly h-10 text-[10px] rounded-md mt-1 opacity-80 "
                 style={{
                   backgroundColor: `${theme.activeColor}30`,
+                  color: theme.activeColor
                 }}
               >
                 <div className="p-1">Code</div>
@@ -93,6 +94,7 @@ const LayoutButton = ({ theme }: { theme: ThemeTypes }) => {
                 className="flex flex-col items-center justify-center text-[10px] rounded-md mt-1 opacity-80 "
                 style={{
                   backgroundColor: `${theme.activeColor}30`,
+                  color: theme.activeColor
                 }}
               >
                 <div className="p-1 h-9 flex items-center justify-center">
