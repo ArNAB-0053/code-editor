@@ -144,7 +144,7 @@ const Owner = ({ ownerDetails, remaining }: OwnerProps) => {
               >
                 Name:
               </p>
-              <h3 className=" text-base font-normal -translate-y-0.5 truncate w-full text-nowrap ">
+              <h3 className=" text-sm font-normal -translate-y-0.5 truncate w-full text-nowrap ">
                 {fullname || fallbackProfileDetails?.name}
               </h3>
             </div>
@@ -169,7 +169,7 @@ const Owner = ({ ownerDetails, remaining }: OwnerProps) => {
                 Email:
               </p>
               <h3
-                className="text-base font-normal -translate-y-0.5"
+                className="text-sm font-normal -translate-y-0.5"
                 style={{
                   color: theme.textColor,
                 }}

@@ -9,6 +9,7 @@ import { selectWebsiteFont } from "@/redux/slices/preferenceSlice";
 import { transitionString } from "@/styles";
 import { GlobalEditorStyles } from "@/styles/customStyledCss";
 import Link from "next/link";
+import { FaArrowRightLong } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
@@ -18,19 +19,28 @@ import { useSelector } from "react-redux";
 //   }
 // `;
 
-export const AllLangs = () => {
+export const AllLangs = ({
+  dir = "horizontal",
+}: {
+  dir?: "vertical" | "horizontal";
+}) => {
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   const dispatch = useDispatch();
   return (
-    <div className="mb-8 flex items-center flex-wrap gap-6">
+    <div
+      className={cn(
+        "mb-8 flex  ",
+        dir === "vertical" ? "flex-col gap-4" : "items-center flex-wrap gap-6"
+      )}
+    >
       {Object.entries(langs).map(([key, x], i) => (
         <Link
           key={i}
           href={`${appUrls.LANG}/${key}`}
           className={cn(
-            "text-sm text-center  flex items-center justify-center gap-x-2",
+            "text-sm text-center  flex items-center justify-center gap-x-2 group",
             font?.className
           )}
           onClick={() => {
@@ -46,6 +56,8 @@ export const AllLangs = () => {
             <div className="h-5 aspect-square ">{x.logo}</div>
             <p className="truncate w-full text-start">{x.label}</p>
           </div>
+
+          <FaArrowRightLong className={cn("group-hover:opacity-100 opacity-0 -translate-x-5 group-hover:translate-x-0", transitionString)} />
         </Link>
       ))}
     </div>

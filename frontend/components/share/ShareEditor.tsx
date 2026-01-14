@@ -37,19 +37,22 @@ const ShareEditor = ({
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   const lang = useSelector(selectedLang);
-
   if (isLoading) {
     return <p>Loading</p>;
   }
 
   return (
     <div className="w-full flex gap-x-2">
-      <SharedEditorComponent p_lang={sharedData?.lang?.trim() || lang} isShared />
+      <SharedEditorComponent
+        p_lang={sharedData?.lang?.trim() || lang}
+        isShared
+      />
+
       <div
         className=" text-wrap text-white overflow-x-hidden overflow-y-auto pb-9 custom-scrollbar"
         style={{
           width: OWNER_WIDTH,
-          height: "calc(100vh - 50px - 20px)",
+          height: "calc(100svh - 50px - 20px)",
         }}
       >
         <div

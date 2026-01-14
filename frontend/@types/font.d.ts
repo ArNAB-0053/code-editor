@@ -5,7 +5,8 @@ export type EditorFontKey =
   | "sourcecode"
   | "robotomono"
   | "ubuntumono"
-  | "inconsolata";
+  | "inconsolata"
+  | "lilex";
 
 export type EditorFontsMap = Record<EditorFontKey, string>;
 

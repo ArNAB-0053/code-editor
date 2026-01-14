@@ -1,14 +1,12 @@
 "use client";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/assets/ChevronIcons";
-import { StyledSplitter } from "@/components/editor/editors-component/createdFileEditor";
+import { StyledSplitter } from "@/components/editor/editors-component";
 import FileCodeSider from "@/components/file/code/file-code-sider";
 import { themeConfig } from "@/config/themeConfig";
+import { EDITOR_HEIGHT } from "@/helper/_base.helper";
 import { useScreenWidth } from "@/hooks/useScreenWidth";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
-import { RadioChangeEvent, Splitter } from "antd";
-import { Code } from "lucide-react";
-import React, { useState } from "react";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import React from "react";
 import { useSelector } from "react-redux";
 
 const CodeLayout = ({
@@ -34,7 +32,7 @@ const CodeLayout = ({
           end: <ChevronRightIcon />,
         }}
       >
-        <Splitter.Panel
+        <StyledSplitter.Panel
           defaultSize={screenWidth >= 900 ? 250 : 180}
           min={screenWidth >= 900 ? 200 : 180}
           collapsible={{
@@ -44,15 +42,15 @@ const CodeLayout = ({
           }}
           max="40%"
           style={{
-            height: "calc(100svh - 68px)",
+            height: EDITOR_HEIGHT,
             // paddingBottom: "10px",
           }}
           className="relative!"
         >
           <FileCodeSider />
-        </Splitter.Panel>
+        </StyledSplitter.Panel>
 
-        <Splitter.Panel className="relative!">{children}</Splitter.Panel>
+        <StyledSplitter.Panel className="relative!">{children}</StyledSplitter.Panel>
       </StyledSplitter>
     </div>
   );

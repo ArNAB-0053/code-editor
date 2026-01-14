@@ -20,7 +20,7 @@ const ATree = ({ style, ...rest }: TreeProps) => {
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
   return (
-    <>
+    <div className="atree">
       <GlobalTreeStyles $theme={theme} />
       <DirectoryTree
         style={{
@@ -31,7 +31,7 @@ const ATree = ({ style, ...rest }: TreeProps) => {
         className={cn(font?.className)}
         {...rest}
       />
-    </>
+    </div>
   );
 };
 

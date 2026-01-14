@@ -26,9 +26,9 @@ export const LangSider = ({ p_lang }: { p_lang?: string }) => {
 
   return (
     <div
-      className="w-16 bg-white/10 px-2 py-3 flex flex-col gap-y-3 border "
+      className="w-16 bg-white/10 px-2 py-3 flex flex-col gap-y-3 border border-b-0 "
       style={{
-        height: "calc(100vh - 65px)",
+        height: "100svh",
         background: theme?.outputBackground,
         borderColor: theme?.border,
       }}

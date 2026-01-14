@@ -21,6 +21,7 @@ import { RiLayoutGrid2Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { CDivider } from "../ui/custom";
+import { AllLangs } from "../lang";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes; $isActiveTab: boolean }>`
   &:hover {
@@ -51,6 +52,8 @@ type DisabledItemTemplateProps = {
   labelClassName?: string;
   rootClassName?: string;
   label: string;
+  isLink?: boolean;
+  linkClassName?: string;
 };
 
 export const TabLabelTemplate = ({
@@ -86,6 +89,8 @@ const DisabledItemTemplate = ({
   label,
   rootClassName,
   labelClassName,
+  isLink,
+  linkClassName,
 }: DisabledItemTemplateProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -99,7 +104,23 @@ const DisabledItemTemplate = ({
         color: theme.disabledTextColor,
       }}
     >
-      <span className={cn("pl-1", labelClassName)}>{label}</span>
+      <span className={cn("pl-1", labelClassName)}>
+        {label}
+        {isLink && (
+          <span
+            className={cn(
+              "text-[10px] px-1 py-0.5 rounded-full",
+              linkClassName
+            )}
+            style={{
+              backgroundColor: `${theme.activeColor}60`,
+              color: theme.activeColor,
+            }}
+          >
+            link
+          </span>
+        )}
+      </span>
       <CDivider
         style={{
           backgroundColor: theme.disabledTextColor,
@@ -170,7 +191,7 @@ const Sider = () => {
           label={x.title}
           labelClassName={cn(
             x.id === 1 ? "translate-y-0.5 translate-x-0.5" : "",
-            pathname === x.href ? "font-medium": ""
+            pathname === x.href ? "font-medium" : ""
           )}
           isActiveTab={pathname === x.href}
           link={x.href}
@@ -179,10 +200,23 @@ const Sider = () => {
       ))}
 
       <DisabledItemTemplate
+        label="Langs"
+        rootClassName="mt-6"
+        labelClassName="uppercase"
+        isLink
+        linkClassName="text-[8.5px]"
+      />
+
+      <div className="px-4 xl:px-6 pt-2">
+        <AllLangs dir="vertical" />
+      </div>
+
+      <DisabledItemTemplate
         label="Recycle Bin"
         rootClassName="mt-6"
         labelClassName="uppercase"
       />
+
       {SideElements?.other?.map((x, i) => (
         <TabLabelTemplate
           Icon={<>{x.icon}</>}

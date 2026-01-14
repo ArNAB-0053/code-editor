@@ -81,7 +81,12 @@ namespace backend.Services.implementations
                         new BsonArray
                                 {
                                     new BsonDocument("$match",
-                                    new BsonDocument("UserId", userId)),
+                                    new BsonDocument{
+                                        { "UserId", userId },
+                                        { "SharedId",
+                                        new BsonDocument("$not",
+                                        new BsonDocument("$eq", shareId)) }
+                                    }),
                                     new BsonDocument("$lookup",
                                     new BsonDocument
                                         {

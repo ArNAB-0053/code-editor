@@ -5,8 +5,9 @@ import { useRunCode, useUpdateOutput } from "@/services/code";
 import { useSelector } from "react-redux";
 import { HeaderProps } from "@/@types";
 import { useDispatch } from "react-redux";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { selectedSharedCode, selectedSharedEditorId, setShareOutputRedux } from "@/redux/slices/sharedEditorSlice";
+import LayoutButton from "./layout-btn";
 
 const SharedEditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
@@ -98,6 +99,8 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
             dispatch(setCodeRedux(""));
           }}
         /> */}
+
+        <LayoutButton theme={theme} />
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />
