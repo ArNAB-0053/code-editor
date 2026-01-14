@@ -13,11 +13,9 @@ import {
   setCreatedFileNameRedux,
   setCreatedFileOutputRedux,
 } from "@/redux/slices/createdFilesEditorSlice";
-import { IFileCodeModel } from "@/@types/files";
 import CreatedEditorComponent from "@/components/editor/editors-component/createdFileEditor";
 
 const Code = () => {
-  const [codeDataState, setCodeDataState] = useState<IFileCodeModel>();
   const params = useParams();
   const dispatch = useDispatch();
 
@@ -25,7 +23,6 @@ const Code = () => {
   const lang = useSelector(selectedCreatedFileLang);
 
   const fileId = params?.fileId;
-  const codeDataRef = useRef<IFileCodeModel>(null);
 
   const payload = {
     FileId: String(fileId),
@@ -33,22 +30,33 @@ const Code = () => {
   };
 
   const { data: codeData, isLoading } = useFileCode(payload);
+  const [delayedLoading, setDelayedLoading] = useState(true);
+  const delayedLoadingRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (!codeData || isLoading) return;
-    console.log("GOING IN");
     dispatch(setCreatedFileIdRedux(codeData?.data?.fileId));
     dispatch(setCreatedFileLangRedux(codeData?.data?.lang));
     dispatch(setCreatedFileCodeRedux(codeData?.data?.code));
     dispatch(setCreatedFileOutputRedux(codeData?.data?.output));
     dispatch(setCreatedFileNameRedux(codeData?.data?.fileName));
-
-    codeDataRef.current = codeData?.data;
-    setCodeDataState(codeDataRef.current);
-    console.log("codeData", codeData);
   }, [codeData, dispatch, isLoading]);
 
-  return <CreatedEditorComponent p_lang={lang} isShared />;
+  // Just adding 1.3 extra second to provide time for editor to get the color.
+  useEffect(() => {
+    if (isLoading) {
+      delayedLoadingRef.current = true;
+      setDelayedLoading(delayedLoadingRef.current);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setDelayedLoading(false);
+    }, 1300);
+
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
+  return <CreatedEditorComponent p_lang={lang} isLoading={delayedLoading} />;
 };
 
 export default Code;

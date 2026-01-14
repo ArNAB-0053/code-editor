@@ -40,18 +40,20 @@ import { cn } from "@/lib/utils";
 import { useScreenWidth } from "@/hooks/useScreenWidth";
 import { StyledSplitter } from ".";
 import { EDITOR_HEIGHT, eHEIGHT } from "@/helper/_base.helper";
+import EditorLoader from "@/components/Loaders/editor";
 
 export default function CreatedEditorComponent({
   p_lang,
-  isShared = false,
+  isLoading,
 }: {
   p_lang: string;
-  isShared?: boolean;
+  isLoading?: boolean;
 }) {
   // const defaultCode = getDefaultCode(p_lang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const [editorReady, setEditorReady] = useState(false);
 
   const screenWidth = useScreenWidth();
 
@@ -81,6 +83,8 @@ export default function CreatedEditorComponent({
   const debouncedCode = useDebounce(currentCode, 1000);
   const lastSaveRef = useRef("");
 
+  // console.log(debouncedCode, currentCode)
+
   useEffect(() => {
     if (!userId) return;
     if (debouncedCode.trim() === lastSaveRef.current.trim()) {
@@ -102,7 +106,7 @@ export default function CreatedEditorComponent({
           dispatch(setCreatedFileCodeRedux(res?.data?.code));
           dispatch(setCreatedFileEditorId(res?.data?.fileId));
           dispatch(setCreatedFileNameRedux(res?.data?.fileName));
-          dispatch(setCreatedFileOutputRedux(res?.data?.output)) // for bug#43
+          dispatch(setCreatedFileOutputRedux(res?.data?.output)); // for bug#43
           // isAutoSaving.current = false;
           toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
         },
@@ -142,6 +146,12 @@ export default function CreatedEditorComponent({
     editorRef.current = editor;
     monacoRef.current = monaco;
     monaco.editor.setTheme("app-dark");
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setEditorReady(true);
+      });
+    });
   };
 
   useEffect(() => {
@@ -219,9 +229,8 @@ export default function CreatedEditorComponent({
                 loading={loading}
                 setLoading={setLoading}
                 setError={setError}
-                isShared={isShared}
               />
-              <div className="h-full overflow-hidden">
+              <div className="h-full overflow-hidden relative">
                 <Editor
                   key={lang}
                   value={currentCode}
@@ -243,11 +252,18 @@ export default function CreatedEditorComponent({
                     automaticLayout: true,
                   }}
                   className="py-2!"
+                  loading={<></>}
                 />
+
+                {(!editorReady || isLoading) && (
+                  <div className="absolute backdrop-blur-2xl left-0 top-0 flex items-center justify-center h-full w-full z-40">
+                    <EditorLoader />
+                  </div>
+                )}
               </div>
             </div>
           </Splitter.Panel>
-          
+
           <StyledSplitter.Panel
             defaultSize={
               layout === "vertical" ? "" : screenWidth >= 1000 ? "40%" : "50%"
@@ -301,7 +317,7 @@ export default function CreatedEditorComponent({
                     <div
                       className="absolute top-0 left-0 w-full h-full flex items-center justify-center backdrop-blur-[2px]"
                       style={{
-                        backgroundColor: theme.border10,
+                        backgroundColor: theme.border5,
                         color: theme.textColor,
                       }}
                     >

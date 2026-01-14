@@ -17,7 +17,7 @@ export interface EditorHeaderProps {
   loading: boolean;
   setLoading: setterFunctionTypesBool;
   setError: SetterFunctionTypesString;
-  isShared: boolean;
+  isShared?: boolean;
 }
 
 export type HeaderProps = OutputHeaderProps | EditorHeaderProps;
