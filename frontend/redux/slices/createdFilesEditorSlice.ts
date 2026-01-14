@@ -17,55 +17,60 @@ const initialState: ISharedEditorState = {
   fileId: "",
 };
 
+const ensureFile = (state: ISharedEditorState, fileId: string) => {
+  if (!state.content[fileId]) {
+    state.content[fileId] = {
+      code: "",
+      output: "",
+      editorId: "",
+      lang: "",
+      fileName: "main",
+    };
+  }
+};
+
+
 export const createdFileEditorSlice = createSlice({
   name: "createdFilesEditor",
   initialState,
   reducers: {
+    
     setCreatedFileIdRedux: (state, action: PayloadAction<string>) => {
       state.fileId = action.payload;
-      if (!state.content[action.payload]) {
-        state.content[action.payload] = {
-          code: "",
-          output: "",
-          editorId: "",
-          lang: "",
-          fileName: "main",
-        };
-      }
     },
 
     setCreatedFileCodeRedux: (state, action: PayloadAction<string>) => {
       const fileId = state.fileId;
       if (!fileId) return;
 
+      ensureFile(state, fileId);
       state.content[fileId].code = action.payload;
     },
 
     setCreatedFileOutputRedux: (state, action: PayloadAction<string>) => {
       const fileId = state.fileId;
       if (!fileId) return;
-
+      ensureFile(state, fileId);
       state.content[fileId].output = action.payload;
     },
 
     setCreatedFileEditorId: (state, action: PayloadAction<string>) => {
       const fileId = state.fileId;
       if (!fileId) return;
-
       state.content[fileId].editorId = action.payload;
     },
 
     setCreatedFileLangRedux: (state, action: PayloadAction<string>) => {
       const fileId = state.fileId;
       if (!fileId) return;
-
+      ensureFile(state, fileId);
       state.content[fileId].lang = action.payload;
     },
 
     setCreatedFileNameRedux: (state, action: PayloadAction<string>) => {
       const fileId = state.fileId;
       if (!fileId) return;
-
+      ensureFile(state, fileId);
       state.content[fileId].fileName = action.payload;
     },
   },

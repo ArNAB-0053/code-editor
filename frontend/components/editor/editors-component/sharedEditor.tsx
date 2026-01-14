@@ -1,7 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Splitter } from "antd";
-import styled from "styled-components";
 import { themeConfig } from "@/config/themeConfig";
 import { Editor, Monaco } from "@monaco-editor/react";
 import { useSelector } from "react-redux";
@@ -11,9 +9,8 @@ import {
   selectEditorTheme,
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
-import { asap, editorFonts, sora, spaceGrotesk, websiteFonts } from "@/fonts";
+import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
-import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
 import { useDispatch } from "react-redux";
 import { LuLoader } from "react-icons/lu";
@@ -28,9 +25,6 @@ import { selectEditorLayout } from "@/redux/slices/editorLayout";
 import { useScreenWidth } from "@/hooks/useScreenWidth";
 import { cn } from "@/lib/utils";
 import { StyledSplitter } from ".";
-import { AModal } from "@/components/ui/antd";
-import { FaCircleInfo } from "react-icons/fa6";
-import CInfoModal from "@/components/modals/info-modal";
 import ReadOnlyInfoModal from "@/components/modals/share/readOnlyInfoModal";
 
 export default function SharedEditorComponent({
@@ -53,15 +47,10 @@ export default function SharedEditorComponent({
   const screenWidth = useScreenWidth();
 
   const lang = useSelector(selectedSharedLang);
-  // const [sharingDetails, setSharingDetails] = useState(null);
-
-  // console.log("___Editor___ (defaultCode)", defaultCode)
 
   const currentCode = useSelector(selectedSharedCode);
   const currentOutput = useSelector(selectedSharedOutput);
   const layout = useSelector(selectEditorLayout);
-
-  // console.log("currentCode", currentCode);
 
   const dispatch = useDispatch();
 
@@ -102,10 +91,6 @@ export default function SharedEditorComponent({
     });
   };
 
-  useEffect(() => {
-    console.log("SHOW MODAL", showModal);
-  }, [showModal]);
-
   const handleOnMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
@@ -124,8 +109,6 @@ export default function SharedEditorComponent({
         monaco.KeyCode.End,
       ];
 
-      console.log(e.keyCode, showModal);
-
       // allow copy (Ctrl / Cmd + C)
       if ((e.ctrlKey || e.metaKey) && e.keyCode === monaco.KeyCode.KeyC) return;
 
@@ -133,7 +116,6 @@ export default function SharedEditorComponent({
 
       // typing / delete / paste attempt
       if (!showModal) {
-        console.log("sss");
         openReadOnlyModal();
       }
 
@@ -165,8 +147,6 @@ export default function SharedEditorComponent({
       monacoRef.current.editor.setTheme("app-dark");
     }
   }, [editorTheme]);
-
-  // console.log(sharingDetails)
 
   return (
     <div

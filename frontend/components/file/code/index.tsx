@@ -1,6 +1,4 @@
 "use client";
-import { IUserDetails } from "@/@types/auth";
-import { IShareByMeResRemaining } from "@/@types/share";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -17,7 +15,6 @@ import {
 } from "@/redux/slices/createdFilesEditorSlice";
 import { IFileCodeModel } from "@/@types/files";
 import CreatedEditorComponent from "@/components/editor/editors-component/createdFileEditor";
-import FileCodeSider from "./file-code-sider";
 
 const Code = () => {
   const [codeDataState, setCodeDataState] = useState<IFileCodeModel>();
@@ -39,6 +36,7 @@ const Code = () => {
 
   useEffect(() => {
     if (!codeData || isLoading) return;
+    console.log("GOING IN");
     dispatch(setCreatedFileIdRedux(codeData?.data?.fileId));
     dispatch(setCreatedFileLangRedux(codeData?.data?.lang));
     dispatch(setCreatedFileCodeRedux(codeData?.data?.code));
@@ -47,15 +45,10 @@ const Code = () => {
 
     codeDataRef.current = codeData?.data;
     setCodeDataState(codeDataRef.current);
-    // console.log(codeData);
+    console.log("codeData", codeData);
   }, [codeData, dispatch, isLoading]);
 
-  return (
-    <CreatedEditorComponent
-      p_lang={codeDataState?.lang?.trim() || lang}
-      isShared
-    />
-  );
+  return <CreatedEditorComponent p_lang={lang} isShared />;
 };
 
 export default Code;

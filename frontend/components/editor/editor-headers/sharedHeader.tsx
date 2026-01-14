@@ -7,16 +7,8 @@ import {
   selectedSharedCode,
   setShareOutputRedux,
 } from "@/redux/slices/sharedEditorSlice";
-import LayoutButton from "./layout-btn";
 import { useState } from "react";
 import ReadOnlyInfoModal from "@/components/modals/share/readOnlyInfoModal";
-import { AButton } from "@/components/ui/antd";
-import { selectedUserId } from "@/redux/slices/userSlice";
-import { FileTypeEnum } from "@/@types/_enums";
-import { ICreateFileRequest } from "@/@types/files";
-import { useFileCreation } from "@/services/files";
-import { toast } from "sonner";
-import { FilesModal } from "@/components/modals/files";
 import { MakeACopyModal } from "@/components/modals/share/makeACopyModal";
 import { CButton } from "@/components/ui/custom";
 import { cn } from "@/lib/utils";

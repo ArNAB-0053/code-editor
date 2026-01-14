@@ -18,39 +18,43 @@ const initialState: IEditorState = {
   currentLang: "",
 };
 
+// Updated to fix bug#43
+const ensureFile = (state: IEditorState, lang: string) => {
+  if (!state.content[lang]) {
+    state.content[lang] = {
+      code: "",
+      output: "",
+      editorId: "",
+    };
+  }
+};
+
 export const editorCodeSlice = createSlice({
   name: "editorCode",
   initialState,
   reducers: {
     setLangRedux: (state, action: PayloadAction<string>) => {
       state.currentLang = action.payload;
-      if (!state.content[action.payload]) {
-        state.content[action.payload] = {
-          code: "", 
-          output: "",
-          editorId: "",
-        };
-      }
     },
 
     setCodeRedux: (state, action: PayloadAction<string>) => {
       const lang = state.currentLang;
       if (!lang) return;
-
+      ensureFile(state, lang);
       state.content[lang].code = action.payload;
     },
 
     setOutputRedux: (state, action: PayloadAction<string>) => {
       const lang = state.currentLang;
       if (!lang) return;
-
+      ensureFile(state, lang);
       state.content[lang].output = action.payload;
     },
 
     setEditorId: (state, action: PayloadAction<string>) => {
       const lang = state.currentLang;
       if (!lang) return;
-
+      ensureFile(state, lang);
       state.content[lang].editorId = action.payload;
     },
   },
@@ -58,7 +62,6 @@ export const editorCodeSlice = createSlice({
 
 export const { setCodeRedux, setLangRedux, setOutputRedux, setEditorId } =
   editorCodeSlice.actions;
-
 
 export const selectedLang = (state: RootState) => state.editorCode.currentLang;
 

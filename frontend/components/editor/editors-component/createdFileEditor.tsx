@@ -27,6 +27,7 @@ import {
   setCreatedFileEditorId,
   setCreatedFileLangRedux,
   setCreatedFileNameRedux,
+  setCreatedFileOutputRedux,
 } from "@/redux/slices/createdFilesEditorSlice";
 import { useDebounce } from "@/hooks/useDebounce";
 import { selectedUserId } from "@/redux/slices/userSlice";
@@ -101,6 +102,7 @@ export default function CreatedEditorComponent({
           dispatch(setCreatedFileCodeRedux(res?.data?.code));
           dispatch(setCreatedFileEditorId(res?.data?.fileId));
           dispatch(setCreatedFileNameRedux(res?.data?.fileName));
+          dispatch(setCreatedFileOutputRedux(res?.data?.output)) // for bug#43
           // isAutoSaving.current = false;
           toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
         },

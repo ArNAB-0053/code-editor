@@ -23,6 +23,7 @@ import {
   setCodeRedux,
   setEditorId,
   setLangRedux,
+  setOutputRedux,
 } from "@/redux/slices/editorSlice";
 import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
@@ -105,8 +106,9 @@ export default function EditorComponent({
         onSuccess: (res) => {
           lastSaveRef.current = debouncedCode;
           dispatch(setLangRedux(res?.lang));
-          dispatch(setCodeRedux(res?.code));
+          dispatch(setCodeRedux(res?.code)); 
           dispatch(setEditorId(res?.id));
+          dispatch(setOutputRedux(res?.output)); // for bug#43
           // isAutoSaving.current = false;
           toast.success(messagesConfig.AUTOSAVE.SUCCESS, { id: "autoSave" });
         },
