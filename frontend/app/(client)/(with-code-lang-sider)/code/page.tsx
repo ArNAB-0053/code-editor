@@ -2,6 +2,7 @@
 import { CheckIcon, CrossIcon } from "@/assets/CheckCrossIcon";
 import Logo from "@/components/Logo";
 import { themeConfig } from "@/config/themeConfig";
+import { features } from "@/constants/welcome/code";
 import {
   asimovian,
   geo,
@@ -17,25 +18,6 @@ import { transitionString } from "@/styles";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
-const features = [
-  { featureAvailable: true, featureHeading: "Create files & folders" },
-  { featureAvailable: true, featureHeading: "Edit and save files" },
-  {
-    featureAvailable: true,
-    featureHeading: "Folder-based project structure",
-  },
-  {
-    featureAvailable: false,
-    featureHeading: "Import / export resolution between files",
-  },
-  {
-    featureAvailable: false,
-    featureHeading: "Multi-file dependency tracking",
-  },
-  { featureAvailable: false, featureHeading: "Build or run configurations" },
-  { featureAvailable: false, featureHeading: "Git integration" },
-];
 
 const Page = () => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -93,7 +75,7 @@ const Page = () => {
 
   return (
     <div
-      className="h-full w-full custom-scrollbar overflow-y-auto overflow-x-hidden flex items-center justify-center border-2 border-l-0 border-b-0 "
+      className="h-full w-full px-6 custom-scrollbar overflow-y-auto overflow-x-hidden flex items-center justify-center border-2 border-l-0 border-b-0 "
       style={{
         height: "calc(100svh - 68px)",
         borderColor: theme.border15,

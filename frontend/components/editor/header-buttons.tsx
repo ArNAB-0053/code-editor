@@ -24,7 +24,7 @@ export const TransparentButton = ({
       onClick={onClick}
       type="default"
       disabled={loading}
-      className={`h-full! text-white! font-medium! border-none! ${font?.className}`}
+      className={`h-full! text-white/60! hover:text-white/90! font-medium! border-none! ${font?.className}`}
     >
       Clear
     </AButton>

@@ -36,6 +36,7 @@ import { useUpdateFilesCode } from "@/services/files";
 import CreatedFileEditorHeaderComponent from "../editor-headers/createdFileHeader";
 import { selectEditorLayout } from "@/redux/slices/editorLayout";
 import { cn } from "@/lib/utils";
+import { useScreenWidth } from "@/hooks/useScreenWidth";
 
 export const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar {
@@ -55,6 +56,20 @@ export const StyledSplitter = styled(Splitter)<{ $theme: ThemeTypes }>`
   .ant-splitter-bar-dragger::before {
     background: ${({ $theme }) => $theme.splitterColor} !important;
   }
+
+  .ant-splitter-horizontal > .ant-splitter-bar,
+  .ant-splitter-bar-collapse-bar-start,
+  .ant-splitter-bar-collapse-bar-end {
+    &:hover {
+      background-color: ${({ $theme }) => $theme.border10}20 !important;
+      opacity: 0.6 !important;
+    }
+    background-color: ${({ $theme }) => $theme.border15} !important;
+    color: ${({ $theme }) => $theme.textColor} !important;
+    padding: 10px !important;
+    opacity: 1 !important;
+    transition: all 0.2s ease-in-out;
+  }
 `;
 
 export default function CreatedEditorComponent({
@@ -68,25 +83,27 @@ export default function CreatedEditorComponent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const lang = useSelector(selectedCreatedFileLang);
 
+  const screenWidth = useScreenWidth();
+
+  const lang = useSelector(selectedCreatedFileLang);
   const currentCode = useSelector(selectedCreatedFileCode);
   const currentOutput = useSelector(selectedCreatedFileOutput);
   const fileId = useSelector(selectedfileId);
   const layout = useSelector(selectEditorLayout);
 
-  const dispatch = useDispatch();
-
   const editorFont = useSelector(selectEditorFont);
   const editorFontSize = useSelector(selectEditorFontSize);
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
-  const font = websiteFonts[websiteFont as WebsiteFontsKey]
   const userId = useSelector(selectedUserId);
+
+  const dispatch = useDispatch();
 
   const autoSaveCode = useUpdateFilesCode();
 
   const theme = themeConfig(editorTheme);
+  const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   // refs for monaco editor
   const editorRef = useRef<any>(null);
@@ -192,7 +209,7 @@ export default function CreatedEditorComponent({
       <div className="flex w-full overflow-hidden border-t border-t-white/20">
         <StyledSplitter
           $theme={theme}
-          layout={layout}
+          orientation={layout}
           style={{
             height: layout === "vertical" ? "calc(100vh - 68px)" : "100%",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
@@ -200,8 +217,14 @@ export default function CreatedEditorComponent({
           }}
         >
           <Splitter.Panel
-            defaultSize={layout === "vertical" ? "80%" : "60%"}
-            min="40%"
+            defaultSize={
+              layout === "vertical"
+                ? "80%"
+                : screenWidth >= 1000
+                ? "60%"
+                : "50%"
+            }
+            min={screenWidth >= 1000 ? "40%" : "50%"}
             max="80%"
             className="overflow-hidden!"
           >
@@ -213,7 +236,7 @@ export default function CreatedEditorComponent({
                 height: "100%",
               }}
               className={cn(
-                "border border-t-0 border-b-0 overflow-hidden! text-white",
+                "border-r overflow-hidden! text-white",
                 font?.className
               )}
             >
@@ -254,14 +277,23 @@ export default function CreatedEditorComponent({
             </div>
           </Splitter.Panel>
           <Splitter.Panel
-            defaultSize={layout === "vertical" ? "" : "40%"}
-            min={layout === "vertical" ? "" : "20%"}
+            defaultSize={
+              layout === "vertical" ? "" : screenWidth >= 1000 ? "40%" : "50%"
+            }
+            min={
+              layout === "vertical" ? "" : screenWidth >= 1000 ? "20%" : "40%"
+            }
+            max={
+              layout === "vertical"
+                ? "60%"
+                : screenWidth >= 1000
+                ? "40%"
+                : "50%"
+            }
             className="overflow-hidden!"
           >
             <div
-              className={`overflow-hidden pb-4  border-r relative ${
-                font?.className
-              }`}
+              className={`overflow-hidden pb-4  border-r relative ${font?.className}`}
               style={{
                 background: theme.outputBackground,
                 color: theme.outputColor,
@@ -281,7 +313,10 @@ export default function CreatedEditorComponent({
 
               {/* Scrolling enable for output here */}
               <div
-                className={cn("p-2 overflow-y-auto custom-scrollbar overflow-x-hidden text-wrap ", font?.className)}
+                className={cn(
+                  "p-2 overflow-y-auto custom-scrollbar overflow-x-hidden text-wrap ",
+                  font?.className
+                )}
                 style={{
                   height: "calc(100% - 40px)",
                 }}

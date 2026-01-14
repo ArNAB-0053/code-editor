@@ -253,8 +253,10 @@ const ThreeDotDropdown = ({
         }}
         className="cursor-pointer "
         rootClassName=" backdrop-blur-xl rounded-xl p-0! "
-        overlayStyle={{
-          backgroundColor: `${theme.border10}`,
+        styles={{
+          root: {
+            backgroundColor: `${theme.border10}`,
+          },
         }}
       >
         <div className="p-1.5 hover:bg-white/5 rounded-full cursor-pointer">

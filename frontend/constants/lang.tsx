@@ -1,14 +1,15 @@
 import { LangDefinition } from "@/@types/langs";
-import { getDataUrls } from "@/helper/dataUrls";
+import { getProgLangLogos } from "@/helper/getPLogos";
+import Image from "next/image";
 
 export const languageLogo = (lang: string) => {
-  const uri = getDataUrls(lang);
+  const logo = getProgLangLogos(lang)
   return (
-    <img
-      src={uri}
+    <Image
+      src={logo}
       alt={lang}
-      width={110}
-      height={110}
+      width={1200}
+      height={1200}
       className="rounded-sm grayscale-100 brightness-[400]"
     />
   );
