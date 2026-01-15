@@ -13,7 +13,6 @@ import {
 } from "@/redux/slices/preferenceSlice";
 import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
-import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
 import { useDispatch } from "react-redux";
 import { LuLoader } from "react-icons/lu";

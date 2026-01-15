@@ -43,7 +43,7 @@ export const getUsernameError = (username: string) => {
   if (!/^[a-z]/.test(username))
     return "Username must start with a lowercase letter";
 
-  if (!/^[a-z0-9_]+$/.test(username))
+  if (!/^[a-z0-9_-]+$/.test(username))
     return "Username can only contain lowercase letters, numbers, and underscores";
 
   if (username.length > 18)

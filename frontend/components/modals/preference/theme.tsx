@@ -3,12 +3,14 @@ import { editorThemes } from "@/constants/preference-constants";
 import { selectEditorTheme, setEditorTheme } from "@/redux/slices/preferenceSlice";
 import { EditorThemeOptionsTypes } from "@/@types/theme";
 import { useSelector, useDispatch } from "react-redux";
+import { setCookies } from "@/helper/cookies";
 
 const EditorTheme = () => {
   const editorTheme = useSelector(selectEditorTheme);
   const dispatch = useDispatch();
 
   const handleChange = (value: string) => {
+    setCookies("theme", 365, "lax", value)
     dispatch(setEditorTheme(value));
   };
 

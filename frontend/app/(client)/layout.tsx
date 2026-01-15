@@ -13,12 +13,8 @@ export default function ClientLayout({
       <CookieProviderForLocalStorage>
         {/* <CookieProviderToSetPreferrenceToCookie /> */}
         <WrapperRedux>
-          <main className="h-full ">
-            <section className="w-full">
-              {/* <Breadcrumbs /> */}
-              {children}
-            </section>
-          </main>
+          {/* <Breadcrumbs /> */}
+          {children}
         </WrapperRedux>
       </CookieProviderForLocalStorage>
     </ReduxPersistProvider>

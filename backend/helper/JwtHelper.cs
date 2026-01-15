@@ -28,7 +28,10 @@ namespace backend.helper
                 new Claim("middlename", user.Name.MiddleName ?? ""),
                 new Claim("lastname", user.Name.LastName),
 
-                new Claim("username", user.Username)
+                new Claim("username", user.Username),
+
+                new Claim("provider", user.Provider.ToString())
+
             };
 
             var token = new JwtSecurityToken(
@@ -38,8 +41,6 @@ namespace backend.helper
                 expires: DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpiryMinutes"]!)),
                 signingCredentials: creds
             );
-
-            Console.WriteLine(token.ToString());
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

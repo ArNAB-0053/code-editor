@@ -32,14 +32,14 @@ const NotFound = () => {
           width={600}
           height={600}
           alt="404"
-          className="w-60 brightness-90"
+          className="w-60 brightness-90 z-20 "
         />
 
         <span
           className={cn(
             amarante.className,
             "flex items-center  justify-center w-[38rem] gap-x-0 ",
-            "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] -z-10 "
+            "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] z-10 opacity-20 "
           )}
         >
           {/* <p className=" ">4</p> */}

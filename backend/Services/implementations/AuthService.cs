@@ -72,10 +72,60 @@ namespace backend.Services.implementations
             return auth;
         }
 
+        public async Task<AuthModel> FindOrCreateOAuthUser(
+            string email,
+            ProviderEnum provider,
+            string providerId,
+            NameDto name,
+            string username
+        ){
+            if (string.IsNullOrWhiteSpace(providerId))
+                throw new Exception("Invalid OAuth provider id");
+
+            email = email.ToLower();
+            username = username.ToLower();
+
+            var user = _auth.Find(x => x.Email == email).FirstOrDefault();
+
+            if (user != null)
+                    {
+                        if (user.Provider != provider)
+                            throw new Exception("Account exists with a different login method");
+
+                        return user;
+                    }
+
+                    
+
+             var newUser = new AuthModel
+                            {
+                                Email = email,
+                                Provider = provider,
+                                ProviderId = providerId,
+                                Name = name,
+                                Username = username,
+                                Password = null
+                            };
+
+             await CheckUsernameExists(newUser.Username);
+
+             _auth.InsertOne(newUser);
+
+                    await _redis.SetString($"user:email:{newUser.Email}", newUser.Id);
+                    await _redis.SetString($"user:username:{newUser.Username}", newUser.Id);
+
+                    return newUser;
+        }
+
+
         // Get all users
         public List<AuthModel> GetAllUsers() => _auth.Find(x => true).ToList();
 
+        // Details - Get by userId
         public AuthModel GetUserById(string id) => _auth.Find(x => x.Id == id).FirstOrDefault();
+
+        // Details - Get by username
+        public AuthModel GetUserByUsername(string username) => _auth.Find(x => x.Username == username).FirstOrDefault();
 
         // Sign In
         public AuthModel? SignIn(string identifier, string password)
@@ -90,6 +140,13 @@ namespace backend.Services.implementations
             var user = _auth.Find(filter).FirstOrDefault();
 
             if (user == null) return null;
+
+            if (user.Provider != ProviderEnum.NORMAL)
+            {
+                throw new Exception($"Please sign in using {user.Provider}");
+            }
+
+            if (string.IsNullOrEmpty(user.Password)) return null;
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password)) return null;
 
             return user;
@@ -196,7 +253,7 @@ namespace backend.Services.implementations
 
             try
             {
-                var regex = new Regex("^[a-z][a-z0-9_]{2,17}$");
+                var regex = new Regex("^[a-z][a-z0-9_-]{2,17}$");
                 return regex.IsMatch(username);
             } 
             catch
