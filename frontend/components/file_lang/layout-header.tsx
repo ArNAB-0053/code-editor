@@ -18,6 +18,7 @@ import { Dropdown } from "antd";
 import { CButton, CDivider } from "../ui/custom";
 import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
+import { FullscreenButton } from "./fullscreen-btn";
 
 const FileLanglayoutHeader = () => {
   const [openFile, setOpenFile] = useState(false);
@@ -125,9 +126,7 @@ const FileLanglayoutHeader = () => {
         <div className="flex items-center justify-end gap-x-3 h-full">
           <FileLangLayoutButtons />
 
-          <button className="opacity-90 cursor-pointer">
-            <RxEnterFullScreen size={20} />
-          </button>
+         <FullscreenButton/>
 
           <button className="opacity-90 cursor-pointer bg-red-600 h-full px-3">
             <X size={20} />
