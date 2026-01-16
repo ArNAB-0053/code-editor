@@ -20,14 +20,9 @@ import { FaCheck } from "react-icons/fa";
 import { IFileRenameRequest } from "@/@types/files";
 import { useRename } from "@/hooks/useRenameFileFolder";
 import ATooltip from "@/components/ui/antd/tooltip";
-import { useGithubRepos } from "@/services/github";
 
 const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
-
-  const {data: githubRepos} = useGithubRepos()
-
-  console.log(githubRepos)
 
   const dispatch = useDispatch();
 

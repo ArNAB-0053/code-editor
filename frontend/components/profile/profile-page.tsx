@@ -1,7 +1,6 @@
 import { themeConfig } from "@/config/themeConfig";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { transitionString } from "@/styles";
-import { AInputWithLabel, Description, Heading } from "./base";
 import { FaUserEdit } from "react-icons/fa";
 import { fallbackAvatar } from "@/constants/base.const";
 import { useSelector } from "react-redux";
@@ -11,6 +10,7 @@ import { useScreenWidth } from "@/hooks/useScreenWidth";
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
 import { cn } from "@/lib/utils";
 import { memo } from "react";
+import { Heading, AInputWithLabel, Description } from "../_base/_base";
 
 interface ProfileDetailsProps {
   firstName: string;
@@ -151,4 +151,3 @@ export const ProfileDetails = memo(
     prev.lastName === next.lastName &&
     prev.name === next.name
 );
-

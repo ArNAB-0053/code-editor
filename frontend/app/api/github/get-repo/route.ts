@@ -8,7 +8,8 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const res = await fetch("https://api.github.com/user/repos", {
+  // Getting it based on updated time (last updated on top)
+  const res = await fetch("https://api.github.com/user/repos?sort=updated&direction=desc", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token.githubAccessToken}`,
