@@ -11,13 +11,16 @@ import { FormItemComponent } from ".";
 import { useAuth } from "@/hooks/useAuth";
 import { useSession } from "next-auth/react";
 import { ProviderTypeEnum, ProviderTypeEnumString } from "@/@types/_enums";
-import { IRegisterUsingProviderRequest } from "@/@types/auth";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useState } from "react";
+import { useGetUsernameAvailability } from "@/services/auth";
+import { messagesConfig } from "@/config/messages.config";
+import EditorLoader from "@/components/Loaders/editor";
+import { AnimatePresence, motion } from "motion/react";
 
 export const CompleteSignUpForm = () => {
   const { data: session, status } = useSession();
   const { registerUserUsingProvider: registerUser } = useAuth();
-
-  if (status === "loading") return <div>Loading</div>;
 
   const user = session?.user;
 
@@ -33,12 +36,28 @@ export const CompleteSignUpForm = () => {
     providerId: user?.providerId,
   };
 
-  console.log("initialValues", initialValues);
+  const [username, setUsername] = useState(user?.name);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [blurredFields, setBlurredFields] = useState<Set<string>>(new Set());
+
+  const [initialUsername, setInitialUsername] = useState(true);
+
+  const debouncedUsername = useDebounce(username, 1000);
+
+  const { data: usernameAvailability, isLoading: isUsernameChecking } =
+    useGetUsernameAvailability(debouncedUsername);
+
+  const shouldShowError = (fieldName: string) => {
+    return focusedField === fieldName || blurredFields.has(fieldName);
+  };
+
+  if (status === "loading") return <EditorLoader />;
 
   return (
     <Formik
       initialValues={initialValues}
       validate={zodToFormik(registerProSchema)}
+      enableReinitialize
       onSubmit={async (values, { setSubmitting }) => {
         await registerUser(values);
         setSubmitting(false);
@@ -52,32 +71,64 @@ export const CompleteSignUpForm = () => {
         handleSubmit,
         isSubmitting,
         handleBlur,
-        isValid,
-        validateForm,
       }) => {
-        const disabled = 
-          !values.username || 
-          !values.name?.firstName || 
-          !values.name?.lastName || 
+        const disabled =
+          !usernameAvailability?.available ||
+          !values.username ||
+          !values.name?.firstName ||
+          !values.name?.lastName ||
           isSubmitting;
 
         return (
-          <form 
-            onSubmit={handleSubmit} 
-            name="complete-sign-in-form" 
+          <NRAForm
+            onFinish={handleSubmit}
+            name="complete-sign-in-form"
             className="px-0! w-full!"
           >
             <FormItemComponent
               name="username"
-              value={values?.username}
-              onChange={handleChange("username")}
+              value={values.username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setInitialUsername(false);
+                handleChange("username")(e);
+              }}
+              onFocus={() => setFocusedField("username")}
+              onBlur={(e) => {
+                setBlurredFields((prev) => new Set(prev).add("username"));
+                setFocusedField(null);
+                handleBlur("username")(e);
+              }}
               formItemChildren="Username"
-              touched={touched?.username}
-              onBlur={handleBlur("username")}
+              loading={isUsernameChecking}
               errorText={errors?.username}
               placeholder="Enter Username"
               placeholderIcon={<FaUser size={12} />}
+              rootClassName="my-0!"
             />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`availability-${usernameAvailability?.available}`}
+                layout
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className={cn(
+                  "py-1 px-2 text-center rounded-sm text-[10px] w-full -translate-y-2 ",
+                  usernameAvailability?.available
+                    ? "text-[#00ff6a] bg-[#00ff6a]/25"
+                    : "text-[#ff0000] bg-[#ff0000]/25",
+                  jetBrainsMono.className
+                )}
+              >
+                <p className="truncate">
+                  {usernameAvailability?.available
+                    ? messagesConfig.AVAILABILITY_CHECKS.USERNAME.TRUE
+                    : messagesConfig.AVAILABILITY_CHECKS.USERNAME.FALSE}
+                </p>
+              </motion.div>
+            </AnimatePresence>
 
             <FormItemComponent
               name="firstname"
@@ -89,6 +140,7 @@ export const CompleteSignUpForm = () => {
               errorText={errors?.name?.firstName}
               placeholder="Enter First Name"
               placeholderIcon={<FaUser size={12} />}
+              rootClassName="my-0!"
             />
 
             <FormItemComponent
@@ -101,6 +153,7 @@ export const CompleteSignUpForm = () => {
               errorText={errors?.name?.middleName}
               placeholder="Enter Middle Name"
               placeholderIcon={<FaUser size={12} />}
+              rootClassName="my-0!"
             />
 
             <FormItemComponent
@@ -113,6 +166,7 @@ export const CompleteSignUpForm = () => {
               errorText={errors?.name?.lastName}
               placeholder="Enter Last Name"
               placeholderIcon={<FaUser size={12} />}
+              rootClassName="my-0!"
             />
 
             <NRCButton
@@ -126,7 +180,7 @@ export const CompleteSignUpForm = () => {
               {isSubmitting ? "Submitting..." : "Complete Sign Up"}
               <FaArrowRightLong />
             </NRCButton>
-          </form>
+          </NRAForm>
         );
       }}
     </Formik>

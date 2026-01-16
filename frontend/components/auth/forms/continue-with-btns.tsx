@@ -1,40 +1,53 @@
 // import GoogleLogo from "@/assets/GoogleLogo";
-import { NRCButton } from "@/components/ui/no-redux";
 import { themeConfig } from "@/config/themeConfig";
 import { useTheme } from "@/context/ThemeContext";
 import { spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { FaGithub } from "react-icons/fa";
-import { useSession } from "next-auth/react";
 import { appUrls } from "@/config/navigation.config";
+import { transitionString } from "@/styles";
+import CompleteSignupModal from "@/components/modals/auth/sign-up/complete-signup";
+import { useEffect, useState } from "react";
 
 export const ContinueWithGoogle = () => {
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
 
-  const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
+  const { data: session, status } = useSession();
+
+  const handleClick = () => {
+    signIn("github");
+  };
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      setOpen(true);
+    }
+  }, [status, session]);
 
   return (
     <>
-      <NRCButton
-        type="none"
-        variant="transparent"
-        className="w-full! flex items-center justify-center gap-x-3 opacity-80 hover:opacity-100"
-        hoverBgColor={`${theme.activeColor}40`}
+      <button
+        className={cn(
+          "w-full! flex items-center justify-center gap-x-3 border-2 py-1.5 cursor-pointer opacity-80 hover:opacity-100 rounded-md",
+          transitionString
+        )}
         style={{
           backgroundColor: `${theme.activeColor}30`,
+          color: theme.textColor,
+          borderColor: theme.activeColor,
         }}
-        onClick={() => signIn("github", { callbackUrl: appUrls.COMPLETE_SIGNUP })}
+        onClick={handleClick}
       >
-        {/* <GoogleLogo style={{ width: "18px" }} /> */}
-        <FaGithub />
+        <FaGithub size={20} />
         <span className={cn("font-medium", spaceGrotesk.className)}>
-          Continue With GIthub
+          Continue With Github
         </span>
-      </NRCButton>
+      </button>
 
-      <p className="text-white">{session && JSON.stringify(session)}</p>
+      <CompleteSignupModal open={open} setOpen={setOpen} />
     </>
   );
 };

@@ -123,6 +123,10 @@ body {
   background-color: transparent !important;
 }
 
+.ant-popover-container {
+    background-color: transparent !important;
+  }
+
 .ant-modal {
   background-color: transparent !important;
 }
