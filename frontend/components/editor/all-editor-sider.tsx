@@ -20,6 +20,7 @@ import TrashIcon from "@/assets/TrashIcon";
 import { AvatarDropdown } from "../profile/avatar";
 import { useState } from "react";
 import PreferenceModal from "../modals/preference";
+import { EDITOR_HEIGHT } from "@/helper/_base.helper";
 
 const links = [
   { link: "/", icon: <HomeIcon />, tooltip: "Home" },
@@ -55,11 +56,11 @@ const AllEditorSider = () => {
 
   return (
     <div
-      className="w-14 flex items-center justify-between flex-col border-l pb-2 "
+      className="w-14 flex items-center justify-between flex-col border-l border-t pb-2 "
       style={{
-        height: "100svh",
+        height: EDITOR_HEIGHT,
         // backgroundColor: `${theme.border10}`,
-        // borderLeftColor: theme.border10,
+        borderTopColor: theme.border20,
         backgroundColor: "transparent",
         borderLeftColor: "transparent",
       }}
