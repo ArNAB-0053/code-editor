@@ -51,5 +51,17 @@ export const messagesConfig = {
             ERROR: "Error creating folder"
         }
     }, 
-    RENAME: "Renamed Successfully"
+    RENAME: "Renamed Successfully",
+    PUBLISH: {
+        REPO: {
+            LOADING: "Creating New Repo",
+            SUCCESS: "Repo Created Successfully",
+            ERROR: "Error Creating Repo"
+        },
+        FILE:{
+            LOADING: "Pushing File",
+            SUCCESS: "File Pushed Successfully",
+            ERROR: "Error Pushing File"
+        }
+    },
 };

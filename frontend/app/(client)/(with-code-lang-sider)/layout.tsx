@@ -1,5 +1,6 @@
 "use client";
 import AllEditorSider from "@/components/editor/all-editor-sider";
+import FileLanglayoutHeader from "@/components/file_lang/layout-header";
 import { themeConfig } from "@/config/themeConfig";
 import { EDITOR_HEIGHT } from "@/helper/_base.helper";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
@@ -16,6 +17,7 @@ const CodeLangLayout = ({
   return (
     <>
       {/* <div className="h-8 flex items-center px-3">Coditor</div> */}
+      <FileLanglayoutHeader/>
       <div
         className="flex w-full  "
         style={{

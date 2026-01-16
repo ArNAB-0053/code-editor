@@ -9,12 +9,21 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { SelectProps } from "antd";
 import { useSelector } from "react-redux";
 import BaseASelect from "../_Base/ASelect";
+import React from "react";
 
 interface ASelectProps extends SelectProps {
   optionBorderRadius?: string;
+  dropdownRadius?: string;
+  dropdownStyle?: React.CSSProperties;
 }
 
-const ASelect = ({ children, optionBorderRadius, ...rest }: ASelectProps) => {
+const ASelect = ({
+  children,
+  optionBorderRadius,
+  dropdownRadius,
+  dropdownStyle,
+  ...rest
+}: ASelectProps) => {
   const websiteFont = useSelector(selectWebsiteFont);
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -25,6 +34,8 @@ const ASelect = ({ children, optionBorderRadius, ...rest }: ASelectProps) => {
       font={websiteFont as WebsiteFontsKey}
       themeName={editorTheme}
       optionBorderRadius={optionBorderRadius}
+      dropdownRadius={dropdownRadius}
+      dropdownStyle={dropdownStyle}
       {...rest}
     >
       {children}

@@ -20,7 +20,6 @@ import { FaCheck } from "react-icons/fa";
 import { IFileRenameRequest } from "@/@types/files";
 import { useRename } from "@/hooks/useRenameFileFolder";
 import ATooltip from "@/components/ui/antd/tooltip";
-import LayoutButton from "./layout-btn";
 
 const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
@@ -188,9 +187,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
           onClick={() => {
             dispatch(setCodeRedux(""));
           }}
-        /> */}
-
-        <LayoutButton theme={theme} />        
+        /> */}        
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />

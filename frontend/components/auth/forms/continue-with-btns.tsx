@@ -33,10 +33,6 @@ export const ContinueWithGoogle = () => {
     }
   }, [status, session]);
 
-  const name: NameObjType = parseFullName(
-    session?.user?.name ?? "Couldn't Get Name"
-  );
-
   const handleClick = async () => {
     await signIn("github");
   };

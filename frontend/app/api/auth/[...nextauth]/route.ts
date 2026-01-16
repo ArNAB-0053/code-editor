@@ -23,6 +23,11 @@ const handler = NextAuth({
           image: profile.avatar_url,
         };
       },
+      authorization: {
+        params: {
+          scope: "read:user user:email repo",
+        },
+      },
     }),
   ],
   callbacks: {
@@ -35,6 +40,7 @@ const handler = NextAuth({
       if (account?.provider === "github") {
         token.provider = "GITHUB";
         token.providerId = account.providerAccountId;
+        token.githubAccessToken = account.access_token;
       }
       return token;
     },
@@ -46,6 +52,9 @@ const handler = NextAuth({
         (session.user as any).username = token.username;
         (session.user as any).provider = token.provider;
         (session.user as any).providerId = token.providerId;
+
+        // Shouldn't add in here
+        // (session as any).githubAccessToken = token.githubAccessToken;
       }
       return session;
     },
