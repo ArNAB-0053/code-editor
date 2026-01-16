@@ -96,6 +96,8 @@ export const GlobalStyles = createGlobalStyle<{
     display: flex !important;
     align-items: center !important;
   }
+
+  
    
 
   // -----------------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 import { websiteFonts } from "@/fonts";
 import { selectWebsiteFont } from "@/redux/slices/preferenceSlice";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaCheckCircle, FaPlay } from "react-icons/fa";
 import { IoCopy } from "react-icons/io5";
 import { useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import { AButton } from "../ui/antd";
 import { WebsiteFontsKey } from "@/@types/font";
 import ATooltip from "../ui/antd/tooltip";
 import { cn } from "@/lib/utils";
+import { LuLoaderCircle } from "react-icons/lu";
 
 // Clear Button
 export const TransparentButton = ({
@@ -104,7 +104,7 @@ export const RunButton = ({
       )}
     >
       {loading ? (
-        <AiOutlineLoading3Quarters className="animate-spin" />
+        <LuLoaderCircle className="animate-spin text-white " />
       ) : (
         <FaPlay />
       )}

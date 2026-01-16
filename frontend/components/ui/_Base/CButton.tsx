@@ -14,7 +14,7 @@ export type BaseCButtonProps = {
   variant?: "transparent" | "sameBg" | "bordered" | "default";
   hoverColor?: string | null;
   hoverBgColor?: string | null;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 const BaseCButton = ({

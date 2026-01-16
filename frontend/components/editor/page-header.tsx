@@ -5,19 +5,13 @@ import {
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
-import { asap, exo, lora, sora, spaceGrotesk, websiteFonts } from "@/fonts";
+import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
 import { FaSlidersH } from "react-icons/fa";
 import { AButton } from "../ui/antd";
 import Logo from "../Logo";
 import PreferenceModal from "../modals/preference";
 import { AvatarDropdown } from "../profile/avatar";
-import { LayoutHorizontalIcon, LayoutVerticalIcon } from "@/assets/LayoutIcons";
-import {
-  selectEditorLayout,
-  setEditorLayout,
-} from "@/redux/slices/editorLayout";
-import { useDispatch } from "react-redux";
 import { cn } from "@/lib/utils";
 import { transitionString } from "@/styles";
 import getFileRelatedLinks from "@/helper/file-related-links";
@@ -45,7 +39,8 @@ const PageHeader = () => {
     appUrls.SHARE.WITH_ME,
   ];
 
-  const showLinks = !cantShowLinksPages.includes(pathname);
+  const isProfilePage = pathname.includes(appUrls.PROFILE)
+  const showLinks = !cantShowLinksPages.includes(pathname) && !isProfilePage;
 
   return (
     <>

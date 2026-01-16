@@ -18,7 +18,12 @@ export const WrapperRedux = ({ children }: { children: React.ReactNode }) => {
   const theme = themeConfig(editorTheme);
 
   return (
-    <div className={font?.className}>
+    <div
+      className={font?.className}
+      style={{
+        backgroundColor: theme.background,
+      }}
+    >
       <GlobalStyles $theme={theme} $font={font} />
       {children}
     </div>

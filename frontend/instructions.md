@@ -44,3 +44,11 @@ In any component folder, the `index.tsx` file acts as the **main entry point** f
 - Assemble them into one larger, unified component
 - Keep the folder organized and modular
 - Provide a single, clean export point for easier imports elsewhere
+
+
+
+MONGO IN SHELL (WSL)
+- docker exec -it mongodb mongosh
+
+REDIS
+- docker exec -it redis redis-cli
