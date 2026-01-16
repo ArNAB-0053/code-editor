@@ -118,9 +118,6 @@ export const PublishRepoModal = ({ open, setOpen }: IModalProps) => {
     repoName: value ?? "repo",
   };
 
-  console.log("value")
-  console.log(value)
-
   const handlePublish = async () => {
     await createGithubRepo(payload);
     setOpen(false);
