@@ -10,7 +10,6 @@ export const appUrls = {
     // auth - (protected)
     LOGIN: '/auth/sign-in',
     REGISTER: '/auth/sign-up',
-    COMPLETE_SIGNUP: '/auth/complete-signup',
 
     // simple page (initial plan - programiz like code editor)
     LANG: '/lang',

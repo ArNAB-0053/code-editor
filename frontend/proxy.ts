@@ -8,7 +8,7 @@ export default async function proxy(req: NextRequest) {
   const token = req.cookies.get("jwt")?.value;
   const path = req.nextUrl.pathname;
 
-  const publicRoutes = [appUrls.LOGIN, appUrls.REGISTER, appUrls.COMPLETE_SIGNUP]; // PUBLIC ROUTES
+  const publicRoutes = [appUrls.LOGIN, appUrls.REGISTER]; // PUBLIC ROUTES
   const isPublic = publicRoutes.includes(path);
 
   let isValid = false;

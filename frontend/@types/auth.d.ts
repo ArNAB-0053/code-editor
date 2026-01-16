@@ -1,5 +1,5 @@
 import { NameObjType } from "./_base";
-import { ProviderTypeEnum } from "./_enums";
+import { ProviderTypeEnum, ProviderTypeEnumString } from "./_enums";
 
 export interface IAuthReturn {
   message: string;
@@ -49,6 +49,6 @@ export interface IRegisterUsingProviderRequest {
   name: NameObjType;
   email: string;
   username: string;
-  provider: ProviderTypeEnum;
+  provider: ProviderTypeEnumString;
   providerId: string;
 }

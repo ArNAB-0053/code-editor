@@ -85,7 +85,10 @@ namespace backend.Services.implementations
             email = email.ToLower();
             username = username.ToLower();
 
-            var user = _auth.Find(x => x.Email == email).FirstOrDefault();
+            var user = _auth.Find(x =>
+               x.Provider == provider &&
+               x.ProviderId == providerId
+           ).FirstOrDefault();
 
             if (user != null)
                     {
@@ -95,26 +98,37 @@ namespace backend.Services.implementations
                         return user;
                     }
 
-                    
+            if (!string.IsNullOrEmpty(email))
+            {
+                var emailUser = _auth.Find(x => x.Email == email).FirstOrDefault();
+                if (emailUser != null && emailUser.Provider != provider)
+                    throw new Exception("Account exists with a different login method");
+            }
 
-             var newUser = new AuthModel
+            var generatedUsername = await GenerateUniqueUsername(
+                username,
+                name?.FirstName,
+                name?.LastName
+            );
+
+            var newUser = new AuthModel
                             {
                                 Email = email,
                                 Provider = provider,
                                 ProviderId = providerId,
                                 Name = name,
-                                Username = username,
+                                Username = generatedUsername,
                                 Password = null
                             };
 
-             await CheckUsernameExists(newUser.Username);
-
              _auth.InsertOne(newUser);
 
-                    await _redis.SetString($"user:email:{newUser.Email}", newUser.Id);
-                    await _redis.SetString($"user:username:{newUser.Username}", newUser.Id);
 
-                    return newUser;
+            await _redis.SetString($"user:username:{username}", newUser.Id);
+            if (!string.IsNullOrEmpty(email))
+                await _redis.SetString($"user:email:{email}", newUser.Id);
+
+            return newUser;
         }
 
 
@@ -153,6 +167,8 @@ namespace backend.Services.implementations
         }
 
         // Checking Username already exists or not
+
+        // retruns a VOID
         public async Task CheckUsernameExists(string username)
         {
        
@@ -167,6 +183,22 @@ namespace backend.Services.implementations
             if (_auth.Find(x => x.Username == username).Any())
                 throw new Exception("Username already in use");
         }
+
+        // return BOOLEAN
+        public async Task<bool> IsUsernameAvailable(string username)
+        {
+            username = username.ToLower();
+
+            if (!IsValidUsername(username)) return false;
+
+            if (await _redis.Exists($"user:username:{username}")) return false;
+
+            if (_auth.Find(x => x.Username == username).Any())
+                return false;
+
+            return true;
+        }
+
 
         // Checking Email already exists or not
         public async Task CheckEmailExists(string email)
@@ -277,5 +309,42 @@ namespace backend.Services.implementations
                 return false;
             }
         }
+
+        // Generate Username
+        private async Task<string> GenerateUniqueUsername(
+            string githubUsername,
+            string firstName,
+            string lastName
+        )
+        {
+            if (!string.IsNullOrWhiteSpace(githubUsername))
+            {
+                var baseName = githubUsername.ToLower();
+
+                if (IsValidUsername(baseName) && await IsUsernameAvailable(baseName))
+                    return baseName;
+
+                for (int i = 1; i <= 999; i++)
+                {
+                    var attempt = $"{baseName}{i}";
+                    if (IsValidUsername(attempt) && await IsUsernameAvailable(attempt))
+                        return attempt;
+                }
+            }
+
+            var nameBase = $"{firstName}{lastName}".ToLower();
+            if (IsValidUsername(nameBase) && await IsUsernameAvailable(nameBase))
+                return nameBase;
+
+            for (int i = 1; i <= 999; i++)
+            {
+                var attempt = $"{nameBase}{i}";
+                if (IsValidUsername(attempt) && await IsUsernameAvailable(attempt))
+                    return attempt;
+            }
+
+            throw new Exception("Unable to generate unique username");
+        }
+
     }
 }

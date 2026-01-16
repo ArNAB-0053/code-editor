@@ -15,8 +15,9 @@ import {
 } from "@/redux/slices/userSlice";
 import { messagesConfig } from "@/config/messages.config";
 import { appUrls } from "@/config/navigation.config";
-import { IAuthReturn, IRegisterRequest, IUserDetails } from "@/@types/auth";
+import { IAuthReturn, IRegisterRequest, IRegisterUsingProviderRequest, IUserDetails } from "@/@types/auth";
 import { LoginFormType, RegisterProType } from "@/zod/auth.z";
+import { signIn } from "next-auth/react";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -92,11 +93,15 @@ export const useAuth = () => {
     }
   };
 
-  const registerUserUsingProvider = async (values: RegisterProType) => {
+  const registerUserUsingProvider = async (values: IRegisterUsingProviderRequest) => {
     const toastId = toast.loading(messagesConfig.SIGN_UP.LOADING);
     try {
+      // await signIn("github");
+
       const res: IAuthReturn = await registerUsingProviderMutate(values);
       const data: IUserDetails = res?.user;
+
+      console.log("_AUTH_ data", data)
       
       if (res?.status === "success") {
         toast.success(messagesConfig.SIGN_UP.SUCCESS, { id: toastId });

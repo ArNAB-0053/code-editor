@@ -37,19 +37,10 @@ export const CompleteSignUpForm = () => {
   };
 
   const [username, setUsername] = useState(user?.name);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [blurredFields, setBlurredFields] = useState<Set<string>>(new Set());
-
-  const [initialUsername, setInitialUsername] = useState(true);
-
   const debouncedUsername = useDebounce(username, 1000);
 
   const { data: usernameAvailability, isLoading: isUsernameChecking } =
     useGetUsernameAvailability(debouncedUsername);
-
-  const shouldShowError = (fieldName: string) => {
-    return focusedField === fieldName || blurredFields.has(fieldName);
-  };
 
   if (status === "loading") return <EditorLoader />;
 
@@ -90,15 +81,9 @@ export const CompleteSignUpForm = () => {
               value={values.username}
               onChange={(e) => {
                 setUsername(e.target.value);
-                setInitialUsername(false);
                 handleChange("username")(e);
               }}
-              onFocus={() => setFocusedField("username")}
-              onBlur={(e) => {
-                setBlurredFields((prev) => new Set(prev).add("username"));
-                setFocusedField(null);
-                handleBlur("username")(e);
-              }}
+              onBlur={handleBlur("username")}
               formItemChildren="Username"
               loading={isUsernameChecking}
               errorText={errors?.username}
