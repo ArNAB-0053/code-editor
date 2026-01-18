@@ -32,7 +32,7 @@ export async function getMyProfile() {
 const Page = async () => {
   const profileDetails = await getMyProfile();
   return (
-    <div className="overflow-y-auto h-screen custom-scrollbar scroll-smooth relative  ">
+    <div className="overflow-y-auto h-screen custom-scrollbar scroll-smooth relative overflow-x-hidden ">
       {/* <Link href="/python" >Gooo</Link> */}
       <Header
         isLoading={false}
