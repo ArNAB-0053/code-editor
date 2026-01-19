@@ -115,7 +115,7 @@ export const AvatarTemplate = ({
 
         <StyledLink
           $theme={theme}
-          href={appUrls.PROFILE}
+          href={`${appUrls.PROFILE}/${username}`}
           style={{
             background: `${theme.textColor}10`,
             color: theme.textColor,

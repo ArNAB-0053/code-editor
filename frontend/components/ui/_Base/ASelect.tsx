@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 interface BaseASelectProps extends SelectProps, IExtraProps {
   themeName?: string;
   optionBorderRadius?: string;
+  dropdownRadius?: string
+  dropdownStyle?: React.CSSProperties
 }
 
 const StyledBaseASelect = styled(Select)<{ $theme: ThemeTypes }>`
@@ -71,6 +73,8 @@ const BaseASelect = ({
   font,
   themeName,
   optionBorderRadius,
+  dropdownRadius,
+  dropdownStyle,
   ...rest
 }: BaseASelectProps) => {
   const dropdownClass = `a-select-dropdown-${themeName?.replace(
@@ -102,7 +106,8 @@ const BaseASelect = ({
               background: theme.border5,
               backdropFilter: "blur(25px)",
               padding: "8px 8px 4px 8px",
-              borderRadius: "14px",
+              borderRadius: dropdownRadius ?? "14px",
+              ...dropdownStyle
             },
           },
         }}

@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { getDefaultCode } from "@/helper/defaultCode";
 import EditorComponent from "./editors-component/editor";
 import { LuLoader } from "react-icons/lu";
+import EditorLoader from "../Loaders/editor";
 
 const MainEditor = ({ p_lang }: { p_lang: string }) => {
   const dispatch = useDispatch();
@@ -42,7 +43,12 @@ const MainEditor = ({ p_lang }: { p_lang: string }) => {
     }
   }, [codeData, isLoading, p_lang, defaultCode, dispatch]);
 
-  if (isLoading) return <LuLoader className="animate-spin" />;
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <EditorLoader />
+      </div>
+    );
 
   return <EditorComponent p_lang={p_lang} />;
 };

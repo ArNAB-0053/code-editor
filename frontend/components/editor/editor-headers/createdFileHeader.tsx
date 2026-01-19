@@ -19,16 +19,7 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { IFileRenameRequest } from "@/@types/files";
 import { useRename } from "@/hooks/useRenameFileFolder";
-import {
-  selectEditorLayout,
-  setEditorLayout,
-} from "@/redux/slices/editorLayout";
-import { LayoutHorizontalIcon, LayoutVerticalIcon } from "@/assets/LayoutIcons";
-import { transitionString } from "@/styles";
-import { cn } from "@/lib/utils";
-import { spaceGrotesk } from "@/fonts";
 import ATooltip from "@/components/ui/antd/tooltip";
-import LayoutButton from "./layout-btn";
 
 const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const [isRenaming, setIsRenaming] = useState(false);
@@ -38,7 +29,6 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
   const userId = useSelector(selectedUserId);
   const currentCode = useSelector(selectedCreatedFileCode);
   const fileName = useSelector(selectedCreatedFileName);
-  const layout = useSelector(selectEditorLayout);
 
   const lang = useSelector(selectedCreatedFileLang);
 
@@ -86,7 +76,6 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
         code: currentCode,
         lang: props.p_lang,
       });
-      // console.log(res);
       const output = res.output ?? "";
       const payload = { FileId: fileId, Output: output, OwnerId: userId };
 
@@ -198,9 +187,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
           onClick={() => {
             dispatch(setCodeRedux(""));
           }}
-        /> */}
-
-        <LayoutButton theme={theme} />        
+        /> */}        
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />

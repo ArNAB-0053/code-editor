@@ -24,9 +24,7 @@ import { FaFolderPlus } from "react-icons/fa6";
 import { FolderCodeIcon } from "lucide-react";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
-import { IoMdCodeWorking } from "react-icons/io";
 import { transitionString } from "@/styles";
-import { IoCodeSharp, IoCodeSlash } from "react-icons/io5";
 import { CodeFirstBlock, CodeLastBlock } from "@/assets/CodeComponentIcons";
 
 const CreateNew = ({ files }: { files: any }) => {

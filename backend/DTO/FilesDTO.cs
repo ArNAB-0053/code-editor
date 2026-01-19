@@ -14,6 +14,8 @@ namespace backend.DTO
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string? ParentId { get; set; }
+        public string? Code { get; set; }
+        public string? Output { get; set; }
     }
 
     public class FileListRequest

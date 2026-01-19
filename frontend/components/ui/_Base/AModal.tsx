@@ -49,7 +49,7 @@ const BaseAModal = ({
             <div
               className="w-4 rounded-r-sm h-[30px] absolute top-4 -left-3"
               style={{
-                background: theme.activeColor,
+                backgroundColor: theme.activeColor,
               }}
             />
           )}

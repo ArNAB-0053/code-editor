@@ -1,7 +1,11 @@
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
-import { useLogin, useRegister } from "@/services/auth";
+import {
+  useLogin,
+  useRegister,
+  useRegisterUsingProvider,
+} from "@/services/auth";
 import {
   setUserId,
   setUserName,
@@ -11,8 +15,8 @@ import {
 } from "@/redux/slices/userSlice";
 import { messagesConfig } from "@/config/messages.config";
 import { appUrls } from "@/config/navigation.config";
-import { IAuthReturn, IUserDetails } from "@/@types/auth";
-import { LoginFormType, RegisterFormType } from "@/zod/auth.z";
+import { IAuthReturn, IRegisterRequest, IRegisterUsingProviderRequest, IUserDetails } from "@/@types/auth";
+import { LoginFormType } from "@/zod/auth.z";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -20,6 +24,8 @@ export const useAuth = () => {
 
   const { mutateAsync: loginMutate } = useLogin();
   const { mutateAsync: registerMutate } = useRegister();
+  const { mutateAsync: registerUsingProviderMutate } =
+    useRegisterUsingProvider();
 
   const loginUser = async ({
     values,
@@ -59,7 +65,7 @@ export const useAuth = () => {
     }
   };
 
-  const registerUser = async (values: RegisterFormType) => {
+  const registerUser = async (values: IRegisterRequest) => {
     const toastId = toast.loading(messagesConfig.SIGN_UP.LOADING);
     try {
       const res: IAuthReturn = await registerMutate(values);
@@ -86,5 +92,29 @@ export const useAuth = () => {
     }
   };
 
-  return { loginUser, registerUser };
+  const registerUserUsingProvider = async (values: IRegisterUsingProviderRequest) => {
+    const toastId = toast.loading(messagesConfig.SIGN_UP.LOADING);
+    try {
+
+      const res: IAuthReturn = await registerUsingProviderMutate(values);
+      const data: IUserDetails = res?.user;
+      
+      if (res?.status === "success") {
+        toast.success(messagesConfig.SIGN_UP.SUCCESS, { id: toastId });
+        dispatch(setUserId(data?.id));
+        dispatch(setUserName(data?.name));
+        dispatch(setUserEmail(data?.email));
+        dispatch(setUserUsername(data?.username));
+        dispatch(setPersistedAt(Date.now()));
+
+        router.push(appUrls.FILE);
+      } else {
+        toast.error(messagesConfig.SIGN_UP.ERROR, { id: toastId });
+      }
+    } catch {
+      toast.error(messagesConfig.SIGN_UP.ERROR, { id: toastId });
+    }
+  };
+
+  return { loginUser, registerUser, registerUserUsingProvider };
 };

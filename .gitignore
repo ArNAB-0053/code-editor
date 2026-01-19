@@ -364,5 +364,7 @@ FodyWeavers.xsd
 
 pat.key.md
 
+.vscode
+
 temp.*
 /temp

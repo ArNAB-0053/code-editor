@@ -72,10 +72,74 @@ namespace backend.Services.implementations
             return auth;
         }
 
+        public async Task<AuthModel> FindOrCreateOAuthUser(
+            string email,
+            ProviderEnum provider,
+            string providerId,
+            NameDto name,
+            string username
+        ){
+            if (string.IsNullOrWhiteSpace(providerId))
+                throw new Exception("Invalid OAuth provider id");
+
+            email = email.ToLower();
+            username = username.ToLower();
+
+            var user = _auth.Find(x =>
+               x.Provider == provider &&
+               x.ProviderId == providerId
+           ).FirstOrDefault();
+
+            if (user != null)
+                    {
+                        if (user.Provider != provider)
+                            throw new Exception("Account exists with a different login method");
+
+                        return user;
+                    }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                var emailUser = _auth.Find(x => x.Email == email).FirstOrDefault();
+                if (emailUser != null && emailUser.Provider != provider)
+                    throw new Exception("Account exists with a different login method");
+            }
+
+            var generatedUsername = await GenerateUniqueUsername(
+                username,
+                name?.FirstName,
+                name?.LastName
+            );
+
+            var newUser = new AuthModel
+                            {
+                                Email = email,
+                                Provider = provider,
+                                ProviderId = providerId,
+                                Name = name,
+                                Username = generatedUsername,
+                                Password = null
+                            };
+
+             _auth.InsertOne(newUser);
+
+
+            await _redis.SetString($"user:username:{username}", newUser.Id);
+            if (!string.IsNullOrEmpty(email))
+                await _redis.SetString($"user:email:{email}", newUser.Id);
+
+            return newUser;
+        }
+
+
         // Get all users
         public List<AuthModel> GetAllUsers() => _auth.Find(x => true).ToList();
 
+        // Details - Get by userId
         public AuthModel GetUserById(string id) => _auth.Find(x => x.Id == id).FirstOrDefault();
+
+        // Details - Get by username
+        public AuthModel GetUserByUsername(string username) => _auth.Find(x => x.Username == username).FirstOrDefault();
 
         // Sign In
         public AuthModel? SignIn(string identifier, string password)
@@ -90,12 +154,21 @@ namespace backend.Services.implementations
             var user = _auth.Find(filter).FirstOrDefault();
 
             if (user == null) return null;
+
+            if (user.Provider != ProviderEnum.NORMAL)
+            {
+                throw new Exception($"Please sign in using {user.Provider}");
+            }
+
+            if (string.IsNullOrEmpty(user.Password)) return null;
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password)) return null;
 
             return user;
         }
 
         // Checking Username already exists or not
+
+        // retruns a VOID
         public async Task CheckUsernameExists(string username)
         {
        
@@ -110,6 +183,22 @@ namespace backend.Services.implementations
             if (_auth.Find(x => x.Username == username).Any())
                 throw new Exception("Username already in use");
         }
+
+        // return BOOLEAN
+        public async Task<bool> IsUsernameAvailable(string username)
+        {
+            username = username.ToLower();
+
+            if (!IsValidUsername(username)) return false;
+
+            if (await _redis.Exists($"user:username:{username}")) return false;
+
+            if (_auth.Find(x => x.Username == username).Any())
+                return false;
+
+            return true;
+        }
+
 
         // Checking Email already exists or not
         public async Task CheckEmailExists(string email)
@@ -196,7 +285,7 @@ namespace backend.Services.implementations
 
             try
             {
-                var regex = new Regex("^[a-z][a-z0-9_]{2,17}$");
+                var regex = new Regex("^[a-z][a-z0-9_-]{2,17}$");
                 return regex.IsMatch(username);
             } 
             catch
@@ -220,5 +309,42 @@ namespace backend.Services.implementations
                 return false;
             }
         }
+
+        // Generate Username
+        private async Task<string> GenerateUniqueUsername(
+            string githubUsername,
+            string firstName,
+            string lastName
+        )
+        {
+            if (!string.IsNullOrWhiteSpace(githubUsername))
+            {
+                var baseName = githubUsername.ToLower();
+
+                if (IsValidUsername(baseName) && await IsUsernameAvailable(baseName))
+                    return baseName;
+
+                for (int i = 1; i <= 999; i++)
+                {
+                    var attempt = $"{baseName}{i}";
+                    if (IsValidUsername(attempt) && await IsUsernameAvailable(attempt))
+                        return attempt;
+                }
+            }
+
+            var nameBase = $"{firstName}{lastName}".ToLower();
+            if (IsValidUsername(nameBase) && await IsUsernameAvailable(nameBase))
+                return nameBase;
+
+            for (int i = 1; i <= 999; i++)
+            {
+                var attempt = $"{nameBase}{i}";
+                if (IsValidUsername(attempt) && await IsUsernameAvailable(attempt))
+                    return attempt;
+            }
+
+            throw new Exception("Unable to generate unique username");
+        }
+
     }
 }

@@ -15,6 +15,8 @@ export const QUERY_KEYS = {
     FILE_CODE: 'file-code',
     
     BREADCRUMB: 'breadcrumbs',
+
+    GITHUB: "github",
     
     CONNECTION: 'connection',
     NOTIFICATION: 'notification',

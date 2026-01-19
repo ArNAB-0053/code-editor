@@ -26,6 +26,7 @@ const ATooltip = ({
   className,
   titleIsString = true,
   color,
+  rootClassName,
   ...rest
 }: ATooltipProps) => {
   const websiteTheme = useSelector(selectEditorTheme);
@@ -36,6 +37,7 @@ const ATooltip = ({
         offset: offset,
       }}
       placement={placement}
+      rootClassName={cn("rounded-md! overflow-hidden!", rootClassName)}
       title={
         titleIsString ? (
           <p

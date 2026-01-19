@@ -1,7 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Splitter } from "antd";
-import styled from "styled-components";
 import { themeConfig } from "@/config/themeConfig";
 import { Editor, Monaco } from "@monaco-editor/react";
 import { useSelector } from "react-redux";
@@ -13,7 +11,6 @@ import {
 } from "@/redux/slices/preferenceSlice";
 import { editorFonts, websiteFonts } from "@/fonts";
 import getEditorSytaxRules from "@/helper/editor-syntax-rules";
-import { ThemeTypes } from "@/@types/theme";
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
 import { useDispatch } from "react-redux";
 import { LuLoader } from "react-icons/lu";
@@ -28,6 +25,7 @@ import { selectEditorLayout } from "@/redux/slices/editorLayout";
 import { useScreenWidth } from "@/hooks/useScreenWidth";
 import { cn } from "@/lib/utils";
 import { StyledSplitter } from ".";
+import ReadOnlyInfoModal from "@/components/modals/share/readOnlyInfoModal";
 
 export default function SharedEditorComponent({
   p_lang,
@@ -40,19 +38,19 @@ export default function SharedEditorComponent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const openReadOnlyModal = () => {
+    setShowModal(true);
+  };
 
   const screenWidth = useScreenWidth();
 
   const lang = useSelector(selectedSharedLang);
-  // const [sharingDetails, setSharingDetails] = useState(null);
-
-  // console.log("___Editor___ (defaultCode)", defaultCode)
 
   const currentCode = useSelector(selectedSharedCode);
   const currentOutput = useSelector(selectedSharedOutput);
   const layout = useSelector(selectEditorLayout);
-
-  // console.log("currentCode", currentCode);
 
   const dispatch = useDispatch();
 
@@ -96,7 +94,34 @@ export default function SharedEditorComponent({
   const handleOnMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
+
     monaco.editor.setTheme("app-dark");
+    editor.onKeyDown((e: any) => {
+      // allow navigation keys
+      const navigationKeys = [
+        monaco.KeyCode.LeftArrow,
+        monaco.KeyCode.RightArrow,
+        monaco.KeyCode.UpArrow,
+        monaco.KeyCode.DownArrow,
+        monaco.KeyCode.PageUp,
+        monaco.KeyCode.PageDown,
+        monaco.KeyCode.Home,
+        monaco.KeyCode.End,
+      ];
+
+      // allow copy (Ctrl / Cmd + C)
+      if ((e.ctrlKey || e.metaKey) && e.keyCode === monaco.KeyCode.KeyC) return;
+
+      if (navigationKeys.includes(e.keyCode)) return;
+
+      // typing / delete / paste attempt
+      if (!showModal) {
+        openReadOnlyModal();
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+    });
   };
 
   useEffect(() => {
@@ -123,15 +148,13 @@ export default function SharedEditorComponent({
     }
   }, [editorTheme]);
 
-  // console.log(sharingDetails)
-
   return (
     <div
       style={{
         fontFamily: "Inter, Roboto, system-ui",
         height: "calc(100svh - 25px)",
       }}
-      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 relative"
+      className="w-full overflow-y-hidden flex items-start justify-between gap-x-0 "
     >
       <div className="flex w-full overflow-hidden border-l border-t border-l-white/20 border-t-white/20">
         <StyledSplitter
@@ -148,8 +171,8 @@ export default function SharedEditorComponent({
               layout === "vertical"
                 ? "80%"
                 : screenWidth >= 1000
-                  ? "60%"
-                  : "50%"
+                ? "60%"
+                : "50%"
             }
             min={screenWidth >= 1000 ? "40%" : "50%"}
             max="80%"
@@ -177,8 +200,10 @@ export default function SharedEditorComponent({
                 setLoading={setLoading}
                 setError={setError}
                 isShared={isShared}
+                code={currentCode}
+                output={currentOutput}
               />
-              <div className="h-full overflow-hidden">
+              <div className="h-full overflow-hidden relative">
                 <Editor
                   key={lang}
                   value={currentCode}
@@ -194,6 +219,7 @@ export default function SharedEditorComponent({
                   onMount={handleOnMount}
                   beforeMount={handleBeforeMount}
                   options={{
+                    readOnly: true,
                     fontFamily: editorFonts[editorFont as EditorFontKey],
                     fontSize: editorFontSize,
                     minimap: { enabled: false },
@@ -201,6 +227,8 @@ export default function SharedEditorComponent({
                   }}
                   className="py-2!"
                 />
+
+                {/* <div className="w-full h-full absolute left-0 top-0 cursor-not-allowed pointer-events-auto z-20 "/> */}
               </div>
             </div>
           </StyledSplitter.Panel>
@@ -215,8 +243,8 @@ export default function SharedEditorComponent({
               layout === "vertical"
                 ? "60%"
                 : screenWidth >= 1000
-                  ? "40%"
-                  : "50%"
+                ? "40%"
+                : "50%"
             }
             className="overflow-hidden!"
           >
@@ -227,10 +255,10 @@ export default function SharedEditorComponent({
                 color: theme.outputColor,
                 borderColor: theme.border15,
                 whiteSpace: "pre-wrap",
-                height: layout === "horizontal" ? "calc(100svh - 65px)" : "100%",
+                height:
+                  layout === "horizontal" ? "calc(100svh - 65px)" : "100%",
               }}
             >
-
               <div className="w-full backdrop-blur-2xl">
                 <SharedEditorHeaderComponent
                   editorTheme={editorTheme}
@@ -272,6 +300,8 @@ export default function SharedEditorComponent({
           </StyledSplitter.Panel>
         </StyledSplitter>
       </div>
+
+      {showModal && <ReadOnlyInfoModal setShowModal={setShowModal} />}
     </div>
   );
 }

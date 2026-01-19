@@ -7,6 +7,8 @@ export const filesSchema = z.object({
   FileType: z.nativeEnum(FileTypeEnum),
   Lang: z.string().optional(),
   ParentId: z.string().optional().nullable(),
+  Code: z.string().optional(),
+  Output: z.string().optional(),
 });
 
 export type CreateFilesFormType = z.infer<typeof filesSchema>;

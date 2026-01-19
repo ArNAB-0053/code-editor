@@ -14,12 +14,14 @@ import {
 import { EditorFontKey, WebsiteFontsKey } from "@/@types/font";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { setCookies } from "@/helper/cookies";
 
 export const WebsiteFontFamily = () => {
   const websiteFont = useSelector(selectWebsiteFont);
   const dispatch = useDispatch();
 
   const handleChange = (value: WebsiteFontsKey) => {
+    setCookies("font", 365, "lax", value);
     dispatch(setWebsiteFont(value));
   };
 

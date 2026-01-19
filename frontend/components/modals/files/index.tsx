@@ -1,6 +1,10 @@
 import { AModal } from "@/components/ui/antd";
 import { FilesCreationForm, FolderCreationForm } from "./creationForm";
 import { SetterFunctionTypesBool } from "@/@types/_base";
+import { selectedUserId } from "@/redux/slices/userSlice";
+import { useSelector } from "react-redux";
+import { selectFolderId } from "@/redux/slices/fileFolderSlice";
+import { FileTypeEnum } from "@/@types/_enums";
 
 export const FilesModal = ({
   open,
@@ -9,6 +13,8 @@ export const FilesModal = ({
   open: boolean;
   setOpen: SetterFunctionTypesBool;
 }) => {
+  const userId = useSelector(selectedUserId);
+  const currentFolderId = useSelector(selectFolderId);
   return (
     <AModal
       title="Create New File"
@@ -17,7 +23,17 @@ export const FilesModal = ({
       footer={null}
       className="overflow-hidden! w-full! md:w-[20rem]!"
     >
-      <FilesCreationForm setOpen={setOpen} />
+      <FilesCreationForm
+        setOpen={setOpen}
+        initialValues={{
+          OwnerId: userId,
+          FileName: "",
+          FileType: FileTypeEnum.FILE,
+          Lang: "python",
+          ParentId: currentFolderId,
+        }}
+        selecteLang
+      />
     </AModal>
   );
 };
@@ -41,4 +57,3 @@ export const FolderModal = ({
     </AModal>
   );
 };
-

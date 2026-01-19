@@ -37,7 +37,7 @@ namespace backend.Controllers
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-                var res = await _service.Create(fileModel);
+                var res = await _service.Create(fileModel, files.Code ?? "", files.Output ?? "");
                 return Ok(new { status = "success", data = res });
             }
             catch (Exception ex)

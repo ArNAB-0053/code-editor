@@ -26,7 +26,7 @@ namespace backend.Services.implementations
         // -------------------------------
 
         // CREATE / ADD file
-        public async Task<FilesModel> Create(FilesModel file)
+        public async Task<FilesModel> Create(FilesModel file, string code, string output)
         {
             await _files.InsertOneAsync(file);
 
@@ -42,8 +42,8 @@ namespace backend.Services.implementations
                     FileId = file.Id!,
                     FileName = file.FileName,
                     OwnerId = file.OwnerId,
-                    Output = string.Empty,
-                    Code = string.Empty,
+                    Output = output ?? string.Empty,
+                    Code = code ?? string.Empty,
                     Lang = file.Lang ?? "python",
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow

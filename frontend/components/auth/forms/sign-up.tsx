@@ -26,8 +26,6 @@ import { ContinueWithGoogle } from "./continue-with-btns";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
-import { IRegister } from "@/@types/auth";
-import { CAvatar } from "@/components/ui/custom";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
