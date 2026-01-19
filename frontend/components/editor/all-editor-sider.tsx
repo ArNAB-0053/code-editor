@@ -7,7 +7,7 @@ import { appUrls } from "@/config/navigation.config";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import { HomeIcon } from "lucide-react";
+import { HomeIcon, NotebookPen } from "lucide-react";
 import { FilesIcon } from "@/assets/EditorSidebar/FilesIcon";
 import { LangIcon } from "@/assets/EditorSidebar/LangIcon";
 import { FolderCodeIcon } from "@/assets/FolderIcon";
@@ -66,38 +66,58 @@ const AllEditorSider = () => {
       }}
     >
       <div className="w-14 flex items-center flex-col ">
-        {sidebarItems.map((x, i) => (
-          <ATooltip
-            key={i}
-            title={x.tooltip}
-            placement="right"
-            offset={[-5, 20]}
-          >
-            <div
+        <>
+          {sidebarItems.map((x, i) => (
+            <ATooltip
+              key={i}
+              title={x.tooltip}
+              placement="right"
+              offset={[-5, 20]}
+            >
+              <div
+                className={cn(
+                  " w-full flex items-center justify-center border-l-2",
+                  activeTab(x.link)
+                    ? "opacity-100"
+                    : "opacity-60 hover:opacity-100",
+                  transitionString,
+                )}
+                style={{
+                  borderColor: activeTab(x.link)
+                    ? theme.textColor
+                    : "transparent",
+                }}
+              >
+                <Link
+                  href={x.link}
+                  className="w-full h-full py-3 flex items-center justify-center"
+                >
+                  {x.icon}
+                </Link>
+              </div>
+            </ATooltip>
+          ))}
+
+          <ATooltip title="Create Note" placement="right" offset={[-5, 20]}>
+            <button
               className={cn(
-                " w-full flex items-center justify-center border-l-2",
-                activeTab(x.link)
-                  ? "opacity-100"
-                  : "opacity-60 hover:opacity-100",
-                transitionString
+                "w-8/10 h-full py-3 rounded-md flex items-center justify-center mt-3 border cursor-pointer hover:opacity-80",
+                transitionString,
               )}
               style={{
-                borderColor: activeTab(x.link)
-                  ? theme.textColor
-                  : "transparent",
+                backgroundColor: `${theme.activeColor}50`,
+                borderColor: `${theme.activeColor}90`,
+                // color: theme.activeColor,
               }}
             >
-              <Link
-                href={x.link}
-                className="w-full h-full py-3 flex items-center justify-center"
-              >
-                {x.icon}
-              </Link>
-            </div>
+              {/* <LuNotebookPen /> */}
+              {/* <NotesIcon /> */}
+              <NotebookPen size={18} strokeWidth={2.5} />
+            </button>
           </ATooltip>
-        ))}
+        </>
 
-        <div className="mt-8 mb-2 w-full flex items-center justify-center flex-col">
+        {/* <div className="mt-8 mb-2 w-full flex items-center justify-center flex-col">
           <div
             className="w-8/10 h-px opacity-60 mb-0.5"
             style={{ backgroundColor: theme.disabledTextColor }}
@@ -123,9 +143,9 @@ const AllEditorSider = () => {
             className="w-8/10 h-px opacity-60 "
             style={{ backgroundColor: theme.disabledTextColor }}
           />
-        </div>
+        </div> */}
 
-        {links.map((x, i) => (
+        {/* {links.map((x, i) => (
           <ATooltip
             key={i}
             title={x.tooltip}
@@ -135,7 +155,7 @@ const AllEditorSider = () => {
             <div
               className={cn(
                 " w-full flex items-center justify-center  opacity-60 hover:opacity-100",
-                transitionString
+                transitionString,
               )}
             >
               <Link
@@ -146,11 +166,17 @@ const AllEditorSider = () => {
               </Link>
             </div>
           </ATooltip>
-        ))}
+        ))} */}
       </div>
 
       <div className="py-3 w-full flex items-center justify-center flex-col gap-y-6">
-        <button onClick={() => setOpen(true)} className={cn("opacity-80 hover:opacity-100 cursor-pointer w-full flex items-center justify-center py-3", transitionString)}>
+        <button
+          onClick={() => setOpen(true)}
+          className={cn(
+            "opacity-80 hover:opacity-100 cursor-pointer w-full flex items-center justify-center py-3",
+            transitionString,
+          )}
+        >
           <FaSlidersH />
         </button>
         <AvatarDropdown

@@ -1,6 +1,5 @@
 "use client";
 import { fallbackAvatar, fallbackProfileDetails } from "@/constants/base.const";
-import { AvatarTemplate, ExtraProps } from "./avatar-template";
 import { spaceGrotesk, websiteFonts } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { FiLogOut } from "react-icons/fi";
@@ -19,6 +18,7 @@ import {
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
 import { CAvatar, CButton } from "@/components/ui/custom";
 import { transitionString } from "@/styles";
+import { AvatarTemplate, ExtraProps } from "@/components/dropdown/avatar-template";
 
 interface AvatarDropdownProps extends ExtraProps {
   color?: string;

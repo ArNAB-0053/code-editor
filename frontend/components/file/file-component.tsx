@@ -21,10 +21,7 @@ import { useBreadcrumbs } from "@/services/files";
 import { selectFolderId, setFolderId } from "@/redux/slices/fileFolderSlice";
 import { useDispatch } from "react-redux";
 import BreadcrumbLoader from "../Loaders/breadcrumbs";
-import ThreeDotDropdown from "./file-folder-dropdown/three-dot-dropdown";
-import Link from "next/link";
-import { appUrls } from "@/config/navigation.config";
-import { IoMdCodeWorking } from "react-icons/io";
+import { ThreeDotDropdown } from "../dropdown/three-dot-dropdown";
 
 interface FileComponentProps {
   files: IFilesListResponse;

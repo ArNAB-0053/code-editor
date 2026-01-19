@@ -18,8 +18,8 @@ import { FileTypeEnum } from "@/@types/_enums";
 import { jetBrainsMono } from "@/fonts";
 import { getExtention, getFileIcon } from "@/helper/getExtention";
 import { cn } from "@/lib/utils";
-import ThreeDotDropdown from "../../file-folder-dropdown/three-dot-dropdown";
 import { SetterFunctionTypesBool } from "@/@types/_base";
+import { ThreeDotDropdown } from "@/components/dropdown/three-dot-dropdown";
 
 export interface DataNode {
   title: string | ReactNode;
