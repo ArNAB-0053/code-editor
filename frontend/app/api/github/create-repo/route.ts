@@ -1,3 +1,4 @@
+import { isSafeName } from "@/helper/github";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
@@ -13,7 +14,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body: createRepoProps = await req.json();
+  const body: createRepoRequest = await req.json();
+
+  if (!isSafeName(body.owner) || !isSafeName(body.repoName)) {
+    return NextResponse.json({ error: "Invalid repo" }, { status: 400 });
+  }
 
   const res = await fetch("https://api.github.com/user/repos", {
     method: "POST",
@@ -27,8 +32,10 @@ export async function POST(req: Request) {
     }),
   });
 
+  const apiUrl = `https://api.github.com/repos/${body.owner}/${body.repoName}/contents/README.md`
+
   await fetch(
-    `https://api.github.com/repos/${body.owner}/${body.repoName}/contents/README.md`,
+    apiUrl,
     {
       method: "PUT",
       headers: {

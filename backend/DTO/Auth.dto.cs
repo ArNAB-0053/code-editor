@@ -26,7 +26,6 @@ namespace backend.DTO
         public NameDto Name { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
-        public ProviderEnum Provider { get; set; }
         public string ProviderId { get; set; }
     }
 }
