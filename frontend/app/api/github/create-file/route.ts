@@ -1,24 +1,8 @@
+import { isSafeName, sanitizePath } from "@/helper/github";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-const SAFE_RE = /^[a-zA-Z0-9_.-]+$/;
 
-function isSafeName(v: string) {
-  return SAFE_RE.test(v);
-}
-
-function sanitizePath(p: string) {
-  if (
-    !p ||
-    p.includes("..") ||
-    p.startsWith("/") ||
-    p.includes("\\") ||
-    p.includes("://")
-  ) {
-    throw new Error("Invalid path");
-  }
-  return p;
-}
 
 export async function POST(req: Request) {
   const token = await getToken({ req });
