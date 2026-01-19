@@ -1,90 +1,83 @@
 "use client";
 import { WebsiteFontsKey } from "@/@types/font";
-import { ThemeTypes } from "@/@types/theme";
 import { appUrls } from "@/config/navigation.config";
-import { themeConfig } from "@/config/themeConfig";
 import { langs } from "@/constants/lang";
 import { websiteFonts } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { setLangRedux } from "@/redux/slices/editorSlice";
-import {
-  selectEditorTheme,
-  selectWebsiteFont,
-} from "@/redux/slices/preferenceSlice";
+import { selectWebsiteFont } from "@/redux/slices/preferenceSlice";
+import { transitionString } from "@/styles";
 import { GlobalEditorStyles } from "@/styles/customStyledCss";
 import Link from "next/link";
+import { FaArrowRightLong } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import styled from "styled-components";
-import { CDivider } from "../ui/custom";
-import { HeaderLangTitle } from "./header-title";
-import ShareToAndByMe from "./share";
 
-const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
-  &:hover {
-    background: ${({ $theme }) => $theme.border15} !important;
-  }
-`;
+// const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
+//   &:hover {
+//     background: ${({ $theme }) => $theme.border15} !important;
+//   }
+// `;
 
-export const MAX_SHARE_VISIBLE = {
-  TABLE: 8,
-  CARD: 3,
-  LIST: 2
-};
-
-const Lang = () => {
-  const editorTheme = useSelector(selectEditorTheme);
-  const theme = themeConfig(editorTheme);
-
+export const AllLangs = ({
+  dir = "horizontal",
+  showArrow,
+}: {
+  dir?: "vertical" | "horizontal";
+  showArrow?: boolean;
+}) => {
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
   const dispatch = useDispatch();
   return (
+    <div
+      className={cn(
+        "mb-8 flex  ",
+        dir === "vertical" ? "flex-col gap-4" : "items-center flex-wrap gap-6"
+      )}
+    >
+      {Object.entries(langs).map(([key, x], i) => (
+        <Link
+          key={i}
+          href={`${appUrls.LANG}/${key}`}
+          className={cn(
+            "text-sm text-center  flex items-center justify-center gap-x-2 group",
+            font?.className
+          )}
+          onClick={() => {
+            dispatch(setLangRedux(key));
+          }}
+        >
+          <div
+            className={cn(
+              "w-full h-full opacity-60 hover:opacity-100 rounded-md flex items-center justify-center gap-x-2",
+              transitionString
+            )}
+          >
+            <div className="h-5 aspect-square ">{x.logo}</div>
+            <p className="truncate w-full text-start">{x.label}</p>
+          </div>
+
+          {showArrow && (
+            <FaArrowRightLong
+              className={cn(
+                "group-hover:opacity-100 opacity-0 -translate-x-5 group-hover:translate-x-0",
+                transitionString
+              )}
+            />
+          )}
+        </Link>
+      ))}
+    </div>
+  );
+};
+
+const Lang = () => {
+  return (
     <>
       <GlobalEditorStyles />
-      <HeaderLangTitle title="Select programming language" />
-      <div
-        className="mb-8 grid max-[350px]:grid-cols-1 grid-cols-2 min-[400px]:grid-cols-3 min-[600px]:grid-cols-4 min-[768px]:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-9 gap-4 flex-wrap rounded-xl relative p-4 "
-        style={{
-          background: `${theme?.activeColor}10`,
-          borderColor: theme?.border10,
-        }}
-      >
-        {langs?.map((x, i) => (
-          <StyledLink
-            key={i}
-            $theme={theme}
-            href={`${appUrls.LANG}/${x.link}`}
-            className={cn(
-              "border px-2 py-3 text-sm text-center opacity-80 hover:opacity-100 rounded-md transition-all ease-linear duration-100 flex items-center justify-center flex-col gap-3",
-              font?.className
-            )}
-            style={{
-              backgroundColor: `${theme.activeColor}20`,
-              borderColor: theme.border20,
-            }}
-            onClick={() => {
-              dispatch(setLangRedux(x.link));
-            }}
-          >
-            <div className="w-7 aspect-square">{x.logo}</div>
-            <p className="truncate w-full">{x.label}</p>
-          </StyledLink>
-        ))}
-      </div>
-
-      <CDivider
-        style={{
-          background: theme.activeColor,
-          width: "10rem",
-          height: "2px",
-        }}
-        className="my-20"
-      />
-
-      {/* SHARE */}
-      <ShareToAndByMe />
+      <AllLangs />
     </>
   );
 };

@@ -1,8 +1,8 @@
 import { IUserDetails } from "@/@types/auth";
-import { MAX_SHARE_VISIBLE } from "@/components/lang";
-import UsersAvatar from "@/components/lang/share/by-me/users-avatar";
-import CodePreview from "@/components/lang/share/code-preview";
-import ViewButton from "@/components/lang/share/view-btn";
+import { MAX_SHARE_VISIBLE } from "@/components/file";
+import UsersAvatar from "@/components/file/share/by-me/users-avatar";
+import CodePreview from "@/components/file/share/code-preview";
+import ViewButton from "@/components/file/share/view-btn";
 import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";

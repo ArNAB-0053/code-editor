@@ -26,8 +26,6 @@ import { ContinueWithGoogle } from "./continue-with-btns";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
-import { IRegister } from "@/@types/auth";
-import { CAvatar } from "@/components/ui/custom";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -480,7 +478,6 @@ export const SignUpForm = () => {
             <div className="flex gap-3 mt-8">
               {currentStep > 0 && (
                 <NRCButton
-                  type="button"
                   onClick={() => goToStep(currentStep - 1, values, errors)}
                   className={cn(
                     "flex items-center justify-center gap-x-2 px-6",
@@ -512,6 +509,7 @@ export const SignUpForm = () => {
                     "flex-1 flex items-center justify-center gap-x-3 disabled:opacity-40!",
                     jetBrainsMono.className
                   )}
+                  
                 >
                   {isSubmitting ? "Submitting..." : "Continue"}
                   <FaArrowRightLong />

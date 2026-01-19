@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import EditorComponent from "./editor";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useGetCode } from "@/services/code";
 import {
@@ -11,6 +10,9 @@ import {
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useSelector } from "react-redux";
 import { getDefaultCode } from "@/helper/defaultCode";
+import EditorComponent from "./editors-component/editor";
+import { LuLoader } from "react-icons/lu";
+import EditorLoader from "../Loaders/editor";
 
 const MainEditor = ({ p_lang }: { p_lang: string }) => {
   const dispatch = useDispatch();
@@ -41,13 +43,14 @@ const MainEditor = ({ p_lang }: { p_lang: string }) => {
     }
   }, [codeData, isLoading, p_lang, defaultCode, dispatch]);
 
-  if (isLoading) return <p>Loading ...</p>;
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <EditorLoader />
+      </div>
+    );
 
-  return (
-    <div>
-      <EditorComponent p_lang={p_lang} />
-    </div>
-  );
+  return <EditorComponent p_lang={p_lang} />;
 };
 
 export default MainEditor;

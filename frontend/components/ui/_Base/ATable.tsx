@@ -79,6 +79,14 @@ const BaseATable = ({
   className,
   ...rest
 }: IBaseATableProps) => {
+  const normalizedScroll =
+    rest.scroll && typeof rest.scroll === "object"
+      ? {
+          ...rest.scroll,
+          y: typeof rest.scroll.y === "number" ? rest.scroll.y : undefined,
+        }
+      : rest.scroll;
+
   return (
     <StyledWrapper
       $theme={theme}
@@ -96,6 +104,7 @@ const BaseATable = ({
             : websiteFonts[font as WebsiteFontsKey]?.className,
           className
         )}
+        scroll={normalizedScroll}
         {...rest}
       />
     </StyledWrapper>

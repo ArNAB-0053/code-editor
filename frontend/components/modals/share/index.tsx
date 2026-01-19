@@ -55,7 +55,7 @@ const ShareModal = ({
 
   const { mutateAsync: createShare } = useCreateShare();
 
-  console.log("searchItem => ", searchItems);
+  // console.log("searchItem => ", searchItems);
 
   useEffect(() => {
     setTimeout(() => {
@@ -77,9 +77,9 @@ const ShareModal = ({
     OwnerDetails: OwnerDetails,
   };
 
-  useEffect(() => {
-    console.log("____ =>  isPublic", isPublic);
-  }, [isPublic]);
+  // useEffect(() => {
+  //   console.log("____ =>  isPublic", isPublic);
+  // }, [isPublic]);
 
   const handleGenerateSafeShare = async () => {
     setIsSharingLoading(true);
@@ -208,8 +208,10 @@ const ShareModal = ({
                       }}
                       className="cursor-pointer "
                       rootClassName=" backdrop-blur-xl rounded-xl p-0! "
-                      overlayStyle={{
-                        backgroundColor: `${theme.border10}`,
+                      styles={{
+                        root: {
+                          backgroundColor: `${theme.border10}`,
+                        },
                       }}
                     >
                       <span

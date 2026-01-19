@@ -53,7 +53,15 @@ export interface IProfileDetails
   userId: string;
   nameObj: NameObjType;
   username: string;
-  mobileNo?: string
+  mobileNo?: string;
+}
+export interface IProfileDetailsByUsername
+  extends Pick<RegisterFormType, "password" | "email"> {
+  id: string;
+  name: NameObjType;
+  userId: string;
+  username: string;
+  mobileNo?: string;
 }
 
 export type NameObjType = {
@@ -61,3 +69,14 @@ export type NameObjType = {
   middleName?: string;
   lastName: string;
 };
+
+export interface IBaseLogoProps {
+  size?: number;
+  style?: React.CSSProperties;
+  className?: string;
+}
+
+export interface IBaseReturn {
+  status: "success" | "error";
+  message?: string;
+}

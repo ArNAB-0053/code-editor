@@ -28,7 +28,10 @@ namespace backend.helper
                 new Claim("middlename", user.Name.MiddleName ?? ""),
                 new Claim("lastname", user.Name.LastName),
 
-                new Claim("username", user.Username)
+                new Claim("username", user.Username),
+
+                new Claim("provider", user.Provider.ToString())
+
             };
 
             var token = new JwtSecurityToken(

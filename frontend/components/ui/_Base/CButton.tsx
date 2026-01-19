@@ -14,7 +14,7 @@ export type BaseCButtonProps = {
   variant?: "transparent" | "sameBg" | "bordered" | "default";
   hoverColor?: string | null;
   hoverBgColor?: string | null;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 const BaseCButton = ({
@@ -57,8 +57,8 @@ const BaseCButton = ({
 
     case "danger":
       color = "#fff";
-      borderColor = "#ff4d4f";
-      backgroundColor = "#ff4d4f";
+      borderColor = "#ff0000";
+      backgroundColor = "#ff000";
       break;
 
     case "text":

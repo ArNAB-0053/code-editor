@@ -40,5 +40,28 @@ export const messagesConfig = {
             TRUE: "This email address is available.",
             FALSE: "This email address is already in use."
         }
-    }
+    },
+    CREATION: {
+        FILE: {
+            SUCCESS: "File created successfully!",
+            ERROR: "Error creating file"
+        },
+        FOLDER: {
+            SUCCESS: "Folder created successfully!",
+            ERROR: "Error creating folder"
+        }
+    }, 
+    RENAME: "Renamed Successfully",
+    PUBLISH: {
+        REPO: {
+            LOADING: "Creating New Repo",
+            SUCCESS: "Repo Created Successfully",
+            ERROR: "Error Creating Repo"
+        },
+        FILE:{
+            LOADING: "Pushing File",
+            SUCCESS: "File Pushed Successfully",
+            ERROR: "Error Pushing File"
+        }
+    },
 };

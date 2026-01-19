@@ -1,17 +1,33 @@
 "use client";
 import { Dropdown } from "antd";
-import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { FaUserCircle } from "react-icons/fa";
 import { MdOutlineLockReset } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { jetBrainsMono, spaceGrotesk } from "@/fonts";
-import styled from "styled-components";
 import { ThemeTypes } from "@/@types/theme";
 import { ReactNode } from "react";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { fallbackProfileDetails } from "@/constants/base.const";
 import { StyledDiv, StyledLink } from "@/styles/StyledComponents";
+
+export interface ExtraProps {
+  offset?: [number, number];
+  isSider?: boolean;
+  verticalLineClassName?: string;
+  horizontalLineClassName?: string;
+}
+
+interface AvatarTemplateProps extends ExtraProps {
+  theme: ThemeTypes;
+  font: NextFont;
+  dropdownContent: ReactNode;
+  avatar: ReactNode;
+  logoutButton: ReactNode;
+  name: string;
+  email: string;
+  username: string;
+}
 
 export const AvatarTemplate = ({
   dropdownContent,
@@ -22,16 +38,11 @@ export const AvatarTemplate = ({
   theme,
   font,
   username,
-}: {
-  dropdownContent: ReactNode;
-  avatar: ReactNode;
-  logoutButton: ReactNode;
-  name: string;
-  email: string;
-  username: string;
-  theme: ThemeTypes;
-  font: NextFont;
-}) => {
+  offset,
+  isSider,
+  verticalLineClassName,
+  horizontalLineClassName,
+}: AvatarTemplateProps) => {
   const dropdownElement = () => (
     <div
       className=" px-1 pt-1 rounded-xl relative"
@@ -104,7 +115,7 @@ export const AvatarTemplate = ({
 
         <StyledLink
           $theme={theme}
-          href={appUrls.PROFILE}
+          href={`${appUrls.PROFILE}/${username}`}
           style={{
             background: `${theme.textColor}10`,
             color: theme.textColor,
@@ -151,17 +162,35 @@ export const AvatarTemplate = ({
       </div>
 
       <div
-        className="h-0.5 w-1/2 mt-4 place-self-center rounded-l-2xl rounded-r-2xl opacity-90"
+        className={cn(
+          "h-0.5 w-1/2 mt-4 rounded-l-2xl rounded-r-2xl opacity-90",
+          isSider ? "place-self-start" : "place-self-center",
+          horizontalLineClassName
+          
+        )}
         style={{
           backgroundColor: `${theme.activeColor}`,
         }}
       />
+
       <div
         className="h-1 w-full place-self-center rounded-l-2xl rounded-r-2xl blur-[14px] opacity-90"
         style={{
           backgroundColor: `${theme.activeColor}`,
         }}
       />
+
+      {isSider && (
+        <div
+          className={cn(
+            "h-8/10 w-0.5 place-self-center rounded-l-2xl rounded-r-2xl absolute left-0 bottom-4",
+            verticalLineClassName
+          )}
+          style={{
+            backgroundColor: `${theme.activeColor}`,
+          }}
+        />
+      )}
     </div>
   );
 
@@ -169,6 +198,9 @@ export const AvatarTemplate = ({
     <>
       <Dropdown
         trigger={["click"]}
+        align={{
+          offset,
+        }}
         menu={{
           items: [
             {
@@ -179,8 +211,10 @@ export const AvatarTemplate = ({
         }}
         className="cursor-pointer "
         rootClassName=" backdrop-blur-xl rounded-xl p-0! "
-        overlayStyle={{
-          backgroundColor: `${theme.activeColor}20`,
+        styles={{
+          root: {
+            backgroundColor: `${theme.activeColor}20`,
+          },
         }}
       >
         {dropdownContent}

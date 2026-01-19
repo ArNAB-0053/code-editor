@@ -35,7 +35,7 @@ const SharedByMePage = () => {
 
   useEffect(() => {
     if (!sharedData || isLoading) return;
-    dispatch(setShareIdRedux(sharedData?.share.sharedId))
+    dispatch(setShareIdRedux(sharedData?.share?.sharedId))
     dispatch(setShareLangRedux(sharedData?.share?.lang));
     dispatch(setShareCodeRedux(sharedData?.share?.code));
     dispatch(setShareOutputRedux(sharedData?.share?.output));

@@ -38,6 +38,7 @@ type FormItemComponentType = {
   loading?: boolean;
 
   footerChildren?: boolean | ReactNode;
+  rootClassName?: string;
 };
 
 export const FormItemComponent = ({
@@ -59,6 +60,7 @@ export const FormItemComponent = ({
   onFocus,
   showError: showErrorProp,
   footerChildren,
+  rootClassName
 }: FormItemComponentType) => {
   const { themeName } = useTheme();
   const theme = themeConfig(themeName);
@@ -84,7 +86,7 @@ export const FormItemComponent = ({
         </NRCFormLabel>
       }
       name={name}
-      className="my-3! w-full!"
+      className={cn("my-3! w-full!", rootClassName)}
     >
       <>
         <div className="relative">

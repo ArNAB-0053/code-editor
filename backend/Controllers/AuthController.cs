@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using backend.DTO;
 using backend.helper;
 using backend.Models;
 using backend.Services.implementations;
@@ -31,7 +32,7 @@ namespace backend.Controllers
 
         // SIGN UP
         [HttpPost("register")]
-        public async Task<IActionResult> Create([FromBody] AuthModel auth)
+        public async Task<IActionResult> Create([FromBody] RegisterRequest req)
         {
             if (!ModelState.IsValid)
             {
@@ -40,7 +41,15 @@ namespace backend.Controllers
 
             try
             {
-                var createdUser = await _service.Create(auth);
+                var user = new AuthModel
+                {
+                    Name = req.Name,
+                    Email = req.Email,
+                    Username = req.Username,
+                    Password = req.Password,
+                    Provider = ProviderEnum.NORMAL
+                };
+                var createdUser = await _service.Create(user);
 
                 return Ok(new
                 {
@@ -56,6 +65,52 @@ namespace backend.Controllers
                 });
             }
             catch (Exception ex) {
+                return Conflict(new
+                {
+                    message = ex.Message,
+                    status = "error"
+                });
+            }
+        }
+
+        [HttpPost("register/provider")]
+        public async Task<IActionResult> FindOrCreateOAuthUser([FromBody] ProviderRequest req)
+        {
+            var provider = ProviderEnum.GITHUB; // FOR NOW IT IS HARD CODED
+            try
+            {
+                var createdUser = await _service.FindOrCreateOAuthUser(req.Email, provider, req.ProviderId, req.Name, req.Username);
+
+                var token = JwtHelper.GenerateToken(createdUser, _config);
+
+                Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true,
+#if DEBUG
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
+#else
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+#endif
+                    Expires = DateTime.UtcNow.AddDays(3)
+                });
+
+                return Ok(new
+                {
+                    message = "User registered successfully",
+                    status = "success",
+                    user = new
+                    {
+                        id = createdUser.Id,
+                        name = createdUser.Name,
+                        email = createdUser.Email,
+                        username = createdUser.Username,
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
                 return Conflict(new
                 {
                     message = ex.Message,
@@ -114,6 +169,9 @@ namespace backend.Controllers
         // GET - USERS BASED ON ID (UserId)
         [HttpGet("{id}")]
         public AuthModel GetUserById(string id) => _service.GetUserById(id);
+
+        [HttpGet("profile-details")]
+        public AuthModel GetUserByUsername([FromQuery] string username) => _service.GetUserByUsername(username);
 
         // GET - USER DETAILS
         [Authorize]

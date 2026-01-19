@@ -5,7 +5,8 @@ export type EditorFontKey =
   | "sourcecode"
   | "robotomono"
   | "ubuntumono"
-  | "inconsolata";
+  | "inconsolata"
+  | "lilex";
 
 export type EditorFontsMap = Record<EditorFontKey, string>;
 
@@ -30,7 +31,8 @@ export const _WebsiteFonts = {
   karla,
   // amarante,
   // geo,
-  // asimovian
+  // asimovian,
+  sora,
 } as const;
 export type WebsiteFontsKey = keyof typeof _WebsiteFonts;
 export type WebsiteFontsMap = Record<WebsiteFontsKey, NextFont>;

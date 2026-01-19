@@ -56,6 +56,26 @@ body {
   border-radius: 4px;
 }
 
+.custom-scrollbar-sider::-webkit-scrollbar {
+  width: 4px;
+  height: 8px;
+  display: none;
+}
+.custom-scrollbar-sider:hover::-webkit-scrollbar {
+  width: 4px;
+  height: 8px;
+  transition: opacity 0.3s ease-in-out;
+  display: block;
+}
+.custom-scrollbar-sider:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar-sider:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.418);
+  border-radius: 4px;
+}
+
 .ant-drawer-body::-webkit-scrollbar {
   width: 4px;
   height: 8px;
@@ -103,6 +123,10 @@ body {
   background-color: transparent !important;
 }
 
+.ant-popover-container {
+    background-color: transparent !important;
+  }
+
 .ant-modal {
   background-color: transparent !important;
 }
@@ -112,4 +136,12 @@ body {
     @apply 
   }
 } */
+.langFullName {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.langName:hover + .langFullName {
+  opacity: 1;
+}
 

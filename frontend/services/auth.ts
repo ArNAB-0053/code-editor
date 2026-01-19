@@ -1,6 +1,6 @@
-import { IAvailability, IAuthReturn, IRegister, ISearchResult } from "@/@types/auth";
+import { IAvailability, IAuthReturn, IRegister, ISearchResult, IRegisterRequest, IRegisterUsingProviderRequest } from "@/@types/auth";
 import axiosInstance from "@/lib/axios-instance";
-import { LoginFormType, RegisterFormType } from "@/zod/auth.z";
+import { LoginFormType, RegisterFormType, RegisterProType } from "@/zod/auth.z";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from ".";
 
@@ -10,7 +10,7 @@ export const URI = "api/user";
 //                          AUTH 
 // ----------------------------------------------------
 // SIGN UP
-export const register = async (config: RegisterFormType): Promise<IAuthReturn> => {
+export const register = async (config: IRegisterRequest): Promise<IAuthReturn> => {
   const res = await axiosInstance.post(`${URI}/register`, config);
 
   if (!res.data) {
@@ -23,7 +23,24 @@ export const register = async (config: RegisterFormType): Promise<IAuthReturn> =
 
 export const useRegister = () => {
   return useMutation({
-    mutationFn: (payload: RegisterFormType) => register(payload),
+    mutationFn: (payload: IRegisterRequest) => register(payload),
+  });
+};
+
+export const registerUsingProvider = async (config: RegisterProType): Promise<IAuthReturn> => {
+  const res = await axiosInstance.post(`${URI}/register/provider`, config);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useRegisterUsingProvider= () => {
+  return useMutation({
+    mutationFn: (payload: RegisterProType) => registerUsingProvider(payload),
   });
 };
 

@@ -30,12 +30,11 @@ const SharedWithMePage = () => {
 
   const { data: sharedData, isLoading } = useSharedWithMeDataDetails(payload);
 
-  console.log(sharedData);
-  
+  // console.log(sharedData);  
 
   useEffect(() => {
     if (!sharedData || isLoading) return;
-    dispatch(setShareIdRedux(sharedData?.share.sharedId))
+    dispatch(setShareIdRedux(sharedData?.share?.sharedId))
     dispatch(setShareLangRedux(sharedData?.share?.lang));
     dispatch(setShareCodeRedux(sharedData?.share?.code));
     dispatch(setShareOutputRedux(sharedData?.share?.output));

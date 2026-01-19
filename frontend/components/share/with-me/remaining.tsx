@@ -1,7 +1,7 @@
 import { IOwnerDetails } from "@/@types/share";
-import CodePreview from "@/components/lang/share/code-preview";
-import UsersAvatar from "@/components/lang/share/to-me/users-avatar";
-import ViewButton from "@/components/lang/share/view-btn";
+import CodePreview from "@/components/file/share/code-preview";
+import UsersAvatar from "@/components/file/share/to-me/users-avatar";
+import ViewButton from "@/components/file/share/view-btn";
 import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
@@ -59,7 +59,7 @@ const Remaining = ({
           {lang}
         </span>
         <p
-          className="text-xs backdrop-blur-2xl w-fit rounded-md"
+          className="text-[11px] font-semibold backdrop-blur-2xl w-fit rounded-md opacity-80"
           style={{
             // backgroundColor: `${theme.activeColor}`,
             color: theme.disabledTextColor,
@@ -68,7 +68,7 @@ const Remaining = ({
           {createdAt}
         </p>
       </div>
-      <div className="pl-1 w-full my-2 flex items-end justify-between">
+      <div className="pl-1 w-full flex items-end justify-between">
         <div>
           <div className={cn("flex items-center gap-2 mt-1 mb-0.5")}>
             <User size={11} style={{ color: theme.disabledTextColor }} />
@@ -86,7 +86,6 @@ const Remaining = ({
           />
         </div>
         <ViewButton
-          isShareByMe
           sharedId={sharedId}
           linkClassName={cn("py-0 -translate-y-2")}
           variant="link"
