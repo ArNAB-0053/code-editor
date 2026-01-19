@@ -76,17 +76,10 @@ namespace backend.Controllers
         [HttpPost("register/provider")]
         public async Task<IActionResult> FindOrCreateOAuthUser([FromBody] ProviderRequest req)
         {
-            if (req.Provider == ProviderEnum.NORMAL)
-            {
-                return BadRequest(new
-                {
-                    status = "error",
-                    message = "Invalid provider for OAuth registration"
-                });
-            }
+            var provider = ProviderEnum.GITHUB; // FOR NOW IT IS HARD CODED
             try
             {
-                var createdUser = await _service.FindOrCreateOAuthUser(req.Email, req.Provider, req.ProviderId, req.Name, req.Username);
+                var createdUser = await _service.FindOrCreateOAuthUser(req.Email, provider, req.ProviderId, req.Name, req.Username);
 
                 var token = JwtHelper.GenerateToken(createdUser, _config);
 
