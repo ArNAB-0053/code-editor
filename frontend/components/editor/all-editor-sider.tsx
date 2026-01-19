@@ -21,22 +21,8 @@ import { AvatarDropdown } from "../profile/avatar";
 import { useState } from "react";
 import PreferenceModal from "../modals/preference";
 import { EDITOR_HEIGHT } from "@/helper/_base.helper";
-
-const links = [
-  { link: "/", icon: <HomeIcon />, tooltip: "Home" },
-  { link: appUrls.FILE, icon: <FolderCodeIcon />, tooltip: "Folder & File" },
-  {
-    link: appUrls.SHARE.WITH_ME,
-    icon: <ShareWithMeIcon />,
-    tooltip: "Shared With Me",
-  },
-  {
-    link: appUrls.SHARE.BY_ME,
-    icon: <ShareByMeIcon />,
-    tooltip: "Shared By Me",
-  },
-  { link: appUrls.TRASH, icon: <TrashIcon />, tooltip: "Trash" },
-];
+import TiptapEditorModal from "../modals/tiptap";
+import DraggableComponent from "../draggable";
 
 const sidebarItems = [
   { link: appUrls.CODE, icon: <FilesIcon />, tooltip: "Code" },
@@ -45,6 +31,7 @@ const sidebarItems = [
 
 const AllEditorSider = () => {
   const [open, setOpen] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -109,6 +96,7 @@ const AllEditorSider = () => {
                 borderColor: `${theme.activeColor}90`,
                 // color: theme.activeColor,
               }}
+              onClick={() => setNoteOpen(!noteOpen)}
             >
               {/* <LuNotebookPen /> */}
               {/* <NotesIcon /> */}
@@ -116,57 +104,6 @@ const AllEditorSider = () => {
             </button>
           </ATooltip>
         </>
-
-        {/* <div className="mt-8 mb-2 w-full flex items-center justify-center flex-col">
-          <div
-            className="w-8/10 h-px opacity-60 mb-0.5"
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-          <div
-            className="w-full h-px opacity-60  "
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-          <span
-            className="text-xs uppercase py-2 font-medium w-full text-center "
-            style={{
-              color: theme.disabledTextColor,
-              backgroundColor: theme.border5,
-            }}
-          >
-            Links
-          </span>
-          <div
-            className="w-full h-px opacity-60 mb-0.5"
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-          <div
-            className="w-8/10 h-px opacity-60 "
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-        </div> */}
-
-        {/* {links.map((x, i) => (
-          <ATooltip
-            key={i}
-            title={x.tooltip}
-            placement="right"
-            offset={[-5, 20]}
-          >
-            <div
-              className={cn(
-                " w-full flex items-center justify-center  opacity-60 hover:opacity-100",
-                transitionString,
-              )}
-            >
-              <Link
-                href={x.link}
-                className="w-full h-full py-3 flex items-center justify-center"
-              >
-                {x.icon}
-              </Link>
-            </div>
-          </ATooltip>
-        ))} */}
       </div>
 
       <div className="py-3 w-full flex items-center justify-center flex-col gap-y-6">
@@ -190,6 +127,8 @@ const AllEditorSider = () => {
       </div>
 
       <PreferenceModal open={open} setOpen={setOpen} />
+      {/* <DraggableComponent open={noteOpen} setOpen={setNoteOpen} /> */}
+      <DraggableComponent open={noteOpen} setOpen={setNoteOpen} />
     </div>
   );
 };
