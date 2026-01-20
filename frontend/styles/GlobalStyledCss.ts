@@ -97,6 +97,10 @@ export const GlobalStyles = createGlobalStyle<{
     align-items: center !important;
   }
 
+  .ant-select-content-value {
+        display: flex !important;
+    align-items: center !important;
+  }
   
    
 

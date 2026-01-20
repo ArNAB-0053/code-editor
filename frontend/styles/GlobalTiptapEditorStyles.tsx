@@ -26,9 +26,6 @@ export const GlobalTiptapEditorStyles = createGlobalStyle<{
     }
 
     .button-group {
-        background: ${({ $theme }) => $theme?.border20} !important;
-        border-radius: 5px !important;
-
         button:hover {
             transform: scale(1.05);
             background: ${({ $theme }) => $theme?.border20} !important;
@@ -53,4 +50,87 @@ export const GlobalTiptapEditorStyles = createGlobalStyle<{
         cursor: -webkit-grabbing;
     }
    
+    .tiptap {
+  :first-child {
+    margin-top: 0;
+  }
+
+  /* List styles */
+  ul,
+  ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
+
+  /* Heading styles */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+    margin-top: 2.5rem;
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2 {
+    margin-top: 3.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 1rem;
+  }
+
+  pre {
+    background: ${({ $theme }) => $theme?.border15} !important;
+    border-radius: 0.5rem;
+    color: ${({ $theme }) => $theme?.textColor} !important;
+    font-family: 'JetBrainsMono', monospace;
+    margin: 1.5rem 0;
+    padding: 0.75rem 1rem;
+
+    code {
+      background: none;
+      color: inherit;
+      font-size: 0.8rem;
+      padding: 0;
+    }
+  }
+
+  blockquote {
+    border-left: ${({ $theme }) => `3px solid  ${$theme?.border20}`} !important;
+    color: ${({ $theme }) => $theme?.disabledTextColor} !important;
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    font-style: italic !important;
+  }
+
+  hr {
+    border: none;
+    border-top: ${({ $theme }) => `3px solid  ${$theme?.activeColor}`} !important;
+    margin: 2rem 0;
+  }
+}
 `;

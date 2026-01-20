@@ -1,37 +1,38 @@
 "use client";
 
 import { MenuBar } from "./menu-bar";
-import { FullscreenButton } from "../file_lang/fullscreen-btn";
-import FileLangLayoutButtons from "../file_lang/layout-buttons";
+import type { Editor } from '@tiptap/react'
 import { X } from "lucide-react";
 import { useSelector } from "react-redux";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
 import { SetterFunctionTypesBool } from "@/@types/_base";
+import { cn } from "@/lib/utils";
+import { transitionString } from "@/styles";
 
 const NotesHeader = ({
   editor,
   setOpen,
 }: {
-  editor: any;
+  editor: Editor;
   setOpen: SetterFunctionTypesBool;
 }) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
   return (
     <div
-      className="flex h-10 w-full shadow-sm rounded-none  "
+      className="flex w-full shadow-sm rounded-none relative backdrop-blur-3xl! "
       style={{
         backgroundColor: theme.border5,
       }}
     >
       <MenuBar editor={editor} />
 
-      <div className="flex items-center justify-end gap-x-3 h-full">
-        {/* <FileLangLayoutButtons />
-        <FullscreenButton /> */}
+      <div className="flex items-center justify-end gap-x-3 absolute top-0 right-0 ">
+        {/* <FileLangLayoutButtons /> */}
+        {/* <FullscreenButton /> */}
 
-        <button className="opacity-90 cursor-pointer bg-red-600 h-full px-3" onClick={() => setOpen(false)}>
+        <button className={cn("opacity-90 cursor-pointer hover:bg-red-600 h-12 w-12 flex items-center justify-center", transitionString)} onClick={() => setOpen(false)}>
           <X size={20} />
         </button>
       </div>

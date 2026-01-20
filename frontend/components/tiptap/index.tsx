@@ -2,7 +2,7 @@
 
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { MenuBar } from "./menu-bar";
 import "@/styles/editor.css";
@@ -54,8 +54,10 @@ const TiptapEditor = ({ setOpen }: { setOpen: SetterFunctionTypesBool }) => {
 
   return (
     <>
-      <NotesHeader editor={editor} setOpen={setOpen} />
-      <EditorContent editor={editor} />
+      <NotesHeader editor={editor as Editor} setOpen={setOpen} />
+      <div className="overflow-y-auto custom-scrollbar">
+        <EditorContent editor={editor} />
+      </div>
     </>
   );
 };

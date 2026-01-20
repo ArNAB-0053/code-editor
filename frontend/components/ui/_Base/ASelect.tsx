@@ -10,14 +10,17 @@ import { cn } from "@/lib/utils";
 interface BaseASelectProps extends SelectProps, IExtraProps {
   themeName?: string;
   optionBorderRadius?: string;
-  dropdownRadius?: string
-  dropdownStyle?: React.CSSProperties
+  dropdownElementMarginBottom?: string;
+  dropdownItemPadding?: string;
+  dropdownItemMinHeight?: string;
+  dropdownRadius?: string;
+  dropdownStyle?: React.CSSProperties;
 }
 
 const StyledBaseASelect = styled(Select)<{ $theme: ThemeTypes }>`
   .ant-select-arrow {
     color: ${({ $theme }) => $theme.textColor} !important;
-  } 
+  }
 
   .ant-select-selection-item {
     color: ${({ $theme }) => $theme.textColor} !important;
@@ -32,19 +35,31 @@ const DropdownGlobal = createGlobalStyle<{
   selectionBg: string;
   border5: string;
   optionBorderRadius?: string;
+  dropdownElementMarginBottom?: string;
+  dropdownItemPadding?: string;
+  dropdownItemMinHeight?: string;
 }>`
   .${(p) => p.cls} .ant-select-dropdown {
     background: ${(p) => p.outputColor} !important;
     color: ${(p) => p.outputColor} !important;
     border: 1px solid ${(p) => p.border10} !important;
     box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    
+  }
+
+  .${(p) => p.cls} .ant-select-item {
+    min-height: ${(p) =>
+      p.dropdownItemMinHeight ? p.dropdownItemMinHeight : "32px"} !important;
+    padding: ${(p) =>
+      p.dropdownItemPadding ? p.dropdownItemPadding : "5px 12px"} !important;
   }
 
   .${(p) => p.cls} .ant-select-item-option {
     background: transparent;
     color: ${(p) => p.outputColor} !important;
-    margin-bottom: 6px !important;
+    margin-bottom: ${(p) =>
+      p.dropdownElementMarginBottom
+        ? p.dropdownElementMarginBottom
+        : "6px"} !important;
     width: 100%;
     border-radius: ${(p) =>
       p.optionBorderRadius ? p.optionBorderRadius : "12px"} !important;
@@ -75,11 +90,14 @@ const BaseASelect = ({
   optionBorderRadius,
   dropdownRadius,
   dropdownStyle,
+  dropdownElementMarginBottom,
+  dropdownItemMinHeight,
+  dropdownItemPadding,
   ...rest
 }: BaseASelectProps) => {
   const dropdownClass = `a-select-dropdown-${themeName?.replace(
     /[^a-z0-9\-]/gi,
-    ""
+    "",
   )}`;
 
   return (
@@ -92,6 +110,9 @@ const BaseASelect = ({
         selectionBg={theme.editorSelectionBackground}
         border5={theme.border5}
         optionBorderRadius={optionBorderRadius}
+        dropdownElementMarginBottom={dropdownElementMarginBottom}
+        dropdownItemMinHeight={dropdownItemMinHeight}
+        dropdownItemPadding={dropdownItemPadding}
       />
 
       <StyledBaseASelect
@@ -106,8 +127,10 @@ const BaseASelect = ({
               background: theme.border5,
               backdropFilter: "blur(25px)",
               padding: "8px 8px 4px 8px",
+              position: "relative",
+              zIndex: 999999,
               borderRadius: dropdownRadius ?? "14px",
-              ...dropdownStyle
+              ...dropdownStyle,
             },
           },
         }}
@@ -115,7 +138,7 @@ const BaseASelect = ({
           popup: {
             root: cn(
               dropdownClass,
-              websiteFonts[font as WebsiteFontsKey]?.className
+              websiteFonts[font as WebsiteFontsKey]?.className,
             ),
           },
         }}

@@ -7,21 +7,17 @@ import { appUrls } from "@/config/navigation.config";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import { HomeIcon, NotebookPen } from "lucide-react";
+import { NotebookPen } from "lucide-react";
 import { FilesIcon } from "@/assets/EditorSidebar/FilesIcon";
 import { LangIcon } from "@/assets/EditorSidebar/LangIcon";
-import { FolderCodeIcon } from "@/assets/FolderIcon";
-import { ShareByMeIcon, ShareWithMeIcon } from "@/assets/ShareIcons";
 import { cn } from "@/lib/utils";
 import { transitionString } from "@/styles";
-import { FaSlidersH, FaTrash } from "react-icons/fa";
+import { FaSlidersH } from "react-icons/fa";
 import ATooltip from "../ui/antd/tooltip";
-import TrashIcon from "@/assets/TrashIcon";
 import { AvatarDropdown } from "../profile/avatar";
 import { useState } from "react";
 import PreferenceModal from "../modals/preference";
 import { EDITOR_HEIGHT } from "@/helper/_base.helper";
-import TiptapEditorModal from "../modals/tiptap";
 import DraggableComponent from "../draggable";
 
 const sidebarItems = [

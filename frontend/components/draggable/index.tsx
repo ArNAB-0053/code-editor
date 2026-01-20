@@ -31,7 +31,7 @@ const DraggableComponent = ({ open, setOpen }: IModalProps) => {
           borderColor: theme.border10,
         }}
         className={cn(
-          "rounded-xl h-8/10 w-[60rem] overflow-y-auto custom-scrollbar bg-[#2c2c2c]/50 backdrop-blur-2xl border-2 grabbable",
+          "rounded-xl h-8/10 w-[60rem] overflow-hidden custom-scrollbar bg-[#2c2c2c]/50 backdrop-blur-2xl border-2 grabbable",
           open ? "" : "hidden",
         )}
       >

@@ -13,8 +13,11 @@ import React from "react";
 
 interface ASelectProps extends SelectProps {
   optionBorderRadius?: string;
+  dropdownElementMarginBottom?: string;
   dropdownRadius?: string;
   dropdownStyle?: React.CSSProperties;
+  dropdownItemPadding?: string;
+  dropdownItemMinHeight?: string;
 }
 
 const ASelect = ({
@@ -22,6 +25,9 @@ const ASelect = ({
   optionBorderRadius,
   dropdownRadius,
   dropdownStyle,
+  dropdownElementMarginBottom,
+  dropdownItemMinHeight,
+  dropdownItemPadding,
   ...rest
 }: ASelectProps) => {
   const websiteFont = useSelector(selectWebsiteFont);
@@ -36,6 +42,9 @@ const ASelect = ({
       optionBorderRadius={optionBorderRadius}
       dropdownRadius={dropdownRadius}
       dropdownStyle={dropdownStyle}
+      dropdownElementMarginBottom={dropdownElementMarginBottom}
+      dropdownItemPadding={dropdownItemPadding}
+      dropdownItemMinHeight={dropdownItemMinHeight}
       {...rest}
     >
       {children}
