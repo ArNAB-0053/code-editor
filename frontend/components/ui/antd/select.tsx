@@ -10,8 +10,9 @@ import { SelectProps } from "antd";
 import { useSelector } from "react-redux";
 import BaseASelect from "../_Base/ASelect";
 import React from "react";
+import { IBaseStylingProps } from "@/@types/_base";
 
-interface ASelectProps extends SelectProps {
+interface ASelectProps extends SelectProps, IBaseStylingProps {
   optionBorderRadius?: string;
   dropdownElementMarginBottom?: string;
   dropdownRadius?: string;
@@ -28,6 +29,8 @@ const ASelect = ({
   dropdownElementMarginBottom,
   dropdownItemMinHeight,
   dropdownItemPadding,
+  style, 
+  className,
   ...rest
 }: ASelectProps) => {
   const websiteFont = useSelector(selectWebsiteFont);
@@ -45,6 +48,8 @@ const ASelect = ({
       dropdownElementMarginBottom={dropdownElementMarginBottom}
       dropdownItemPadding={dropdownItemPadding}
       dropdownItemMinHeight={dropdownItemMinHeight}
+      style={style}
+      className={className}
       {...rest}
     >
       {children}

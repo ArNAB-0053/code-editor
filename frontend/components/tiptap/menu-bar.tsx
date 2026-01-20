@@ -3,12 +3,7 @@
 "use client";
 
 import "@/styles/editor.css";
-import { useSelector } from "react-redux";
-import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
-import { themeConfig } from "@/config/themeConfig";
 import { useEditorState, type Editor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { TextStyleKit } from "@tiptap/extension-text-style";
 import {
   Alignment,
   Headings,
@@ -19,47 +14,52 @@ import {
 } from "./menubar-items";
 import { CDivider } from "../ui/custom";
 import { cn } from "@/lib/utils";
+import { ThemeTypes } from "@/@types/theme";
 
 export interface IEditor {
   editor: Editor;
 }
 
 export interface IEditorState {
-  isBold: boolean;
-  canBold: boolean;
-  isItalic: boolean;
-  canItalic: boolean;
-  isStrike: boolean;
-  canStrike: boolean;
-  isCode: boolean;
-  canCode: boolean;
-  canClearMarks: boolean;
-  isParagraph: boolean;
-  isHeading1: boolean;
-  isHeading2: boolean;
-  isHeading3: boolean;
-  isHeading4: boolean;
-  isHeading5: boolean;
-  isHeading6: boolean;
-  isBulletList: boolean;
-  isOrderedList: boolean;
-  isCodeBlock: boolean;
-  isBlockquote: boolean;
-  isHighlight: boolean;
-  canUndo: boolean;
-  canRedo: boolean;
+    isBold: boolean;
+    canBold: boolean;
+    isItalic: boolean;
+    canItalic: boolean;
+    isStrike: boolean;
+    canStrike: boolean;
+    isCode: boolean;
+    canCode: boolean;
+    isLeftAlign: boolean,
+    isRightAlign: boolean,
+    isCenterAlign: boolean,
+    isJustifyAlign: boolean,
+    canClearMarks: boolean;
+    isParagraph: boolean;
+    isHeading1: boolean;
+    isHeading2: boolean;
+    isHeading3: boolean;
+    isHeading4: boolean;
+    isHeading5: boolean;
+    isHeading6: boolean;
+    isBulletList: boolean;
+    isOrderedList: boolean;
+    isCodeBlock: boolean;
+    isBlockquote: boolean;
+    isHighlight: boolean;
+    canUndo: boolean;
+    canRedo: boolean;
 }
-
-const extensions = [TextStyleKit, StarterKit];
 
 export const btnStyle =
   "w-6 h-6 flex items-center justify-center rounded-md transition";
+
 export const btn = (active: boolean) =>
-  cn(btnStyle, active ? "bg-indigo-500 text-white" : "");
+  cn(btnStyle, active ? "text-white" : "text-white/80");
+
+export const btnBgColor = (active: boolean, theme: ThemeTypes) =>
+  active ? theme.activeColor : "transparent";
 
 export const MenuBar = ({ editor }: IEditor) => {
-  const editorTheme = useSelector(selectEditorTheme);
-  const theme = themeConfig(editorTheme);
 
   const editorState: IEditorState = useEditorState({
     editor,
@@ -67,12 +67,22 @@ export const MenuBar = ({ editor }: IEditor) => {
       return {
         isBold: ctx.editor?.isActive("bold") ?? false,
         canBold: ctx.editor?.can().chain().toggleBold().run() ?? false,
+
         isItalic: ctx.editor?.isActive("italic") ?? false,
         canItalic: ctx.editor?.can().chain().toggleItalic().run() ?? false,
+
         isStrike: ctx.editor?.isActive("strike") ?? false,
         canStrike: ctx.editor?.can().chain().toggleStrike().run() ?? false,
+
+        
+        isLeftAlign: ctx.editor?.isActive({ textAlign: "left" }) ?? false,
+        isRightAlign: ctx.editor?.isActive({ textAlign: "right" }) ?? false,
+        isCenterAlign: ctx.editor?.isActive({ textAlign: "center" }) ?? false,
+        isJustifyAlign: ctx.editor?.isActive({ textAlign: "justify" }) ?? false,
+        
         isCode: ctx.editor?.isActive("code") ?? false,
         canCode: ctx.editor?.can().chain().toggleCode().run() ?? false,
+        
         canClearMarks: ctx.editor?.can().chain().unsetAllMarks().run() ?? false,
         isParagraph: ctx.editor?.isActive("paragraph") ?? false,
         isHeading1: ctx.editor?.isActive("heading", { level: 1 }) ?? false,
@@ -105,7 +115,7 @@ export const MenuBar = ({ editor }: IEditor) => {
       <CDivider direction="vertical" />
       <MenuBarBlock editor={editor} editorState={editorState} />
       <CDivider direction="vertical" />
-      <Alignment editor={editor} />
+      <Alignment editor={editor} editorState={editorState} />
       <CDivider direction="vertical" />
       <MenubarOthersItems editor={editor} editorState={editorState} />
     </div>

@@ -8,6 +8,7 @@ import {
   guestFeatures,
 } from "@/constants/welcome/lang";
 import { asimovian, sora, spaceGrotesk } from "@/fonts";
+import { EDITOR_HEIGHT } from "@/helper/_base.helper";
 import { cn } from "@/lib/utils";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { selectedUserId } from "@/redux/slices/userSlice";
@@ -74,9 +75,9 @@ const Page = () => {
 
   return (
     <div
-      className="h-full w-full px-6 custom-scrollbar overflow-y-auto overflow-x-hidden flex items-center justify-center border-2 border-l-0 border-b-0 "
+      className="h-full w-full px-6 custom-scrollbar overflow-hidden flex items-center justify-center border-2 border-l-0 border-b-0 "
       style={{
-        height: "calc(100svh - 68px)",
+        height: EDITOR_HEIGHT,
         borderColor: theme.border15,
         color: theme.textColor,
       }}

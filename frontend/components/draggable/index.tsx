@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Draggable from "react-draggable";
-import TiptapEditorModal from "../modals/tiptap";
 import { IModalProps } from "@/@types/_base";
 import TiptapEditor from "../tiptap";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";

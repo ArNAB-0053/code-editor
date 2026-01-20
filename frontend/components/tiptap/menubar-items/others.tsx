@@ -1,13 +1,19 @@
-import { btn, btnStyle } from "../menu-bar";
+import { btn, btnBgColor, btnStyle } from "../menu-bar";
 import { IEditorAndEditorState } from ".";
 import { GoHorizontalRule } from "react-icons/go";
 import { FaHighlighter, FaRedo, FaUndo } from "react-icons/fa";
 import { CDivider } from "@/components/ui/custom";
 
+import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
+import { useSelector } from "react-redux";
+import { themeConfig } from "@/config/themeConfig";
+
 export const MenubarOthersItems = ({
   editor,
   editorState,
 }: IEditorAndEditorState) => {
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
   return (
     <>
       <button
@@ -20,6 +26,9 @@ export const MenubarOthersItems = ({
       <button
         className={btn(editorState?.isHighlight)}
         onClick={() => editor.chain().focus().toggleHighlight().run()}
+        style={{
+          backgroundColor: btnBgColor(editorState?.isHighlight, theme),
+        }}
       >
         <FaHighlighter size={14} />
       </button>

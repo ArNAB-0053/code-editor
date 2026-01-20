@@ -35,6 +35,7 @@ const Code = () => {
 
   useEffect(() => {
     if (!codeData || isLoading) return;
+
     dispatch(setCreatedFileIdRedux(codeData?.data?.fileId));
     dispatch(setCreatedFileLangRedux(codeData?.data?.lang));
     dispatch(setCreatedFileCodeRedux(codeData?.data?.code));

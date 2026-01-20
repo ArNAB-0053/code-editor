@@ -50,7 +50,11 @@ const CodeLayout = ({
           <FileCodeSider />
         </StyledSplitter.Panel>
 
-        <StyledSplitter.Panel className="relative!">{children}</StyledSplitter.Panel>
+        <StyledSplitter.Panel
+          className="relative! overflow-hidden!"
+        >
+          {children}
+        </StyledSplitter.Panel>
       </StyledSplitter>
     </div>
   );

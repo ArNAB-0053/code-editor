@@ -125,6 +125,9 @@ export const Headings = ({ editor, editorState }: IEditorAndEditorState) => {
     <ASelect
       value={value}
       options={headingOptions}
+      style={{
+        borderRadius: "8px",
+      }}
       optionRender={(option) => {
         const item: getIconProps = {
           val: option?.value as string,
@@ -152,7 +155,7 @@ export const Headings = ({ editor, editorState }: IEditorAndEditorState) => {
         );
       }}
       onChange={onChange}
-      placeholder="Text style"
+      placeholder={<p className="mt-0.5 font-medium">Text style</p>}
       dropdownStyle={{
         width: "11rem",
         padding: "0",

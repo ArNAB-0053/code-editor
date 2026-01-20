@@ -51,86 +51,106 @@ export const GlobalTiptapEditorStyles = createGlobalStyle<{
     }
    
     .tiptap {
-  :first-child {
-    margin-top: 0;
-  }
+      :first-child {
+        margin-top: 0;
+      }
 
-  /* List styles */
-  ul,
-  ol {
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
+      /* List styles */
+      ul,
+      ol {
+        padding: 0 1rem;
+        margin: 1.25rem 1rem 1.25rem 0.4rem;
+        list-style: disc !important;
 
-    li p {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
+        li p {
+          margin-top: 0.25em;
+          margin-bottom: 0.25em;
+        }
+      }
+
+      ol {
+        list-style: decimal !important;
+      }
+
+      ul {
+        list-style: disc !important;
+      }
+
+      p {
+        line-height: 1.1rem;
+        font-size: 14px;
+      }
+
+      /* Heading styles */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        line-height: 1.1;
+        margin-top: 1rem;
+        text-wrap: pretty;
+      }
+
+      h1,
+      h2 {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+      }
+
+      h4 {
+        font-size: 1.2rem;
+      }
+
+      h5 {
+        font-size: 1.1rem;
+      }
+
+      h6 {
+        font-size: 1rem;
+      }
+
+      pre {
+        background: ${({ $theme }) => $theme?.border15} !important;
+        border-radius: 0.5rem;
+        color: ${({ $theme }) => $theme?.textColor} !important;
+        font-family: 'JetBrainsMono', monospace;
+        margin: 1.5rem 0;
+        padding: 0.75rem 1rem;
+
+        code {
+          background: none;
+          color: inherit;
+          font-size: 0.8rem;
+          padding: 0;
+        }
+      }
+
+      blockquote {
+        border-left: ${({ $theme }) => `3px solid  ${$theme?.border20}`} !important;
+        color: ${({ $theme }) => $theme?.disabledTextColor} !important;
+        margin: 1.5rem 0;
+        padding-left: 1rem;
+        font-style: italic !important;
+      }
+
+      hr {
+        border: none;
+        border-top: ${({ $theme }) => `3px solid  ${$theme?.activeColor}`} !important;
+        margin: 2rem 0;
+      } 
     }
-  }
-
-  /* Heading styles */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    line-height: 1.1;
-    margin-top: 2.5rem;
-    text-wrap: pretty;
-  }
-
-  h1,
-  h2 {
-    margin-top: 3.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  h1 {
-    font-size: 1.4rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  h3 {
-    font-size: 1.1rem;
-  }
-
-  h4,
-  h5,
-  h6 {
-    font-size: 1rem;
-  }
-
-  pre {
-    background: ${({ $theme }) => $theme?.border15} !important;
-    border-radius: 0.5rem;
-    color: ${({ $theme }) => $theme?.textColor} !important;
-    font-family: 'JetBrainsMono', monospace;
-    margin: 1.5rem 0;
-    padding: 0.75rem 1rem;
-
-    code {
-      background: none;
-      color: inherit;
-      font-size: 0.8rem;
-      padding: 0;
-    }
-  }
-
-  blockquote {
-    border-left: ${({ $theme }) => `3px solid  ${$theme?.border20}`} !important;
-    color: ${({ $theme }) => $theme?.disabledTextColor} !important;
-    margin: 1.5rem 0;
-    padding-left: 1rem;
-    font-style: italic !important;
-  }
-
-  hr {
-    border: none;
-    border-top: ${({ $theme }) => `3px solid  ${$theme?.activeColor}`} !important;
-    margin: 2rem 0;
-  }
-}
 `;

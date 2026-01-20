@@ -4,10 +4,10 @@ import { WebsiteFontsKey } from "@/@types/font";
 import { ThemeTypes } from "@/@types/theme";
 import { Select, SelectProps } from "antd";
 import styled, { createGlobalStyle } from "styled-components";
-import { IExtraProps } from "@/@types/_base";
+import { IBaseStylingProps, IExtraProps } from "@/@types/_base";
 import { cn } from "@/lib/utils";
 
-interface BaseASelectProps extends SelectProps, IExtraProps {
+interface BaseASelectProps extends SelectProps, IExtraProps, IBaseStylingProps {
   themeName?: string;
   optionBorderRadius?: string;
   dropdownElementMarginBottom?: string;
@@ -93,6 +93,8 @@ const BaseASelect = ({
   dropdownElementMarginBottom,
   dropdownItemMinHeight,
   dropdownItemPadding,
+  style,
+  className,
   ...rest
 }: BaseASelectProps) => {
   const dropdownClass = `a-select-dropdown-${themeName?.replace(
@@ -119,6 +121,7 @@ const BaseASelect = ({
         $theme={theme}
         style={{
           borderRadius: "12px",
+          ...style,
         }}
         styles={{
           popup: {
@@ -142,7 +145,10 @@ const BaseASelect = ({
             ),
           },
         }}
-        className={cn(websiteFonts[font as WebsiteFontsKey]?.className)}
+        className={cn(
+          websiteFonts[font as WebsiteFontsKey]?.className,
+          className,
+        )}
         // dropdownStyle={{
         //   fontFamily: websiteFont,
         //   fontWeight: "normal",
