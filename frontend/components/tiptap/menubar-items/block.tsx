@@ -1,4 +1,4 @@
-import { btn, btnBgColor } from "../menu-bar";
+import { btn, btnBgColor } from "..";
 import { IEditorAndEditorState } from ".";
 import { IoCode } from "react-icons/io5";
 import { RiDoubleQuotesR } from "react-icons/ri";

@@ -6,9 +6,31 @@ export const GlobalTiptapEditorStyles = createGlobalStyle<{
   $theme: ThemeTypes;
   $font: NextFont;
 }>`
+  .react-resizable-handle {
+    opacity: 0 !important;
+  }
+
+  .override-aselect-option-bg {
+    background-color: ${({ $theme }) => $theme.border10} !important;
+
+    .ant-select-dropdown, .ant-select-item {
+      padding: 0 !important;
+    }
+  }
+
+  .override-aselect-bg {
+      width: 122px !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+  }
+
+  .editorContent > div:nth-child(1) {
+      height: 100% !important;
+  }
+
     .tiptap-editor {
         padding: 20px;
-        border-radius: 10px;
+        border-radius: 16px;
         background: transparent !important;
         border: 1px solid ${({ $theme }) => $theme?.border15};
         font-family: ${({ $font }) => $font?.style?.fontFamily};
@@ -18,7 +40,7 @@ export const GlobalTiptapEditorStyles = createGlobalStyle<{
     }
 
     .grabbable > div:nth-child(2) {
-        height: 90% !important;
+        height: calc(100% - 42px) !important;
     }
 
     .ProseMirror {

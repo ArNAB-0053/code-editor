@@ -1,10 +1,10 @@
-import { btn, btnBgColor } from "../menu-bar";
 import { IEditorAndEditorState } from ".";
 import { FiBold, FiItalic } from "react-icons/fi";
 import { TbStrikethrough } from "react-icons/tb";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
+import { btn, btnBgColor } from "..";
 
 export const TextStyle = ({ editor, editorState }: IEditorAndEditorState) => {
   const editorTheme = useSelector(selectEditorTheme);

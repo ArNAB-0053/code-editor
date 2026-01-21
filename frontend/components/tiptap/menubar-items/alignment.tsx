@@ -1,4 +1,4 @@
-import { btn, btnBgColor } from "../menu-bar";
+import { btn, btnBgColor } from "..";
 import {
   FiAlignLeft,
   FiAlignCenter,

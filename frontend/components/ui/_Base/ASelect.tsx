@@ -95,6 +95,7 @@ const BaseASelect = ({
   dropdownItemPadding,
   style,
   className,
+  classNames,
   ...rest
 }: BaseASelectProps) => {
   const dropdownClass = `a-select-dropdown-${themeName?.replace(
@@ -144,6 +145,7 @@ const BaseASelect = ({
               websiteFonts[font as WebsiteFontsKey]?.className,
             ),
           },
+          ...classNames
         }}
         className={cn(
           websiteFonts[font as WebsiteFontsKey]?.className,

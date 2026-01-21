@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
 import { CDivider } from "@/components/ui/custom";
-import { IEditorState } from "../menu-bar";
+import { IEditorState } from "..";
 
 interface getIconProps {
   val: string;
@@ -93,7 +93,7 @@ const OptionTemplate = ({
         <span
           className=" text-[10px] w-6 h-6 flex items-center justify-center rounded-sm"
           style={{
-            backgroundColor: theme.border,
+            backgroundColor: theme.border10,
           }}
         >
           {labelIcon}
@@ -126,8 +126,10 @@ export const Headings = ({ editor, editorState }: IEditorAndEditorState) => {
       value={value}
       options={headingOptions}
       style={{
-        borderRadius: "8px",
+        borderRadius: "4px",
       }}
+      className="override-aselect-bg"
+      classNames={{ popup: { root: "override-aselect-option-bg" } }}
       optionRender={(option) => {
         const item: getIconProps = {
           val: option?.value as string,

@@ -1,102 +1,51 @@
-"use client";
+import { ThemeTypes } from "@/@types/theme";
+import { cn } from "@/lib/utils";
+import { type Editor } from "@tiptap/react";
 
-import Highlight from "@tiptap/extension-highlight";
-import TextAlign from "@tiptap/extension-text-align";
-import { Editor, EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import "@/styles/editor.css";
-import NotesHeader from "./notes-header";
-import { SetterFunctionTypesBool } from "@/@types/_base";
-import { useNoteCreation, useNoteDetails } from "@/services/notes";
-import { IGetNoteDetailsRequest, INoteModel } from "@/@types/notes";
-import { useParams } from "next/navigation";
-import { compressToUTF16, decompressFromUTF16 } from "lz-string";
-import { useSelector } from "react-redux";
-import { selectedfileId } from "@/redux/slices/createdFilesEditorSlice";
-import { useEffect, useState } from "react";
+export interface IEditorState {
+  isBold: boolean;
+  canBold: boolean;
+  isItalic: boolean;
+  canItalic: boolean;
+  isStrike: boolean;
+  canStrike: boolean;
+  isCode: boolean;
+  canCode: boolean;
+  isLeftAlign: boolean;
+  isRightAlign: boolean;
+  isCenterAlign: boolean;
+  isJustifyAlign: boolean;
+  canClearMarks: boolean;
+  isParagraph: boolean;
+  isHeading1: boolean;
+  isHeading2: boolean;
+  isHeading3: boolean;
+  isHeading4: boolean;
+  isHeading5: boolean;
+  isHeading6: boolean;
+  isBulletList: boolean;
+  isOrderedList: boolean;
+  isCodeBlock: boolean;
+  isBlockquote: boolean;
+  isHighlight: boolean;
+  canUndo: boolean;
+  canRedo: boolean;
+}
 
-const TiptapEditor = ({ setOpen }: { setOpen: SetterFunctionTypesBool }) => {
-  const params = useParams();
-  const reduxFileId = useSelector(selectedfileId);
+export interface IEditor {
+  editor: Editor;
+}
 
-  // console.log({
-  //   reduxFileId: reduxFileId,
-  //   "params?.fileId": params?.fileId,
-  //   "params?.fileId === reduxFileId": params?.fileId === reduxFileId,
-  // });
+// Common button styles
+const commonBtnStyle =
+  "w-6 h-6 flex items-center justify-center rounded-md transition";
 
-  const fileId = (params?.fileId ?? reduxFileId) as string;
+export const btnStyle = cn(commonBtnStyle, "text-white/80");
 
-  const get_payload: IGetNoteDetailsRequest = {
-    CodeId: fileId as string,
-  };
-  const { data: notes } = useNoteDetails(get_payload);
+export const btn = (active: boolean) =>
+  cn(commonBtnStyle, active ? "text-white" : "text-white/80");
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
-      Highlight,
-    ],
-    immediatelyRender: false,
-    editorProps: {
-      attributes: {
-        class: "tiptap-editor",
-      },
-    },
-  });
+export const btnBgColor = (active: boolean, theme: ThemeTypes) =>
+  active ? theme.activeColor : "transparent";
 
-  useEffect(() => {
-    if (!editor || !notes?.data?.content) return;
-
-    const decompressed = decompressFromUTF16(notes.data.content);
-
-    if (!decompressed) return;
-
-    try {
-      const json = JSON.parse(decompressed);
-      editor.commands.setContent(json);
-    } catch (err) {
-      console.error("Failed to load note:", err);
-    }
-  }, [editor, notes?.data?.content]);
-
-  const { mutate: createNote } = useNoteCreation();
-
-  const handleSave = () => {
-    if (!editor) return;
-
-    const compressed = compressToUTF16(
-      JSON.stringify(editor.getJSON())
-    );
-
-    const payload: INoteModel = {
-      CodeId: fileId,
-      Content: compressed,
-    };
-
-    createNote(payload, {
-      onSuccess: (res) => console.log("Saved:", res),
-      onError: (err) => console.error("Save error:", err),
-    });
-  };
-
-  return (
-    <>
-      <NotesHeader editor={editor as Editor} setOpen={setOpen} />
-      <div className="overflow-y-auto custom-scrollbar relative">
-        <EditorContent editor={editor} />
-        <button
-          onClick={handleSave}
-          className="mt-4 absolute right-0 top-0 px-3 py-2 text-xs bg-black"
-        >
-          Save
-        </button>
-      </div>
-    </>
-  );
-};
-
-export default TiptapEditor;
+export {default as TiptapEditor} from "./TiptapEditor";

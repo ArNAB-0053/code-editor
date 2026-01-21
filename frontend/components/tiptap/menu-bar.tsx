@@ -2,64 +2,40 @@
 
 "use client";
 
+import React, { useState } from "react";
+import { useEditorState } from "@tiptap/react";
+import { themeConfig } from "@/config/themeConfig";
+
+import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
+import { useSelector } from "react-redux";
+
 import "@/styles/editor.css";
-import { useEditorState, type Editor } from "@tiptap/react";
-import {
-  Alignment,
-  Headings,
-  MenuBarBlock,
-  MenuBarLists,
-  MenubarOthersItems,
-  TextStyle,
-} from "./menubar-items";
 import { CDivider } from "../ui/custom";
+import MoreItems from "./more-items";
+
+import { IEditor, IEditorState } from ".";
+import {
+  getMenuItems,
+  menuBarItemsListFn,
+  remainingMenuItems,
+} from "./menubar-items";
+import { transitionString } from "@/styles";
 import { cn } from "@/lib/utils";
-import { ThemeTypes } from "@/@types/theme";
+import { X } from "lucide-react";
+import { SetterFunctionTypesBool } from "@/@types/_base";
+import { BsFillCloudCheckFill } from "react-icons/bs";
 
-export interface IEditor {
-  editor: Editor;
+export interface MenuBarProps extends IEditor {
+  width?: number;
+  setOpen: SetterFunctionTypesBool;
 }
 
-export interface IEditorState {
-    isBold: boolean;
-    canBold: boolean;
-    isItalic: boolean;
-    canItalic: boolean;
-    isStrike: boolean;
-    canStrike: boolean;
-    isCode: boolean;
-    canCode: boolean;
-    isLeftAlign: boolean,
-    isRightAlign: boolean,
-    isCenterAlign: boolean,
-    isJustifyAlign: boolean,
-    canClearMarks: boolean;
-    isParagraph: boolean;
-    isHeading1: boolean;
-    isHeading2: boolean;
-    isHeading3: boolean;
-    isHeading4: boolean;
-    isHeading5: boolean;
-    isHeading6: boolean;
-    isBulletList: boolean;
-    isOrderedList: boolean;
-    isCodeBlock: boolean;
-    isBlockquote: boolean;
-    isHighlight: boolean;
-    canUndo: boolean;
-    canRedo: boolean;
-}
+// Main MenuBar Component
+export const MenuBar = ({ editor, width, setOpen }: MenuBarProps) => {
+  const [clicked, setClicked] = useState(false);
 
-export const btnStyle =
-  "w-6 h-6 flex items-center justify-center rounded-md transition";
-
-export const btn = (active: boolean) =>
-  cn(btnStyle, active ? "text-white" : "text-white/80");
-
-export const btnBgColor = (active: boolean, theme: ThemeTypes) =>
-  active ? theme.activeColor : "transparent";
-
-export const MenuBar = ({ editor }: IEditor) => {
+  const editorTheme = useSelector(selectEditorTheme);
+  const theme = themeConfig(editorTheme);
 
   const editorState: IEditorState = useEditorState({
     editor,
@@ -74,15 +50,14 @@ export const MenuBar = ({ editor }: IEditor) => {
         isStrike: ctx.editor?.isActive("strike") ?? false,
         canStrike: ctx.editor?.can().chain().toggleStrike().run() ?? false,
 
-        
         isLeftAlign: ctx.editor?.isActive({ textAlign: "left" }) ?? false,
         isRightAlign: ctx.editor?.isActive({ textAlign: "right" }) ?? false,
         isCenterAlign: ctx.editor?.isActive({ textAlign: "center" }) ?? false,
         isJustifyAlign: ctx.editor?.isActive({ textAlign: "justify" }) ?? false,
-        
+
         isCode: ctx.editor?.isActive("code") ?? false,
         canCode: ctx.editor?.can().chain().toggleCode().run() ?? false,
-        
+
         canClearMarks: ctx.editor?.can().chain().unsetAllMarks().run() ?? false,
         isParagraph: ctx.editor?.isActive("paragraph") ?? false,
         isHeading1: ctx.editor?.isActive("heading", { level: 1 }) ?? false,
@@ -102,22 +77,84 @@ export const MenuBar = ({ editor }: IEditor) => {
     },
   });
 
+  const menuBarItemsList = menuBarItemsListFn({ editor, editorState });
+
+  const menuItems = getMenuItems(width, menuBarItemsList);
+  const remainingItems = remainingMenuItems(width, menuBarItemsList);
+
+  // console.log({
+  //   menuItems: menuItems,
+  //   remainingItems: remainingItems,
+  // });
+
   if (!editor) return null;
 
   return (
     // (this -> py-2)
-    <div className="flex items-center flex-wrap gap-1 w-full py-2 px-4 button-group ">
-      <Headings editor={editor} editorState={editorState} />
-      <CDivider direction="vertical" />
-      <TextStyle editor={editor} editorState={editorState} />
-      <CDivider direction="vertical" />
-      <MenuBarLists editor={editor} editorState={editorState} />
-      <CDivider direction="vertical" />
-      <MenuBarBlock editor={editor} editorState={editorState} />
-      <CDivider direction="vertical" />
-      <Alignment editor={editor} editorState={editorState} />
-      <CDivider direction="vertical" />
-      <MenubarOthersItems editor={editor} editorState={editorState} />
+    <div className="flex flex-col gap-1.5 w-full pt-1 pb-1.5 px-2 button-group relative ">
+      <div className="flex items-center flex-wrap gap-1 w-full button-group relative  ">
+        {menuItems?.map((item, i) => (
+          <React.Fragment key={i}>
+            {item.component}
+            {i < menuItems.length - 1 && (
+              <CDivider direction="vertical" className="mx-1!" />
+            )}
+          </React.Fragment>
+        ))}
+
+        {remainingItems && remainingItems.length > 0 && (
+          <>
+            <CDivider direction="vertical" className="mx-1!" />
+            <MoreItems setClicked={setClicked} clicked={clicked} />
+          </>
+        )}
+
+        <div className="absolute top-0 right-0 flex items-center">
+          {/* <button
+            className={cn(
+              "opacity-90 cursor-pointer w-8 h-8 rounded-md flex items-center justify-center ",
+              transitionString,
+            )}
+            // onClick={() => setOpen(false)}
+          >
+            <BsFillCloudCheckFill size={20} />
+          </button> */}
+
+          <button
+            className={cn(
+              "opacity-90 cursor-pointer hover:text-red-600 hover:bg-red-600/20! w-8 h-8 rounded-md flex items-center justify-center ",
+              transitionString,
+            )}
+            onClick={() => setOpen(false)}
+          >
+            <X size={20} />
+          </button>
+        </div>
+      </div>
+
+      {clicked && remainingItems && (
+        <div
+          className="flex items-center justify-start p-2 rounded-md absolute left-50 top-10 border "
+          style={{
+            color: theme.textColor,
+            backgroundColor: theme.border,
+            borderColor: theme.border10,
+          }}
+        >
+          {remainingItems?.map((item, i) => (
+            <React.Fragment key={i}>
+              {item.component}
+              {i < remainingItems.length - 1 && (
+                <CDivider
+                  direction="vertical"
+                  style={{ backgroundColor: theme.border10 }}
+                  className="mx-2! h-6!"
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

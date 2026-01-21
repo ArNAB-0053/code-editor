@@ -31,6 +31,7 @@ const ASelect = ({
   dropdownItemPadding,
   style, 
   className,
+  classNames,
   ...rest
 }: ASelectProps) => {
   const websiteFont = useSelector(selectWebsiteFont);
@@ -50,6 +51,7 @@ const ASelect = ({
       dropdownItemMinHeight={dropdownItemMinHeight}
       style={style}
       className={className}
+      classNames={classNames}
       {...rest}
     >
       {children}

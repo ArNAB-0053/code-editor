@@ -1,14 +1,13 @@
-import { btn, btnBgColor, btnStyle } from "../menu-bar";
+import { btn, btnBgColor, btnStyle } from "..";
 import { IEditorAndEditorState } from ".";
 import { GoHorizontalRule } from "react-icons/go";
 import { FaHighlighter, FaRedo, FaUndo } from "react-icons/fa";
-import { CDivider } from "@/components/ui/custom";
 
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
 
-export const MenubarOthersItems = ({
+export const RuleHighlight = ({
   editor,
   editorState,
 }: IEditorAndEditorState) => {
@@ -32,8 +31,16 @@ export const MenubarOthersItems = ({
       >
         <FaHighlighter size={14} />
       </button>
+    </>
+  );
+};
 
-      <CDivider direction="vertical" />
+export const UndoRedo = ({
+  editor,
+  editorState,
+}: IEditorAndEditorState) => {
+  return (
+    <>
       <button
         onClick={() => editor.chain().focus().undo().run()}
         disabled={!editorState.canUndo}

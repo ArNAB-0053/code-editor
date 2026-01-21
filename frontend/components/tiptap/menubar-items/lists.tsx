@@ -1,4 +1,4 @@
-import { btn, btnBgColor } from "../menu-bar";
+import { btn, btnBgColor } from "..";
 import { IEditorAndEditorState } from ".";
 import { MdFormatListBulleted } from "react-icons/md";
 import { VscListOrdered } from "react-icons/vsc";
