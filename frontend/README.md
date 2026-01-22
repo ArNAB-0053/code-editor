@@ -1,6 +1,6 @@
-GitHub OAuth
+`GitHub OAuth`
    ↓
-NextAuth session created
+`NextAuth session created`
    ↓
 Backend API: TempUserBB
    ↓
