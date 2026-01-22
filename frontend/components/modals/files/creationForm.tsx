@@ -37,12 +37,12 @@ export const FilesCreationForm = ({
     <Formik
       initialValues={initialValues}
       validate={zodToFormik(filesSchema)}
+      enableReinitialize
       closeOnSubmit
       onSubmit={async (values, { setSubmitting }) => {
         const toastId = toast.loading("Creating file...");
         await createFile(values, {
           onSuccess: (res) => {
-            // console.log(res);
             if (res?.status === "success")
               toast.success(messagesConfig.CREATION.FILE.SUCCESS, {
                 id: toastId,
@@ -132,12 +132,15 @@ export const FolderCreationForm = ({
     ParentId: currentFolderId,
   };
 
+
   return (
     <Formik
       initialValues={initialValues}
+      enableReinitialize   
       validate={zodToFormik(filesSchema)}
       onSubmit={async (values, { setSubmitting }) => {
         const toastId = toast.loading("Creating folder...");
+
         await createFile(values, {
           onSuccess: (res) => {
             // console.log(res);

@@ -11,11 +11,11 @@ export interface CDividerType {
 
 const BaseCDivider = ({
   style,
-  direction = "vertical",
+  direction = "horizontal",
   className = "",
   theme
 }: CDividerType) => {
-  if (direction === "horizontal") {
+  if (direction === "vertical") {
     return (
       <div
         className={`w-px mx-3 ${className}`}

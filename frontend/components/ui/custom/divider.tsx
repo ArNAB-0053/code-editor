@@ -12,7 +12,7 @@ export interface CDividerType {
 
 const CDivider = ({
   style,
-  direction = "vertical",
+  direction = "horizontal",
   className = "",
 }: CDividerType) => {
   const editorTheme = useSelector(selectEditorTheme);

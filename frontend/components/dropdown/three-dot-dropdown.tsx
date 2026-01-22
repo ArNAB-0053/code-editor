@@ -31,7 +31,7 @@ interface ThreeDotDropdownProps {
   isFile?: boolean;
 }
 
-const ThreeDotDropdown = ({
+export const ThreeDotDropdown = ({
   fileId,
   isTrash = false,
   fileName,
@@ -287,5 +287,3 @@ const ThreeDotDropdown = ({
     </>
   );
 };
-
-export default ThreeDotDropdown;

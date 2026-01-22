@@ -7,36 +7,19 @@ import { appUrls } from "@/config/navigation.config";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import { HomeIcon } from "lucide-react";
+import { NotebookPen } from "lucide-react";
 import { FilesIcon } from "@/assets/EditorSidebar/FilesIcon";
 import { LangIcon } from "@/assets/EditorSidebar/LangIcon";
-import { FolderCodeIcon } from "@/assets/FolderIcon";
-import { ShareByMeIcon, ShareWithMeIcon } from "@/assets/ShareIcons";
 import { cn } from "@/lib/utils";
 import { transitionString } from "@/styles";
-import { FaSlidersH, FaTrash } from "react-icons/fa";
+import { FaSlidersH } from "react-icons/fa";
 import ATooltip from "../ui/antd/tooltip";
-import TrashIcon from "@/assets/TrashIcon";
 import { AvatarDropdown } from "../profile/avatar";
 import { useState } from "react";
 import PreferenceModal from "../modals/preference";
 import { EDITOR_HEIGHT } from "@/helper/_base.helper";
-
-const links = [
-  { link: "/", icon: <HomeIcon />, tooltip: "Home" },
-  { link: appUrls.FILE, icon: <FolderCodeIcon />, tooltip: "Folder & File" },
-  {
-    link: appUrls.SHARE.WITH_ME,
-    icon: <ShareWithMeIcon />,
-    tooltip: "Shared With Me",
-  },
-  {
-    link: appUrls.SHARE.BY_ME,
-    icon: <ShareByMeIcon />,
-    tooltip: "Shared By Me",
-  },
-  { link: appUrls.TRASH, icon: <TrashIcon />, tooltip: "Trash" },
-];
+import DraggableComponent from "../draggable";
+import { NotesIcon } from "@/assets/NotesIcon";
 
 const sidebarItems = [
   { link: appUrls.CODE, icon: <FilesIcon />, tooltip: "Code" },
@@ -45,6 +28,7 @@ const sidebarItems = [
 
 const AllEditorSider = () => {
   const [open, setOpen] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
@@ -66,91 +50,69 @@ const AllEditorSider = () => {
       }}
     >
       <div className="w-14 flex items-center flex-col ">
-        {sidebarItems.map((x, i) => (
-          <ATooltip
-            key={i}
-            title={x.tooltip}
-            placement="right"
-            offset={[-5, 20]}
-          >
-            <div
-              className={cn(
-                " w-full flex items-center justify-center border-l-2",
-                activeTab(x.link)
-                  ? "opacity-100"
-                  : "opacity-60 hover:opacity-100",
-                transitionString
-              )}
-              style={{
-                borderColor: activeTab(x.link)
-                  ? theme.textColor
-                  : "transparent",
-              }}
+        <>
+          {sidebarItems.map((x, i) => (
+            <ATooltip
+              key={i}
+              title={x.tooltip}
+              placement="right"
+              offset={[-5, 20]}
             >
-              <Link
-                href={x.link}
-                className="w-full h-full py-3 flex items-center justify-center"
+              <div
+                className={cn(
+                  " w-full flex items-center justify-center border-l-2",
+                  activeTab(x.link)
+                    ? "opacity-100"
+                    : "opacity-60 hover:opacity-100",
+                  transitionString,
+                )}
+                style={{
+                  borderColor: activeTab(x.link)
+                    ? theme.textColor
+                    : "transparent",
+                }}
               >
-                {x.icon}
-              </Link>
-            </div>
-          </ATooltip>
-        ))}
+                <Link
+                  href={x.link}
+                  className="w-full h-full py-3 flex items-center justify-center"
+                >
+                  {x.icon}
+                </Link>
+              </div>
+            </ATooltip>
+          ))}
 
-        <div className="mt-8 mb-2 w-full flex items-center justify-center flex-col">
-          <div
-            className="w-8/10 h-px opacity-60 mb-0.5"
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-          <div
-            className="w-full h-px opacity-60  "
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-          <span
-            className="text-xs uppercase py-2 font-medium w-full text-center "
-            style={{
-              color: theme.disabledTextColor,
-              backgroundColor: theme.border5,
-            }}
-          >
-            Links
-          </span>
-          <div
-            className="w-full h-px opacity-60 mb-0.5"
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-          <div
-            className="w-8/10 h-px opacity-60 "
-            style={{ backgroundColor: theme.disabledTextColor }}
-          />
-        </div>
-
-        {links.map((x, i) => (
-          <ATooltip
-            key={i}
-            title={x.tooltip}
-            placement="right"
-            offset={[-5, 20]}
-          >
-            <div
-              className={cn(
-                " w-full flex items-center justify-center  opacity-60 hover:opacity-100",
-                transitionString
-              )}
-            >
-              <Link
-                href={x.link}
-                className="w-full h-full py-3 flex items-center justify-center"
+          {activeTab("code") && (
+            <ATooltip title="Create Note" placement="right" offset={[-5, 20]}>
+              <button
+                className={cn(
+                  "w-7/10 py-2 h-full rounded-md flex items-center justify-center mt-3 border cursor-pointer hover:opacity-80",
+                  transitionString,
+                )}
+                style={{
+                  backgroundColor: `${theme.activeColor}50`,
+                  borderColor: `${theme.activeColor}90`,
+                  // color: theme.activeColor,
+                }}
+                onClick={() => setNoteOpen(!noteOpen)}
               >
-                {x.icon}
-              </Link>
-            </div>
-          </ATooltip>
-        ))}
+                {/* <LuNotebookPen /> */}
+                {/* <NotesIcon /> */}
+                <NotesIcon size={20} />
+              </button>
+            </ATooltip>
+          )}
+        </>
       </div>
 
       <div className="py-3 w-full flex items-center justify-center flex-col gap-y-6">
-        <button onClick={() => setOpen(true)} className={cn("opacity-80 hover:opacity-100 cursor-pointer w-full flex items-center justify-center py-3", transitionString)}>
+        <button
+          onClick={() => setOpen(true)}
+          className={cn(
+            "opacity-80 hover:opacity-100 cursor-pointer w-full flex items-center justify-center py-3",
+            transitionString,
+          )}
+        >
           <FaSlidersH />
         </button>
         <AvatarDropdown
@@ -164,6 +126,8 @@ const AllEditorSider = () => {
       </div>
 
       <PreferenceModal open={open} setOpen={setOpen} />
+      {/* <DraggableComponent open={noteOpen} setOpen={setNoteOpen} /> */}
+      <DraggableComponent open={noteOpen} setOpen={setNoteOpen} />
     </div>
   );
 };

@@ -15,6 +15,14 @@ export const FilesModal = ({
 }) => {
   const userId = useSelector(selectedUserId);
   const currentFolderId = useSelector(selectFolderId);
+
+  const initialValues = {
+    OwnerId: userId,
+    FileName: "",
+    FileType: FileTypeEnum.FILE,
+    Lang: "python",
+    ParentId: currentFolderId,
+  };
   return (
     <AModal
       title="Create New File"
@@ -25,13 +33,7 @@ export const FilesModal = ({
     >
       <FilesCreationForm
         setOpen={setOpen}
-        initialValues={{
-          OwnerId: userId,
-          FileName: "",
-          FileType: FileTypeEnum.FILE,
-          Lang: "python",
-          ParentId: currentFolderId,
-        }}
+        initialValues={initialValues}
         selecteLang
       />
     </AModal>

@@ -19,4 +19,3 @@ Backend API: FindOrCreateOAuthUser
 Saved into main user-db
    ↓
 From TempUserDB deleted
-

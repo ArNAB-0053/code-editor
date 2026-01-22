@@ -105,6 +105,16 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
     });
   };
 
+  const onClick = () => {
+    const payload: IFileRenameRequest = {
+      FileId: fileId,
+      OwnerId: userId,
+      FileName: inputValue,
+    };
+    rename(payload);
+    setIsRenaming(false);
+  };
+
   return (
     // Editor Header
     <div className="flex items-center justify-between text-base h-[50px] relative w-full">
@@ -123,6 +133,11 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
               style={{
                 width: "calc(100% - 24px)",
                 color: theme.textColor,
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onClick();
+                }
               }}
             />
             <p className="pr-1">{ext}</p>
@@ -145,15 +160,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
               style={{
                 backgroundColor: theme.border20,
               }}
-              onClick={() => {
-                const payload: IFileRenameRequest = {
-                  FileId: fileId,
-                  OwnerId: userId,
-                  FileName: inputValue,
-                };
-                rename(payload);
-                setIsRenaming(false);
-              }}
+              onClick={onClick}
             >
               <FaCheck size={13} className="opacity-90" />
             </button>
@@ -187,7 +194,7 @@ const CreatedFileEditorHeaderComponent = (props: HeaderProps) => {
           onClick={() => {
             dispatch(setCodeRedux(""));
           }}
-        /> */}        
+        /> */}
 
         <CopyButton onClick={copyCode} isCopied={props.isCopied} />
         <RunButton onClick={handleRunCode} loading={props.loading} />

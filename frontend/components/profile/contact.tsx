@@ -4,7 +4,7 @@ import React, { memo } from "react";
 import { FaPhone } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { Heading } from "./base";
+import { Heading } from "../_base/_base";
 
 interface ContactDetailsProps {
   mobileNo?: string;
