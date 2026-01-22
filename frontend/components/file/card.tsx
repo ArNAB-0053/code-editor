@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { IFileFolder, IFilesModel } from "@/@types/files";
 import CodePreview from "./share/code-preview";
 import { langs } from "@/constants/lang";
-import ThreeDotDropdown from "./file-folder-dropdown/three-dot-dropdown";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
 import { setCreatedFileIdRedux } from "@/redux/slices/createdFilesEditorSlice";
@@ -13,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { ThemeTypes } from "@/@types/theme";
 import styled from "styled-components";
 import { setFolderId } from "@/redux/slices/fileFolderSlice";
+import { ThreeDotDropdown } from "../dropdown/three-dot-dropdown";
 
 const StyledLink = styled(Link)<{ $theme: ThemeTypes }>`
   background: ${({ $theme }) => $theme.border10} !important;

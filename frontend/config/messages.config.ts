@@ -64,4 +64,9 @@ export const messagesConfig = {
             ERROR: "Error Pushing File"
         }
     },
+
+
+    // Default messages
+    LOADING: "Loading ...",
+    SOMETHING_WENT_WRONG: "Something went wrong. Please try again later."
 };

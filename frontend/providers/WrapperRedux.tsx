@@ -7,6 +7,7 @@ import {
   selectWebsiteFont,
 } from "@/redux/slices/preferenceSlice";
 import { GlobalStyles } from "@/styles/GlobalStyledCss";
+import { GlobalTiptapEditorStyles } from "@/styles/GlobalTiptapEditorStyles";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -25,6 +26,7 @@ export const WrapperRedux = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       <GlobalStyles $theme={theme} $font={font} />
+      <GlobalTiptapEditorStyles $theme={theme} $font={font} />
       {children}
     </div>
   );

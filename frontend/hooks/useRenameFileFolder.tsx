@@ -15,6 +15,7 @@ export const useRename = () => {
         dispatch(setCreatedFileNameRedux(payload.FileName));
         toast.success(messagesConfig.RENAME);
       },
+      onError: () => toast.error(messagesConfig.SOMETHING_WENT_WRONG)
     });
   };
 

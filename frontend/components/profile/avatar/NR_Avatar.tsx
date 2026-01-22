@@ -7,12 +7,12 @@ import {
   fallbackInitial,
   fallbackProfileDetails,
 } from "@/constants/base.const";
-import { AvatarTemplate } from "./avatar-template";
 import { spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { FiLogOut } from "react-icons/fi";
 import { useFont } from "@/context/FontProvider";
 import { IProfileDetails } from "@/@types/_base";
+import { AvatarTemplate } from "@/components/dropdown/avatar-template";
 
 export interface AccountProps {
   profileDetails: IProfileDetails;

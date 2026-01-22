@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { string } from "zod";
 
 export interface ILangContent {
   code: string;
