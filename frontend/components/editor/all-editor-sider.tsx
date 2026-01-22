@@ -19,10 +19,6 @@ import { useState } from "react";
 import PreferenceModal from "../modals/preference";
 import { EDITOR_HEIGHT } from "@/helper/_base.helper";
 import DraggableComponent from "../draggable";
-import { NotesIcon } from "@/assets/NotesIcon";
-import { selectedUserId } from "@/redux/slices/userSlice";
-import LockIcon from "@/assets/EditorSidebar/LockIcon";
-import LockInfoModal from "../modals/lock";
 
 const sidebarItems = [
   { link: appUrls.CODE, icon: <FilesIcon />, tooltip: "Code" },
@@ -32,12 +28,8 @@ const sidebarItems = [
 const AllEditorSider = () => {
   const [open, setOpen] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
-  const [lockOpen, setLockOpen] = useState(false);
-
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
-
-  const userId = useSelector(selectedUserId);
 
   const pathname = usePathname();
 
@@ -89,41 +81,26 @@ const AllEditorSider = () => {
             </ATooltip>
           ))}
 
-          <ATooltip
-            title={!userId ? "Create an account to unlock this" : "Create Note"}
-            placement="right"
-            offset={[-5, 20]}
-            rootClassName="max-w-[150px]! p-0!"
-          >
-            <button
-              className={cn(
-                "w-8/10 h-full py-3 rounded-md flex items-center justify-center mt-3 border relative transition-all",
-                !userId
-                  ? "cursor-not-allowed opacity-70"
-                  : "cursor-pointer hover:opacity-80",
-                transitionString,
-              )}
-              style={{
-                backgroundColor: `${theme.activeColor}50`,
-                borderColor: `${theme.activeColor}90`,
-              }}
-              onClick={() => {
-                if (userId) setLockOpen(true);
-                else setNoteOpen(!noteOpen);
-              }}
-            >
-              <NotesIcon size={20} className={!userId ? "opacity-60" : ""} />
-
-              {userId && (
-                <>
-                  <span className="absolute top-1 right-1 bg-black/60 rounded-full p-1 z-10">
-                    <LockIcon size={16} className="opacity-80" />
-                  </span>
-                  <span className="absolute inset-0 rounded-md bg-black/10 backdrop-blur-[1px]" />
-                </>
-              )}
-            </button>
-          </ATooltip>
+          {activeTab("code") && (
+            <ATooltip title="Create Note" placement="right" offset={[-5, 20]}>
+              <button
+                className={cn(
+                  "w-8/10 h-full py-3 rounded-md flex items-center justify-center mt-3 border cursor-pointer hover:opacity-80",
+                  transitionString,
+                )}
+                style={{
+                  backgroundColor: `${theme.activeColor}50`,
+                  borderColor: `${theme.activeColor}90`,
+                  // color: theme.activeColor,
+                }}
+                onClick={() => setNoteOpen(!noteOpen)}
+              >
+                {/* <LuNotebookPen /> */}
+                {/* <NotesIcon /> */}
+                <NotebookPen size={18} strokeWidth={2.5} />
+              </button>
+            </ATooltip>
+          )}
         </>
       </div>
 
@@ -148,10 +125,8 @@ const AllEditorSider = () => {
       </div>
 
       <PreferenceModal open={open} setOpen={setOpen} />
+      {/* <DraggableComponent open={noteOpen} setOpen={setNoteOpen} /> */}
       <DraggableComponent open={noteOpen} setOpen={setNoteOpen} />
-      {lockOpen && (
-        <LockInfoModal setShowModal={setLockOpen} />
-      )}
     </div>
   );
 };
