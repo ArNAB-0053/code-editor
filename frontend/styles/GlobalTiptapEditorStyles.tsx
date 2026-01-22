@@ -8,6 +8,10 @@ export const GlobalTiptapEditorStyles = createGlobalStyle<{
 }>`
   .react-resizable-handle {
     opacity: 0 !important;
+    width: 50px !important;
+    height: 50px !important;
+    bottom: -10px !important;
+    right: -10px !important;
   }
 
   .override-aselect-option-bg {

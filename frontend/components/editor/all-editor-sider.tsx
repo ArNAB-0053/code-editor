@@ -19,6 +19,7 @@ import { useState } from "react";
 import PreferenceModal from "../modals/preference";
 import { EDITOR_HEIGHT } from "@/helper/_base.helper";
 import DraggableComponent from "../draggable";
+import { NotesIcon } from "@/assets/NotesIcon";
 
 const sidebarItems = [
   { link: appUrls.CODE, icon: <FilesIcon />, tooltip: "Code" },
@@ -85,7 +86,7 @@ const AllEditorSider = () => {
             <ATooltip title="Create Note" placement="right" offset={[-5, 20]}>
               <button
                 className={cn(
-                  "w-8/10 h-full py-3 rounded-md flex items-center justify-center mt-3 border cursor-pointer hover:opacity-80",
+                  "w-7/10 py-2 h-full rounded-md flex items-center justify-center mt-3 border cursor-pointer hover:opacity-80",
                   transitionString,
                 )}
                 style={{
@@ -97,7 +98,7 @@ const AllEditorSider = () => {
               >
                 {/* <LuNotebookPen /> */}
                 {/* <NotesIcon /> */}
-                <NotebookPen size={18} strokeWidth={2.5} />
+                <NotesIcon size={20} />
               </button>
             </ATooltip>
           )}

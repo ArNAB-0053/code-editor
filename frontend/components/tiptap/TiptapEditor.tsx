@@ -142,9 +142,9 @@ const TiptapEditor = ({
           <EditorContent editor={editor} />
         </div>
 
-        <span className="absolute -right-2 -bottom-2">
+        <span className="absolute -right-1 bottom-0 resizableIcon ">
           <IoIosArrowForward
-            className="rotate-45"
+            className="rotate-45 "
             size={21}
             strokeWidth={5}
             color={theme.activeColor}
