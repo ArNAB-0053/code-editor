@@ -2,7 +2,9 @@ import DrawingEditor from '@/components/drawing'
 
 const page = () => {
   return (
-    <DrawingEditor/>
+    <div className='p-5'>
+      <DrawingEditor/>
+    </div>
   )
 }
 
