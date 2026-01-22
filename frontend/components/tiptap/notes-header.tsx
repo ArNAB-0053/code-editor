@@ -12,11 +12,9 @@ import { transitionString } from "@/styles";
 
 const NotesHeader = ({
   editor,
-  setOpen,
   width,
 }: {
   editor: Editor;
-  setOpen: SetterFunctionTypesBool;
   width?: number;
 }) => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -29,7 +27,7 @@ const NotesHeader = ({
         zIndex: 99999,
       }}
     >
-      <MenuBar editor={editor} width={width} setOpen={setOpen} />
+      <MenuBar editor={editor} width={width} />
     </div>
   );
 };

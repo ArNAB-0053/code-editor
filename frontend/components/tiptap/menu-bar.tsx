@@ -19,19 +19,13 @@ import {
   menuBarItemsListFn,
   remainingMenuItems,
 } from "./menubar-items";
-import { transitionString } from "@/styles";
-import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
-import { SetterFunctionTypesBool } from "@/@types/_base";
-import { BsFillCloudCheckFill } from "react-icons/bs";
 
 export interface MenuBarProps extends IEditor {
   width?: number;
-  setOpen: SetterFunctionTypesBool;
 }
 
 // Main MenuBar Component
-export const MenuBar = ({ editor, width, setOpen }: MenuBarProps) => {
+export const MenuBar = ({ editor, width }: MenuBarProps) => {
   const [clicked, setClicked] = useState(false);
 
   const editorTheme = useSelector(selectEditorTheme);
@@ -108,28 +102,6 @@ export const MenuBar = ({ editor, width, setOpen }: MenuBarProps) => {
             <MoreItems setClicked={setClicked} clicked={clicked} />
           </>
         )}
-
-        <div className="absolute top-0 right-0 flex items-center">
-          {/* <button
-            className={cn(
-              "opacity-90 cursor-pointer w-8 h-8 rounded-md flex items-center justify-center ",
-              transitionString,
-            )}
-            // onClick={() => setOpen(false)}
-          >
-            <BsFillCloudCheckFill size={20} />
-          </button> */}
-
-          <button
-            className={cn(
-              "opacity-90 cursor-pointer hover:text-red-600 hover:bg-red-600/20! w-8 h-8 rounded-md flex items-center justify-center ",
-              transitionString,
-            )}
-            onClick={() => setOpen(false)}
-          >
-            <X size={20} />
-          </button>
-        </div>
       </div>
 
       {clicked && remainingItems && (

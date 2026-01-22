@@ -112,6 +112,10 @@ export const GlobalStyles = createGlobalStyle<{
     color: ${({ $theme }) => $theme.textColor} !important;
   }     
 
+  .ant-splitter >.ant-splitter-bar, .ant-splitter-bar-collapse-bar {
+    z-index: 10 !important;
+  }
+
   // -----------------------------------------------------------------------------------
   //                    antd Tabs that is inside "share" class.
   // -----------------------------------------------------------------------------------

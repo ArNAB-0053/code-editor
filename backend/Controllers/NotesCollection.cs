@@ -17,6 +17,8 @@ namespace backend.Controllers
             _service = service;
         }
 
+
+        // Create / Update Note
         [HttpPut]
         public async Task<IActionResult> UpsertAsync(NotesModal note)
         {
@@ -29,7 +31,8 @@ namespace backend.Controllers
                 return BadRequest(new { status = "error", message = ex.Message });
             }
         }
-
+        
+        // Get note but CodeId - (Details)
         [HttpPost("details")]
         public IActionResult GetNote(GetNotesDTO req)
         {
@@ -39,6 +42,21 @@ namespace backend.Controllers
                 return Ok(new { status = "success", data = res });
             }
             catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        // Rename Note
+        [HttpPatch("rename")]
+        public IActionResult RenameNote([FromBody] RenameReqDTO req)
+        {
+            try
+            {
+                _service.RenameNote(req.CodeId, req.Title);
+                return Ok(new { status = "success" });
+            }
+            catch (Exception ex) 
             {
                 return BadRequest(new { status = "error", message = ex.Message });
             }

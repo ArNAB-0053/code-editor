@@ -40,7 +40,7 @@ export const GlobalTiptapEditorStyles = createGlobalStyle<{
     }
 
     .grabbable > div:nth-child(2) {
-        height: calc(100% - 42px) !important;
+        height: calc(100% - 82px) !important;
     }
 
     .ProseMirror {

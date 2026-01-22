@@ -5,12 +5,9 @@ import {
 } from "@/assets/FolderIcon";
 import FileFolderTree from "./file-folder-tree";
 import { FiFolderPlus } from "react-icons/fi";
-import Link from "next/link";
-import { appUrls } from "@/config/navigation.config";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { FilesModal, FolderModal } from "@/components/modals/files";
 import { ReactNode, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -111,16 +108,6 @@ export const TitleRenderComponent = ({
           >
             <FiFolderPlus size={15.5} />
           </button>
-
-          <Link
-            href={appUrls.FILE}
-            style={{
-              color: theme.textColor,
-            }}
-            className="hover:bg-white/10 p-1 rounded-md cursor-pointer opacity-60 hover:opacity-90 transition-all duration-150 ease-linear"
-          >
-            <FaArrowRightLong size={15.5} />
-          </Link>
         </span>
       ) : (
         <div

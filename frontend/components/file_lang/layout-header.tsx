@@ -39,13 +39,13 @@ const FileLanglayoutHeader = () => {
 
         <div className="w-0.5 h-6 " style={{ backgroundColor: theme.border }} />
 
-        <div className="flex items-center justify-end gap-x-3 h-full">
+        <div className="flex items-center justify-end gap-x-3 mr-3 h-full">
           <FileLangLayoutButtons />
           <FullscreenButton />
 
-          <button className="opacity-90 cursor-pointer bg-red-600 h-full px-3">
+          {/* <button className="opacity-90 cursor-pointer bg-red-600 h-full px-3">
             <X size={20} />
-          </button>
+          </button> */}
         </div>
       </div>
     </header>

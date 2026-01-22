@@ -1,7 +1,8 @@
 import axiosInstance from "@/lib/axios-instance";
-import { IGetNoteDetailsRequest, INoteModel, INoteResult } from "@/@types/notes";
+import { IGetNoteDetailsRequest, INoteModel, INoteResult, IRenameNoteRequest } from "@/@types/notes";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from ".";
+import { IBaseReturn } from "@/@types/_base";
 
 const URI = "api/notes";
 
@@ -40,5 +41,23 @@ export const useNoteDetails = (payload: IGetNoteDetailsRequest) => {
     queryKey: [QUERY_KEYS.NOTE, payload?.CodeId],
     queryFn: () => getNoteDetails(payload),
     enabled: !!payload?.CodeId,
+  });
+};
+
+// (PATCH) - Rename
+export const renameNote = async (
+  payload: IRenameNoteRequest,
+): Promise<IBaseReturn> => {
+  const res = await axiosInstance.patch(`${URI}/rename`, payload);
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+  return res.data;
+};
+
+export const useRenameNote = () => {
+  return useMutation({
+    mutationFn: (payload: IRenameNoteRequest) => renameNote(payload),
   });
 };

@@ -22,3 +22,8 @@ export interface IGetNoteDetailsRequest {
     CodeId: string;
     // NoteId: string;
 }
+
+export interface IRenameNoteRequest {
+    CodeId: string;
+    Title: string;
+}

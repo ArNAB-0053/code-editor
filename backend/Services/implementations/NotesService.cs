@@ -24,6 +24,7 @@ namespace backend.Services.implementations
 
         }
 
+        // Create or Update 
         public async Task<NotesModal> UpsertAsync(NotesModal note)
         {
             var filter = Builders<NotesModal>.Filter
@@ -43,7 +44,17 @@ namespace backend.Services.implementations
             return note;
         }
 
-
+        // GET Notr by CodeId - (Details)
         public NotesModal GetNote(string codeId) => _notes.Find(x => x.CodeId == codeId).FirstOrDefault();
+
+        // Rename Note by CodeId
+        public void RenameNote(string codeId, string title)
+        {
+            var filter = Builders<NotesModal>.Update
+                .Set(x => x.Title, title)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            _notes.UpdateOne(x => x.CodeId == codeId, filter);
+        }
     }
 }

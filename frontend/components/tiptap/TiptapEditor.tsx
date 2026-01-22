@@ -7,16 +7,20 @@ import StarterKit from "@tiptap/starter-kit";
 import "@/styles/editor.css";
 import NotesHeader from "./notes-header";
 import { SetterFunctionTypesBool } from "@/@types/_base";
-import { useNoteCreation, useNoteDetails } from "@/services/notes";
+import { useNoteDetails } from "@/services/notes";
 import { IGetNoteDetailsRequest, INoteModel } from "@/@types/notes";
 import { useParams } from "next/navigation";
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 import { useSelector } from "react-redux";
 import { selectedfileId } from "@/redux/slices/createdFilesEditorSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { themeConfig } from "@/config/themeConfig";
+import { useNote } from "@/hooks/useNote";
+import { useDispatch } from "react-redux";
+import { setNotesContent, setNotesTitle } from "@/redux/slices/notesSlice";
+import TitleHeader from "./title-header";
 
 const TiptapEditor = ({
   setOpen,
@@ -30,6 +34,11 @@ const TiptapEditor = ({
 
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
+
+  const lastSavedRef = useRef<string | null>(null);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const dispatch = useDispatch();
 
   // console.log({
   //   reduxFileId: reduxFileId,
@@ -62,43 +71,75 @@ const TiptapEditor = ({
 
   useEffect(() => {
     if (!editor || !notes?.data?.content) return;
+
+    dispatch(setNotesContent({ fileId: fileId, content: notes?.data?.content }));
+    dispatch(
+      setNotesTitle({ fileId: fileId, title: notes?.data?.title as string }),
+    );
     const decompressed = decompressFromUTF16(notes.data.content);
     if (!decompressed) return;
+
     try {
       const json = JSON.parse(decompressed);
       editor.commands.setContent(json);
+
+      lastSavedRef.current = JSON.stringify(json);
     } catch (err) {
       console.error("Failed to load note:", err);
     }
-  }, [editor, notes?.data?.content]);
+  }, [editor, notes?.data?.content, dispatch, fileId, notes?.data?.title]);
 
-  const { mutate: createNote } = useNoteCreation();
+  // hook to save note
+  const { addNote: createNote } = useNote();
 
-  const handleSave = () => {
+  useEffect(() => {
     if (!editor) return;
-    const compressed = compressToUTF16(JSON.stringify(editor.getJSON()));
-    const payload: INoteModel = {
-      CodeId: fileId,
-      Content: compressed,
+
+    const handleUpdate = () => {
+      const currentJSON = JSON.stringify(editor.getJSON());
+
+      if (currentJSON === lastSavedRef.current) return;
+
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      saveTimeoutRef.current = setTimeout(() => {
+        const compressed = compressToUTF16(currentJSON);
+
+        const payload: INoteModel = {
+          CodeId: fileId,
+          Content: compressed,
+        };
+
+        dispatch(setNotesContent({ fileId: fileId, content: currentJSON }));
+        createNote(payload);
+        lastSavedRef.current = currentJSON;
+      }, 1000); // 1 second after last change
     };
-    createNote(payload, {
-      onSuccess: (res) => console.log("Saved:", res),
-      onError: (err) => console.error("Save error:", err),
-    });
-  };
+
+    editor.on("update", handleUpdate);
+
+    return () => {
+      editor.off("update", handleUpdate);
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [editor, fileId, createNote, dispatch]);
 
   return (
     <>
-      <NotesHeader width={width} editor={editor as Editor} setOpen={setOpen} />
-      <div className="pt-2 pb-2 rounded-md bg-[#2c2c2c]/50 relative">
+      <div>
+        <TitleHeader setOpen={setOpen} />
+        <NotesHeader
+          width={width}
+          editor={editor as Editor}
+        />
+      </div>
+      <div className="rounded-md bg-[#2c2c2c]/50 relative">
         <div className="overflow-y-auto custom-scrollbar relative h-full editorContent">
           <EditorContent editor={editor} />
-          <button
-            onClick={handleSave}
-            className="mt-4 absolute right-0 top-0 px-3 py-2 text-xs "
-          >
-            Save
-          </button>
         </div>
 
         <span className="absolute -right-2 -bottom-2">
