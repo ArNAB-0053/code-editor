@@ -40,5 +40,10 @@ namespace backend.Services.implementations
         {
             return await Db.KeyExistsAsync(key);
         }
+
+        public async Task<bool> Delete(string key)
+        {
+            return await Db.KeyDeleteAsync(key);
+        }
     }
 }

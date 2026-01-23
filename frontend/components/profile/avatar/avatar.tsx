@@ -14,6 +14,7 @@ import {
   selectedUserEmail,
   selectedUserName,
   selectedUserUsername,
+  setUserEmpty,
 } from "@/redux/slices/userSlice";
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
 import { CAvatar, CButton } from "@/components/ui/custom";
@@ -24,6 +25,8 @@ import {
 } from "@/components/dropdown/avatar-template";
 import { useState } from "react";
 import { ChangedPasswordModal } from "@/components/modals/change-password/R";
+import { useLogout } from "@/services/auth";
+import { useDispatch } from "react-redux";
 
 interface AvatarDropdownProps extends ExtraProps {
   color?: string;
@@ -47,8 +50,19 @@ export const AvatarDropdown = ({
   const email = useSelector(selectedUserEmail);
   const username = useSelector(selectedUserUsername);
 
+  const dispatch = useDispatch()
+
   const fullname = getFullnameFromNameObj(nameObj);
   // console.log("nameObj", fullname);
+
+  const {mutateAsync: logout} = useLogout()
+
+  const handleLogout = async () => {
+    const res = await logout()
+    if (res.status = "success") {
+      dispatch(setUserEmpty())
+    } 
+  }
 
   const theme = themeConfig(editorTheme);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
@@ -91,6 +105,7 @@ export const AvatarDropdown = ({
               "flex! items-center justify-center gap-x-2 text-[#ff4d4f]! bg-[#ff4d4f]/20! hover:opacity-70 transition-all ease-linear duration-100 font-semibold",
               spaceGrotesk.className,
             )}
+            onClick={handleLogout}
             // style={{
             //   background: `${theme.activeColor}20`,
             // }}

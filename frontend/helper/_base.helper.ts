@@ -42,6 +42,5 @@ export function parseFullName(fullName?: string): NameObjType {
   };
 }
 
-
 export const EDITOR_HEIGHT = 'calc(100svh - 40px)'
 export const eHEIGHT = `calc(${EDITOR_HEIGHT} - 55px)`

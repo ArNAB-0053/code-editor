@@ -44,5 +44,11 @@ namespace backend.helper
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public static string GenerateRefreshToken()
+        {
+            return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        }
+
     }
 }
