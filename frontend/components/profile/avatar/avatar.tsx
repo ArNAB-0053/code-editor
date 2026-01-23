@@ -18,7 +18,12 @@ import {
 import { getFullnameFromNameObj } from "@/helper/_base.helper";
 import { CAvatar, CButton } from "@/components/ui/custom";
 import { transitionString } from "@/styles";
-import { AvatarTemplate, ExtraProps } from "@/components/dropdown/avatar-template";
+import {
+  AvatarTemplate,
+  ExtraProps,
+} from "@/components/dropdown/avatar-template";
+import { useState } from "react";
+import { ChangedPasswordModal } from "@/components/modals/change-password/R";
 
 interface AvatarDropdownProps extends ExtraProps {
   color?: string;
@@ -34,6 +39,8 @@ export const AvatarDropdown = ({
   ...rest
 }: AvatarDropdownProps) => {
   // const { data: profileDetails, isLoading } = useMyProfile();
+  const [open, setOpen] = useState(false);
+
   const editorTheme = useSelector(selectEditorTheme);
   const websiteFont = useSelector(selectWebsiteFont);
   const nameObj = useSelector(selectedUserName);
@@ -82,7 +89,7 @@ export const AvatarDropdown = ({
             type="none"
             className={cn(
               "flex! items-center justify-center gap-x-2 text-[#ff4d4f]! bg-[#ff4d4f]/20! hover:opacity-70 transition-all ease-linear duration-100 font-semibold",
-              spaceGrotesk.className
+              spaceGrotesk.className,
             )}
             // style={{
             //   background: `${theme.activeColor}20`,
@@ -97,6 +104,8 @@ export const AvatarDropdown = ({
         username={username || fallbackProfileDetails?.username}
         theme={theme}
         font={font}
+        onClick={() => setOpen(true)}
+        modalComponent={<ChangedPasswordModal open={open} setOpen={setOpen} />}
       />
     </>
   );

@@ -49,7 +49,7 @@ namespace backend.Controllers
                     Password = req.Password,
                     Provider = ProviderEnum.NORMAL
                 };
-                var createdUser = await _service.Create(user);
+                var createdUser = await _service.Create(user, req.ConfirmPassword);
 
                 return Ok(new
                 {
@@ -170,6 +170,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public AuthModel GetUserById(string id) => _service.GetUserById(id);
 
+        // GET - USERS BASED ON USERNAME (Username)
         [HttpGet("profile-details")]
         public AuthModel GetUserByUsername([FromQuery] string username) => _service.GetUserByUsername(username);
 
@@ -208,6 +209,27 @@ namespace backend.Controllers
                     }
                 });
         }
+
+        // PATCH - CHANGE PASSWORD
+        [HttpPatch("change-password")]
+        public IActionResult ChangePassword([FromBody] ChangePasswordRequest req)
+        {
+            try
+            {
+                var res = _service.ChangePassword(req.Id, req.Username, req.OldPassword, req.NewPassword, req.ConfirmNewPassword);
+                if (!res)
+                {
+                    return BadRequest(new { status = "error", message = "Something Went Wrong!" });
+                }
+
+                return Ok(new { status = "sucess" });
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
 
         // -------------------------------
         //             SEARCH

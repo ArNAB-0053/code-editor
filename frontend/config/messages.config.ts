@@ -27,7 +27,7 @@ export const messagesConfig = {
         LOADING: "Please wait..."
     },
     AUTOSAVE: {
-        LOADING : "Saving ...",
+        LOADING : "Saving...",
         SUCCESS: "Saved",
         FAILED: "Autosave failed. Please check your connection."
     },
@@ -64,9 +64,14 @@ export const messagesConfig = {
             ERROR: "Error Pushing File"
         }
     },
+    CHANGE_PASSWORD: {
+        LOADING: "Changing Password",
+        SUCCESS: "Password Changed",
+        ERROR: "Couldn't Change the Password. Something went wrong.",
+    },
 
 
     // Default messages
-    LOADING: "Loading ...",
+    LOADING: "Loading...",
     SOMETHING_WENT_WRONG: "Something went wrong. Please try again later."
 };

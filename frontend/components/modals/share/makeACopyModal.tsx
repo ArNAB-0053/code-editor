@@ -2,7 +2,7 @@ import { SetterFunctionTypesBool } from "@/@types/_base";
 import { AModal } from "@/components/ui/antd";
 import { selectedUserId } from "@/redux/slices/userSlice";
 import { useSelector } from "react-redux";
-import { FilesCreationForm } from "../files/creationForm";
+import { FilesCreationForm } from "@/components/forms/FilesCreationForm";
 import { FileTypeEnum } from "@/@types/_enums";
 
 export const MakeACopyModal = ({

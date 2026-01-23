@@ -1,8 +1,9 @@
-import { IAvailability, IAuthReturn, IRegister, ISearchResult, IRegisterRequest, IRegisterUsingProviderRequest } from "@/@types/auth";
+import { IAvailability, IAuthReturn, ISearchResult, IRegisterRequest, IChangePassRequest } from "@/@types/auth";
 import axiosInstance from "@/lib/axios-instance";
-import { LoginFormType, RegisterFormType, RegisterProType } from "@/zod/auth.z";
+import { ChangePasswordType, LoginFormType, RegisterProType } from "@/zod/auth.z";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from ".";
+import { IBaseReturn } from "@/@types/_base";
 
 export const URI = "api/user";
 
@@ -10,6 +11,7 @@ export const URI = "api/user";
 //                          AUTH 
 // ----------------------------------------------------
 // SIGN UP
+// Normal Email/Password
 export const register = async (config: IRegisterRequest): Promise<IAuthReturn> => {
   const res = await axiosInstance.post(`${URI}/register`, config);
 
@@ -27,6 +29,7 @@ export const useRegister = () => {
   });
 };
 
+// Using Provider
 export const registerUsingProvider = async (config: RegisterProType): Promise<IAuthReturn> => {
   const res = await axiosInstance.post(`${URI}/register/provider`, config);
 
@@ -61,6 +64,24 @@ export const login = async (config: LoginFormType): Promise<IAuthReturn> => {
 export const useLogin = () => {
   return useMutation({
     mutationFn: (payload: LoginFormType) => login(payload),
+  });
+};
+
+// Change Password
+export const changePassword = async (payload: ChangePasswordType): Promise<IBaseReturn> => {
+  const res = await axiosInstance.patch(`${URI}/change-password`, payload);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: (payload: ChangePasswordType) => changePassword(payload),
   });
 };
 

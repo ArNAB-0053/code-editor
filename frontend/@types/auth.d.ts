@@ -41,6 +41,7 @@ export interface IRegisterRequest {
   email: string;
   username: string;
   password: string;
+  confirmPassword: string;
 }
 
 export type ProviderType = "GITGUB" | "GOOGLE" | "NORMAL"
@@ -51,4 +52,13 @@ export interface IRegisterUsingProviderRequest {
   username: string;
   provider: ProviderTypeEnumString;
   providerId: string;
+}
+
+// Change Password
+export interface IChangePassRequest {
+  Id: string;
+  Username: string;
+  OldPassword: string;
+  NewPassword: string;
+  ConfirmNewPassword: string;
 }

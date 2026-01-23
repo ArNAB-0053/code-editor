@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using backend.config;
+using backend.DTO;
 using backend.Models;
 using BCrypt.Net;
 using MongoDB.Driver;
@@ -43,7 +44,7 @@ namespace backend.Services.implementations
         // -------------------------------
 
         // Create / Sign Up
-        public async Task<AuthModel> Create(AuthModel auth)
+        public async Task<AuthModel> Create(AuthModel auth, string confirmPassword)
         {
             //// REDIS checks for email/username exists or not
             //if (await _redis.Exists($"user:username:{auth.Username}")) throw new Exception("Username already in use");
@@ -60,9 +61,24 @@ namespace backend.Services.implementations
             await CheckUsernameExists(auth.Username);
             await CheckEmailExists(auth.Email);
 
+            Console.WriteLine(auth.Password, confirmPassword);
+
             if (!IsValidPassword(auth.Password)) throw new Exception("Invalid Password Format");
+            if (!IsValidPassword(confirmPassword)) throw new Exception("Invalid Confirm Password Format");
+
+            // This ???
+            //if (auth.Password != confirmPassword)
+            //{
+            //    throw new Exception("Password didn't match"); 
+            //}
 
             auth.Password = BCrypt.Net.BCrypt.HashPassword(auth.Password);
+
+            // Or this ??? - which one better ????
+            if (!BCrypt.Net.BCrypt.Verify(confirmPassword, auth.Password))
+            {
+                throw new Exception("Password didn't match");
+            }
 
             _auth.InsertOne(auth);
 
@@ -72,6 +88,7 @@ namespace backend.Services.implementations
             return auth;
         }
 
+        // Create With Provider
         public async Task<AuthModel> FindOrCreateOAuthUser(
             string email,
             ProviderEnum provider,
@@ -165,6 +182,35 @@ namespace backend.Services.implementations
 
             return user;
         }
+
+        // Change Password
+        public bool ChangePassword(string id, string username, string oldPassword, string newPassword, string confirmNewPassword)
+        {
+            var user = _auth.Find(x => x.Id == id && x.Username == username).FirstOrDefault();
+            if (user == null) throw new Exception("User not found");
+
+            if (user.Provider != ProviderEnum.NORMAL) throw new Exception("Please use your provider");
+
+            if (!IsValidPassword(newPassword)) throw new Exception("Invalid Password Format");
+            if (!IsValidPassword(confirmNewPassword)) throw new Exception("Invalid Password Format");
+
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.Password)) throw new Exception("Old and New Password didn't match");
+
+            newPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            if (!BCrypt.Net.BCrypt.Verify(confirmNewPassword, newPassword)) throw new Exception("Password didn't match");
+
+            var filter = Builders<AuthModel>.Update
+                .Set(x => x.Password, newPassword)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            var res = _auth.UpdateOne(x => x.Id == id && x.Username == username, filter);
+            return res.ModifiedCount > 0;
+        }
+
+        // -------------------------------
+        //       AVAILABILITY CHECK
+        // -------------------------------
 
         // Checking Username already exists or not
 

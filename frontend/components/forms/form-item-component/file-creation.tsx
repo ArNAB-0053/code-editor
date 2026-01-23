@@ -28,7 +28,7 @@ type FormItemComponentType = {
   options?: any[];
 };
 
-export const FormItemComponent = ({
+export const FileCreationFormItemComponent = ({
   name,
   formItemChildren,
   value,

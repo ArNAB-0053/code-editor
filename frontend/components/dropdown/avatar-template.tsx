@@ -9,7 +9,8 @@ import { ThemeTypes } from "@/@types/theme";
 import { ReactNode } from "react";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { fallbackProfileDetails } from "@/constants/base.const";
-import { StyledDiv, StyledLink } from "@/styles/StyledComponents";
+import { StyledButton, StyledDiv, StyledLink } from "@/styles/StyledComponents";
+import { SetterFunctionTypesBool } from "@/@types/_base";
 
 export interface ExtraProps {
   offset?: [number, number];
@@ -27,6 +28,8 @@ interface AvatarTemplateProps extends ExtraProps {
   name: string;
   email: string;
   username: string;
+  onClick?: () => void
+  modalComponent?: ReactNode
 }
 
 export const AvatarTemplate = ({
@@ -42,6 +45,8 @@ export const AvatarTemplate = ({
   isSider,
   verticalLineClassName,
   horizontalLineClassName,
+  onClick,
+  modalComponent
 }: AvatarTemplateProps) => {
   const dropdownElement = () => (
     <div
@@ -135,16 +140,17 @@ export const AvatarTemplate = ({
           Profile
         </StyledLink>
 
-        <StyledDiv
+        <StyledButton
           $theme={theme}
           style={{
             background: `${theme.textColor}10`,
             color: theme.textColor,
           }}
           className={cn(
-            "flex items-center mt-3 w-full gap-x-2 py-2 px-4 group rounded-md  transition-all ease-linear duration-100 relative overflow-hidden",
+            "flex items-center mt-3 w-full gap-x-2 py-2 px-4 group rounded-md  transition-all ease-linear duration-100 relative overflow-hidden cursor-pointer",
             spaceGrotesk?.className
           )}
+          onClick={onClick}
         >
           <div
             className="h-full w-full absolute -left-60 top-0 group-hover:left-0 transition-all ease-linear duration-200"
@@ -154,7 +160,7 @@ export const AvatarTemplate = ({
           />
           <MdOutlineLockReset />
           Change Password
-        </StyledDiv>
+        </StyledButton>
 
         <div className="text-white mt-6 w-full flex items-center justify-end">
           {logoutButton}
@@ -219,6 +225,8 @@ export const AvatarTemplate = ({
       >
         {dropdownContent}
       </Dropdown>
+
+      {modalComponent}
     </>
   );
 };
