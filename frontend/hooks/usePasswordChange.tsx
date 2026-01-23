@@ -1,21 +1,20 @@
 import { toast } from "sonner";
-import {
-  useChangePassword,
-} from "@/services/auth";
+import { useChangePassword } from "@/services/auth";
 import { messagesConfig } from "@/config/messages.config";
 import { ChangePasswordType } from "@/zod/auth.z";
-import { IBaseReturn } from "@/@types/_base";
+import { IBaseReturn, SetterFunctionTypesBool } from "@/@types/_base";
 
-export const usePasswordChange = () => {
+export const usePasswordChange = ({ setOpen }: {setOpen: SetterFunctionTypesBool}) => {
   const { mutateAsync: changePasswordMutate } = useChangePassword();
 
-  const changePassword = async (valus: ChangePasswordType) => {
+  const changePassword = async (values: ChangePasswordType) => {
     const toastId = messagesConfig.CHANGE_PASSWORD.LOADING;
     try {
-      const res: IBaseReturn = await changePasswordMutate(valus);
-      if (res.status == "success")
+      const res: IBaseReturn = await changePasswordMutate(values);
+      if (res.status == "success") {
+        setOpen(false);
         toast.success(messagesConfig.CHANGE_PASSWORD.SUCCESS, { id: toastId });
-      else toast.error(messagesConfig.CHANGE_PASSWORD.ERROR, { id: toastId });
+      } else toast.error(messagesConfig.CHANGE_PASSWORD.ERROR, { id: toastId });
     } catch {
       toast.error(messagesConfig.CHANGE_PASSWORD.ERROR, { id: toastId });
     }

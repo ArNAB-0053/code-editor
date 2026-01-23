@@ -11,18 +11,21 @@ import { usePasswordChange } from "@/hooks/usePasswordChange";
 import { NRAForm, NRCButton, NRCDivider } from "@/components/ui/no-redux";
 import { FormItemComponent } from "../form-item-component/NR";
 import { useTheme } from "@/context/ThemeContext";
+import { SetterFunctionTypesBool } from "@/@types/_base";
 
 interface ChangePasswordFormProps {
   id: string;
   username: string;
+  setOpen: SetterFunctionTypesBool
 }
 
 export const ChangePasswordForm = ({
   id,
   username,
+  setOpen
 }: ChangePasswordFormProps) => {
   const { theme } = useTheme();
-  const { changePassword } = usePasswordChange();
+  const { changePassword } = usePasswordChange({setOpen});
 
   const initialValues: ChangePasswordType = {
     id,
@@ -137,7 +140,7 @@ export const ChangePasswordForm = ({
               disabled={disabled}
               onClick={handleSubmit}
               className={cn(
-                "flex-1 flex items-center justify-center gap-x-3 disabled:opacity-40! w-full!",
+                "flex-1 flex items-center justify-center gap-x-3 disabled:opacity-40! w-full! mt-7!",
                 jetBrainsMono.className,
               )}
             >

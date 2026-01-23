@@ -23,7 +23,7 @@ export const NRChangedPasswordModal = ({
       footer={null}
       className="overflow-hidden! w-full! md:w-[20rem]! "
     >
-      <ChangePasswordForm id={id} username={username} />
+      <ChangePasswordForm id={id} username={username} setOpen={setOpen} />
     </NRAModal>
   );
 };

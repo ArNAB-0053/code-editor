@@ -35,37 +35,37 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
-export const registerProSchema = z
-  .object({
-    name: z.object({
-      firstName: z.string().min(1, "First name required"),
-      middleName: z.string().optional().or(z.literal("")),
-      lastName: z.string().min(1, "Last name required"),
-    }),
-    email: z.string().email("Invalid email"),
-    username: z.string().superRefine((value, ctx) => {
-      const err = getUsernameError(value);
-      if (err) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: err,
-        });
-      }
-    }),
-    provider: z.nativeEnum(ProviderTypeEnumString),
-    providerId: z.string().min(1),    
-  })
+export const registerProSchema = z.object({
+  name: z.object({
+    firstName: z.string().min(1, "First name required"),
+    middleName: z.string().optional().or(z.literal("")),
+    lastName: z.string().min(1, "Last name required"),
+  }),
+  email: z.string().email("Invalid email"),
+  username: z.string().superRefine((value, ctx) => {
+    const err = getUsernameError(value);
+    if (err) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: err,
+      });
+    }
+  }),
+  provider: z.nativeEnum(ProviderTypeEnumString),
+  providerId: z.string().min(1),
+});
 
 export const loginSchema = z.object({
   identifier: z.string(),
   password: z.string().min(6, "Password must be 6+ chars"),
 });
 
-export const changePasswordSchema = z.object({
-  id: z.string(),
-  username: z.string().min(3),
-  oldPassword: z.string(),
-  newPassword: z.string().superRefine((value, ctx) => {
+export const changePasswordSchema = z
+  .object({
+    id: z.string(),
+    username: z.string().min(3),
+    oldPassword: z.string(),
+    newPassword: z.string().superRefine((value, ctx) => {
       const err = getPasswordError(value);
       if (err) {
         ctx.addIssue({
@@ -74,8 +74,12 @@ export const changePasswordSchema = z.object({
         });
       }
     }),
-  confirmNewPassword: z.string()
-})
+    confirmNewPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
+  });
 
 export type RegisterFormType = z.infer<typeof registerSchema>;
 export type LoginFormType = z.infer<typeof loginSchema>;

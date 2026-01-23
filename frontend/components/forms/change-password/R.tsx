@@ -15,15 +15,20 @@ import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
 import { selectedUserId, selectedUserUsername } from "@/redux/slices/userSlice";
+import { SetterFunctionTypesBool } from "@/@types/_base";
 
-export const ChangePasswordForm = () => {
+export const ChangePasswordForm = ({
+  setOpen,
+}: {
+  setOpen: SetterFunctionTypesBool;
+}) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
   const userId = useSelector(selectedUserId);
   const username = useSelector(selectedUserUsername);
 
-  const { changePassword } = usePasswordChange();
+  const { changePassword } = usePasswordChange({ setOpen });
 
   const initialValues: ChangePasswordType = {
     id: userId,
@@ -138,7 +143,7 @@ export const ChangePasswordForm = () => {
               disabled={disabled}
               onClick={handleSubmit}
               className={cn(
-                "flex-1 flex items-center justify-center gap-x-3 disabled:opacity-40! w-full!",
+                "flex-1 flex items-center justify-center gap-x-3 disabled:opacity-40! w-full! mt-7!",
                 jetBrainsMono.className,
               )}
             >

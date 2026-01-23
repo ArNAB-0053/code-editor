@@ -11,7 +11,7 @@ export const ChangedPasswordModal = ({ open, setOpen }: IModalProps) => {
       footer={null}
       className="overflow-hidden! w-full! md:w-[20rem]!"
     >
-      <ChangePasswordForm />
+      <ChangePasswordForm setOpen={setOpen} />
     </AModal>
   );
 };

@@ -222,7 +222,7 @@ namespace backend.Controllers
                     return BadRequest(new { status = "error", message = "Something Went Wrong!" });
                 }
 
-                return Ok(new { status = "success" });
+                return Ok(new { status = "sucess" });
             } 
             catch (Exception ex)
             {

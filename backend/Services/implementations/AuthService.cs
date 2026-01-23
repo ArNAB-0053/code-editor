@@ -187,21 +187,18 @@ namespace backend.Services.implementations
         public bool ChangePassword(string id, string username, string oldPassword, string newPassword, string confirmNewPassword)
         {
             var user = _auth.Find(x => x.Id == id && x.Username == username).FirstOrDefault();
-            if (user == null) return false;
+            if (user == null) throw new Exception("User not found");
 
-            if (user.Provider != ProviderEnum.NORMAL) throw new Exception("Please use you peovider");
+            if (user.Provider != ProviderEnum.NORMAL) throw new Exception("Please use your provider");
 
             if (!IsValidPassword(newPassword)) throw new Exception("Invalid Password Format");
             if (!IsValidPassword(confirmNewPassword)) throw new Exception("Invalid Password Format");
 
-            if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.Password)) return false;
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.Password)) throw new Exception("Old and New Password didn't match");
 
             newPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
-            if (!BCrypt.Net.BCrypt.Verify(confirmNewPassword, newPassword))
-            {
-                throw new Exception("Password didn't match");
-            }
+            if (!BCrypt.Net.BCrypt.Verify(confirmNewPassword, newPassword)) throw new Exception("Password didn't match");
 
             var filter = Builders<AuthModel>.Update
                 .Set(x => x.Password, newPassword)
