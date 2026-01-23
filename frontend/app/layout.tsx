@@ -13,7 +13,6 @@ import CQueryClientProvider from "@/providers/queryClientProvider";
 import BackgroundProvider from "@/providers/bgProvider";
 import { WebsiteFontsKey } from "@/@types/font";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { themeConfig } from "@/config/themeConfig";
 import NextAuthProvider from "@/providers/SessionProvider";
 
 const geistSans = Geist({

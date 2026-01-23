@@ -67,6 +67,41 @@ export const useLogin = () => {
   });
 };
 
+// Refresh
+export const refresh = async (): Promise<IBaseReturn>  => {
+  const res = await axiosInstance.post(`${URI}/refresh`);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data
+}
+export const useRefresh = () => {
+  return useMutation({
+    mutationFn: () => refresh(),
+  });
+};
+
+// Logout
+export const logout = async (): Promise<IBaseReturn> => {
+  const res = await axiosInstance.post(`${URI}/logout`);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data
+}
+export const useLogout = () => {
+  return useMutation({
+    mutationFn: () => logout(),
+  });
+};
+
+
 // Change Password
 export const changePassword = async (payload: ChangePasswordType): Promise<IBaseReturn> => {
   const res = await axiosInstance.patch(`${URI}/change-password`, payload);

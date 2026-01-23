@@ -54,7 +54,7 @@ export const FileCreationFormItemComponent = ({
     <AFormItem
       layout="vertical"
       label={
-        <CFormLabel className="pl-1! text-white/50!  ">
+        <CFormLabel className="pl-1! text-white/50!">
           {formItemChildren}
         </CFormLabel>
       }
