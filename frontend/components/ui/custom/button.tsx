@@ -15,6 +15,7 @@ type CButtonProps = {
   variant?: "transparent" | "sameBg" | "bordered" | "default";
   hoverColor?: string | null;
   hoverBgColor?: string | null;
+  disabled?: boolean;
 };
 
 const CButton = ({
@@ -27,6 +28,7 @@ const CButton = ({
   hoverColor = null,
   hoverBgColor = null,
   variant = "default",
+  disabled = false
 }: CButtonProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -42,6 +44,7 @@ const CButton = ({
       type={type}
       variant={variant}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </BaseCButton>

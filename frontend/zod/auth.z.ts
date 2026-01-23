@@ -61,6 +61,23 @@ export const loginSchema = z.object({
   password: z.string().min(6, "Password must be 6+ chars"),
 });
 
+export const changePasswordSchema = z.object({
+  id: z.string(),
+  username: z.string().min(3),
+  oldPassword: z.string(),
+  newPassword: z.string().superRefine((value, ctx) => {
+      const err = getPasswordError(value);
+      if (err) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: err,
+        });
+      }
+    }),
+  confirmNewPassword: z.string()
+})
+
 export type RegisterFormType = z.infer<typeof registerSchema>;
 export type LoginFormType = z.infer<typeof loginSchema>;
 export type RegisterProType = z.infer<typeof registerProSchema>;
+export type ChangePasswordType = z.infer<typeof changePasswordSchema>;

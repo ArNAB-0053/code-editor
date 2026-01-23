@@ -64,6 +64,11 @@ export const messagesConfig = {
             ERROR: "Error Pushing File"
         }
     },
+    CHANGE_PASSWORD: {
+        LOADING: "Changing Password",
+        SUCCESS: "Password Changed",
+        ERROR: "Couldn't Change the Password. Something went wrong."
+    },
 
 
     // Default messages
