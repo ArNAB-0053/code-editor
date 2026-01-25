@@ -7,11 +7,14 @@ import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
 import { X } from "lucide-react";
 import FileLangLayoutButtons from "./layout-buttons";
-import { websiteFonts } from "@/fonts";
+import { spaceGrotesk, websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
 import { FullscreenButton } from "./fullscreen-btn";
 import PublishDropdown from "../dropdown/publish-dropdown";
 import NavigationDropdown from "../dropdown/navigation-dropdown";
+import { FullLogo, HalfLogo } from "@/assets/Logo";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const FileLanglayoutHeader = () => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -28,8 +31,10 @@ const FileLanglayoutHeader = () => {
         borderBottom: theme.border,
       }}
     >
-      <div className="pl-3 flex items-center gap-x-9">
-        <span>Logo</span>
+      <div className=" flex items-center gap-x-4">
+        <Link href="/" className="flex items-center opacity-60">
+          <HalfLogo size={30}/>
+        </Link>
 
         <NavigationDropdown/>
       </div>
