@@ -38,6 +38,7 @@ const NavigationDropdown = () => {
             key: 1,
             label: (
               <div
+                key={1}
                 className="flex justify-center flex-col w-[12rem] py-2 overflow-hidden border rounded-md bg-black/10"
                 style={{
                   borderColor: theme.border,

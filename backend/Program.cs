@@ -10,6 +10,8 @@ using PythonEditor.Services.interfaces;
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
+JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
@@ -57,6 +59,7 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings["Key"]!)
             ),
+            NameClaimType = JwtRegisteredClaimNames.Sub,
             ClockSkew = TimeSpan.Zero 
         };
 

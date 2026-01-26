@@ -11,7 +11,9 @@ import {
   IFilesDetailsRequest,
   IFilesListRequest,
   IFilesListResponse,
+  IHardDeleteParams,
   IParentId,
+  ISoftDeleteParams,
   ISoftDeleteRequest,
   IUpdateFilesCodeRequest,
   IUpdateFilesOutputRequest,
@@ -54,7 +56,7 @@ export const useFileCreation = () => {
 
 // (GET) - list of files by userId
 export const getFileListByUserId = async (
-  payload: IFilesListRequest
+  payload: IFilesListRequest,
 ): Promise<IFilesListResponse> => {
   const res = await axiosInstance.post(`${URI}/list`, payload);
 
@@ -81,7 +83,7 @@ export const useFileListByUserId = (payload: IFilesListRequest) => {
 
 // (GET) - file details by fileId and userId
 export const getFileDetailsByUserId = async (
-  payload: IFilesDetailsRequest
+  payload: IFilesDetailsRequest,
 ): Promise<IFileDetailsResponse> => {
   const res = await axiosInstance.post(`${URI}/details`, payload);
 
@@ -103,7 +105,7 @@ export const useFileDetailsByUserId = (payload: IFilesDetailsRequest) => {
 
 // (GET) - file code by fileId and ownerId
 export const getFileCode = async (
-  payload: IFilesDetailsRequest
+  payload: IFilesDetailsRequest,
 ): Promise<IFileCodeResponse> => {
   const res = await axiosInstance.post(`${URI}/details/code`, payload);
 
@@ -125,7 +127,7 @@ export const useFileCode = (payload: IFilesDetailsRequest) => {
 
 // (GET) - file folder tree
 export const getChildren = async (
-  parentId: string | null
+  parentId: string | null,
 ): Promise<IChildrenResponce> => {
   const res = await axiosInstance.get(`${URI}/children`, {
     params: {
@@ -174,7 +176,7 @@ export const useParentId = (childId: string) => {
 
 // (PATCH) - Rename
 export const renameFile = async (
-  payload: IFileRenameRequest
+  payload: IFileRenameRequest,
 ): Promise<IBaseReturn> => {
   const res = await axiosInstance.patch(`${URI}/rename`, payload);
 
@@ -203,7 +205,7 @@ export const useRenameFile = () => {
 
 // (PATCH) - Update Code
 export const updateFilesCode = async (
-  payload: IUpdateFilesCodeRequest
+  payload: IUpdateFilesCodeRequest,
 ): Promise<IFileCodeResponse> => {
   const res = await axiosInstance.patch(`${URI}/update/code`, payload);
 
@@ -229,7 +231,7 @@ export const useUpdateFilesCode = () => {
 
 // (PATCH) - Update Output
 export const updateFilesCodeOutput = async (
-  payload: IUpdateFilesOutputRequest
+  payload: IUpdateFilesOutputRequest,
 ): Promise<IBaseReturn> => {
   const res = await axiosInstance.patch(`${URI}/update/output`, payload);
 
@@ -255,16 +257,12 @@ export const useUpdateFilesCodeOutput = () => {
 };
 
 // (PATCH) - (SOFT DELETE) - Trash / Recycle Bin
-export interface ISoftDeleteParams extends ISoftDeleteRequest {
-  ParentId: string;
-}
 export const softDelete = async (
-  payload: ISoftDeleteParams
+  params: ISoftDeleteParams,
 ): Promise<IBaseReturn> => {
-  const resPayload:ISoftDeleteRequest = {
-    FileId: payload.FileId,
-    OwnerId: payload.OwnerId
-  }
+  const resPayload: ISoftDeleteRequest = {
+    FileId: params.FileId,
+  };
   const res = await axiosInstance.patch(`${URI}/trash`, resPayload);
 
   if (!res.data) {
@@ -279,7 +277,7 @@ export const useSoftDelete = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   return useMutation({
-    mutationFn: (payload: ISoftDeleteParams) => softDelete(payload),
+    mutationFn: (params: ISoftDeleteParams) => softDelete(params),
     onSuccess: (_res, variable) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE, variable.OwnerId, false],
@@ -288,16 +286,79 @@ export const useSoftDelete = () => {
         queryKey: [QUERY_KEYS.FILE, variable.OwnerId, true],
       });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.FILE, variable.ParentId === "root" ? null : variable.ParentId],
+        queryKey: [
+          QUERY_KEYS.FILE,
+          variable.ParentId === "root" ? null : variable,
+        ],
       });
       dispatch(refreshTree(variable.ParentId));
     },
   });
 };
 
+// (DELETE) - (HARD DELETE) - Trash / Recycle Bin
+export const hardDelete = async (
+  params: IHardDeleteParams,
+): Promise<IBaseReturn> => {
+  const res = await axiosInstance.delete(`${URI}/delete`, {
+    params: {
+      fileId: params?.FileId,
+    },
+  });
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useHardDelete = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (params: IHardDeleteParams) => hardDelete(params),
+    onSuccess: (_res, variable) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, variable.OwnerId, false],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, variable.OwnerId, true],
+      });
+    },
+  });
+};
+
+// (DELETE) - (HARD DELETE) - Trash / Recycle Bin
+export const hardDeleteAll = async (): Promise<IBaseReturn> => {
+  const res = await axiosInstance.delete(`${URI}/delete-all`);
+
+  if (!res.data) {
+    const txt = await res.statusText;
+    throw new Error(`HTTP ${res.status}: ${txt}`);
+  }
+
+  return res.data;
+};
+
+export const useHardDeleteAll = (ownerId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: hardDeleteAll,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, ownerId, false],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.FILE, ownerId, true],
+      });
+    },
+  });
+};
+
 // (PATCH) - Restore from Trash / Recycle Bin
 export const restore = async (
-  payload: ISoftDeleteRequest
+  payload: ISoftDeleteRequest,
 ): Promise<IBaseReturn> => {
   const res = await axiosInstance.patch(`${URI}/restore`, payload);
 
@@ -326,7 +387,7 @@ export const useRestore = () => {
 
 // (GET) - Breadcrumbs
 export const getBreadcrumbs = async (
-  folderId: string
+  folderId: string,
 ): Promise<IBreadcrumbsRes> => {
   const res = await axiosInstance.get(`${URI}/get-breadcrumbs`, {
     params: {

@@ -74,6 +74,11 @@ export const messagesConfig = {
         SUCCESS: "Moved to Trash",
         ERROR: "Error Moving to Trash"
     },
+    DELETE: {
+        LOADING: "Deleting...",
+        SUCCESS: "Successfully Deleted",
+        ERROR: "Error Deleting"
+    },
 
 
     // Default messages

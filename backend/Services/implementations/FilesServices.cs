@@ -262,5 +262,18 @@ namespace backend.Services.implementations
             return breadcrumbs;
         }
 
+        // HARD DELETE - ONE
+        public async Task<bool> HardDelete(string fileId, string ownerId)
+        {
+            var result = await _files.DeleteOneAsync(x => x.Id == fileId && x.OwnerId == ownerId && x.IsDeleted == true);
+            return result.DeletedCount > 0;
+        }
+
+        // HARD DELETE - MANY
+        public async Task<bool> HardDeleteMany(string ownerId)
+        {
+            var result = await _files.DeleteManyAsync(x => x.OwnerId == ownerId && x.IsDeleted == true);
+            return result.DeletedCount > 0;
+        }
     }
 }

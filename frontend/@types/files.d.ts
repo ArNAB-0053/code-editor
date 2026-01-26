@@ -79,10 +79,24 @@ export interface IFileCodeResponse extends IBaseReturn {
   data: IFileCodeModel;
 }
 
-export interface ISoftDeleteRequest {
+// ------------------------------
+//            Delete
+// ------------------------------
+export interface IDeleteRequest {
   FileId: ObjectId;
+}
+
+export interface ISoftDeleteParams extends IDeleteRequest {
+  OwnerId: string;
+  ParentId: string;
+}
+export interface IHardDeleteParams extends IDeleteRequest{
   OwnerId: string;
 }
+
+// ------------------------------
+//            RENAME
+// ------------------------------
 export interface IFileRenameRequest {
   FileId: ObjectId;
   FileName: string;
