@@ -9,9 +9,10 @@ import { themeConfig } from "@/config/themeConfig";
 import { cn } from "@/lib/utils";
 import { TrashImage } from "@/assets/TrashImage";
 import { selectedUserId } from "@/redux/slices/userSlice";
-import { useFileListByUserId } from "@/services/files";
+import { useFileListByUserId, useHardDeleteAll } from "@/services/files";
 import FileComponent from "./file-component";
 import { IFilesListResponse } from "@/@types/files";
+import { CButton } from "../ui/custom";
 
 const Trash = () => {
   const userId = useSelector(selectedUserId);
@@ -26,6 +27,7 @@ const Trash = () => {
     IsDeleted: true,
   };
   const { data: deletedFolderFiles, isLoading } = useFileListByUserId(payload);
+  const { mutateAsync: deleteAll } = useHardDeleteAll(userId);
 
   const isEmpty =
     !isLoading &&
@@ -44,7 +46,7 @@ const Trash = () => {
         <div
           className={cn(
             "flex items-center justify-center h-full flex-col absolute left-0 -top-10 w-full",
-            font?.className
+            font?.className,
           )}
         >
           <div
@@ -72,6 +74,11 @@ const Trash = () => {
           </p>
         </div>
       )}
+
+      {/* NEED TO MODIFY IN FUTURE */}
+      <CButton className="absolute! right-0 top-0" onClick={deleteAll}>
+        Delete All
+      </CButton>
 
       <FileComponent
         files={deletedFolderFiles as IFilesListResponse}

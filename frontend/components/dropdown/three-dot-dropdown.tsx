@@ -16,6 +16,7 @@ import { Eye } from "lucide-react";
 import { appUrls } from "@/config/navigation.config";
 import {
   ISoftDeleteParams,
+  useHardDelete,
   useParentId,
   useRestore,
   useSoftDelete,
@@ -27,6 +28,7 @@ import { setFolderId } from "@/redux/slices/fileFolderSlice";
 import { ConfirmDeleteModal, RenameModal } from "@/components/modals/three-dot";
 import { setCreatedFileIdRedux } from "@/redux/slices/createdFilesEditorSlice";
 import { messagesConfig } from "@/config/messages.config";
+import { IHardDeleteParams } from "@/@types/files";
 
 interface ThreeDotDropdownProps {
   fileId: string;
@@ -57,6 +59,7 @@ export const ThreeDotDropdown = ({
   }, [fileName]);
 
   const { mutateAsync: moveToTrash } = useSoftDelete();
+  const { mutateAsync: detelePermanently } = useHardDelete();
   const { mutateAsync: restore } = useRestore();
 
   const { data: parent } = useParentId(fileId);
@@ -65,6 +68,11 @@ export const ThreeDotDropdown = ({
     OwnerId: userId,
     FileId: fileId,
     ParentId: parent?.data as string,
+  };
+
+  const hardDeleteParams: IHardDeleteParams = {
+    OwnerId: userId,
+    FileId: fileId,
   };
 
   const dispatch = useDispatch();
@@ -285,6 +293,19 @@ export const ThreeDotDropdown = ({
         fileName={fileName as string}
         open={open}
         setOpen={setOpen}
+        onClick={() => {
+          const toastId = toast.loading(messagesConfig.DELETE.LOADING);
+          detelePermanently(hardDeleteParams, {
+            onSuccess: () =>
+              toast.success(messagesConfig.DELETE.SUCCESS, {
+                id: toastId,
+              }),
+            onError: () =>
+              toast.error(messagesConfig.DELETE.ERROR, {
+                id: toastId,
+              }),
+          });
+        }}
       />
 
       <RenameModal

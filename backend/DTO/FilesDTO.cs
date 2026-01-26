@@ -87,7 +87,6 @@ namespace backend.DTO
     public class SoftDeleteRequest
     {
         public string FileId { get; set; }
-        public string OwnerId { get; set; }
     }
 
     public class BreadcrumbDto

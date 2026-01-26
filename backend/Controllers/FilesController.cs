@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using backend.DTO;
 using backend.Models;
 using backend.Services.implementations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -179,12 +180,19 @@ namespace backend.Controllers
         }
 
         // PATCH - Soft Delete - Trash(Recycle Bin)
+        [Authorize]
         [HttpPatch("trash")]
         public async Task<IActionResult> SoftDelete([FromBody] SoftDeleteRequest req)
         {
             try
             {
-                var res = await _service.SoftDelete(req.FileId, req.OwnerId);
+                var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                var userId = userId1 ?? userId2;
+                if (userId == null) return Unauthorized();
+
+                var res = await _service.SoftDelete(req.FileId, userId);
                 return Ok(new { status = "success"});
             }
             catch (Exception ex)
@@ -199,7 +207,13 @@ namespace backend.Controllers
         {
             try
             {
-                var res = await _service.Restore(req.FileId, req.OwnerId); 
+                var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                var userId = userId1 ?? userId2;
+                if (userId == null) return Unauthorized();
+
+                var res = await _service.Restore(req.FileId, userId); 
                 return Ok(new { status = "success" });
             }
             catch (Exception ex)
@@ -215,6 +229,67 @@ namespace backend.Controllers
             {
                 var res = await _service.GetBreadcrumbs(folderId);
                 return Ok(new { status = "success", data = res });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        // DELETE
+        [Authorize]
+        [HttpDelete("delete")]
+        public async Task<IActionResult> HardDelete([FromQuery] string fileId)
+        {
+            try
+            {
+                var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                var userId = userId1 ?? userId2;
+
+                if (userId == null) return Unauthorized();
+
+                var res = await _service.HardDelete(fileId, userId!);
+
+                if (!res)
+                    return NotFound(new
+                    {
+                        status = "error",
+                        message = "File not found or not in trash"
+                    });
+
+                return Ok(new { status = "success" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("delete-all")]
+        public async Task<IActionResult> HardDeleteMany()
+        {
+            try
+            {
+                var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                var userId = userId1 ?? userId2;
+
+                if (userId == null) return Unauthorized();
+
+                var res = await _service.HardDeleteMany(userId!);
+
+                if (!res)
+                    return NotFound(new
+                    {
+                        status = "error",
+                        message = "File not found or not in trash"
+                    });
+
+                return Ok(new { status = "success" });
             }
             catch (Exception ex)
             {

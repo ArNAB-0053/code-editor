@@ -10,12 +10,14 @@ interface ConfirmDeleteModalProps {
   fileName: string;
   open: boolean;
   setOpen: SetterFunctionTypesBool;
+  onClick: () => void;
 }
 
 export const ConfirmDeleteModal = ({
   fileName,
   open,
   setOpen,
+  onClick
 }: ConfirmDeleteModalProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -56,6 +58,7 @@ export const ConfirmDeleteModal = ({
             className=" flex! items-center! justify-start! gap-x-3! border-none! group! p-0!"
             // variant="transparent"
             type="danger"
+            onClick={onClick}
           >
             <div className=" flex! items-center! justify-start! gap-x-3! px-4.5 py-1.5 hover:opacity-80 w-full font-semibold transition-all duration-200 ease-linear">
               <MdDeleteForever size={18} />
