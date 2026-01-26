@@ -28,7 +28,7 @@ type FormItemComponentType = {
   options?: any[];
 };
 
-export const FormItemComponent = ({
+export const FileCreationFormItemComponent = ({
   name,
   formItemChildren,
   value,
@@ -54,7 +54,7 @@ export const FormItemComponent = ({
     <AFormItem
       layout="vertical"
       label={
-        <CFormLabel className="pl-1! text-white/50!  ">
+        <CFormLabel className="pl-1! text-white/50!">
           {formItemChildren}
         </CFormLabel>
       }

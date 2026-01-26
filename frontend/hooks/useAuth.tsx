@@ -15,7 +15,12 @@ import {
 } from "@/redux/slices/userSlice";
 import { messagesConfig } from "@/config/messages.config";
 import { appUrls } from "@/config/navigation.config";
-import { IAuthReturn, IRegisterRequest, IRegisterUsingProviderRequest, IUserDetails } from "@/@types/auth";
+import {
+  IAuthReturn,
+  IRegisterRequest,
+  IRegisterUsingProviderRequest,
+  IUserDetails,
+} from "@/@types/auth";
 import { LoginFormType } from "@/zod/auth.z";
 
 export const useAuth = () => {
@@ -92,13 +97,14 @@ export const useAuth = () => {
     }
   };
 
-  const registerUserUsingProvider = async (values: IRegisterUsingProviderRequest) => {
+  const registerUserUsingProvider = async (
+    values: IRegisterUsingProviderRequest,
+  ) => {
     const toastId = toast.loading(messagesConfig.SIGN_UP.LOADING);
     try {
-
       const res: IAuthReturn = await registerUsingProviderMutate(values);
       const data: IUserDetails = res?.user;
-      
+
       if (res?.status === "success") {
         toast.success(messagesConfig.SIGN_UP.SUCCESS, { id: toastId });
         dispatch(setUserId(data?.id));

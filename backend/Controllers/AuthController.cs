@@ -49,7 +49,7 @@ namespace backend.Controllers
                     Password = req.Password,
                     Provider = ProviderEnum.NORMAL
                 };
-                var createdUser = await _service.Create(user);
+                var createdUser = await _service.Create(user, req.ConfirmPassword);
 
                 return Ok(new
                 {
@@ -121,40 +121,57 @@ namespace backend.Controllers
 
         // SIGN IN
         [HttpPost("signin")]
-        public IActionResult SignIn([FromBody] SignInRequest req)
+        public async Task<IActionResult> SignIn([FromBody] SignInRequest req)
         {
+            var jwtSettings = _config.GetSection("JwtSettings");
             var user = _service.SignIn(req.Identifier, req.Password);
 
             if (user == null) return Unauthorized(new { message = "Invalid username/email or password", status = "error" });
 
-            var token = JwtHelper.GenerateToken(user, _config);
+            var accessToken = JwtHelper.GenerateToken(user, _config);
+            var refreshToken = JwtHelper.GenerateRefreshToken();
 
-            Response.Cookies.Append("jwt", token, new CookieOptions
+            await _service.StoreRefreshTokenInRedis(user.Id!, refreshToken, _config);
+
+            Response.Cookies.Append("jwt", accessToken, new CookieOptions
             {
                 HttpOnly = true,
-#if DEBUG
-                Secure = false,
-                SameSite = SameSiteMode.Lax,
-#else
+                #if DEBUG
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
+                #else
                     Secure = true,
                     SameSite = SameSiteMode.None,
-#endif
-                Expires = DateTime.UtcNow.AddDays(3)
+                #endif
+                    Expires = DateTime.UtcNow.AddDays(int.Parse(jwtSettings["ExpiryMinutes"]!))
+            });
+
+            Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                #if DEBUG
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax,
+                #else
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                #endif
+                    Expires = DateTime.UtcNow.AddDays(int.Parse(jwtSettings["RefreshExpiryMinutes"]!))
             });
 
             return Ok(new
-            {
-                message = "Logged In Successfully",
-                status = "success",
-
-                user = new
                 {
-                    id = user?.Id,
-                    name = user?.Name,
-                    email = user?.Email,
-                    username = user?.Username
+                    message = "Logged In Successfully",
+                    status = "success",
+
+                    user = new
+                    {
+                        id = user?.Id,
+                        name = user?.Name,
+                        email = user?.Email,
+                        username = user?.Username
+                    }
                 }
-            }
             );
         }
 
@@ -170,6 +187,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public AuthModel GetUserById(string id) => _service.GetUserById(id);
 
+        // GET - USERS BASED ON USERNAME (Username)
         [HttpGet("profile-details")]
         public AuthModel GetUserByUsername([FromQuery] string username) => _service.GetUserByUsername(username);
 
@@ -208,6 +226,88 @@ namespace backend.Controllers
                     }
                 });
         }
+
+        // PATCH - CHANGE PASSWORD
+        [HttpPatch("change-password")]
+        public IActionResult ChangePassword([FromBody] ChangePasswordRequest req)
+        {
+            try
+            {
+                var res = _service.ChangePassword(req.Id, req.Username, req.OldPassword, req.NewPassword, req.ConfirmNewPassword);
+                if (!res)
+                {
+                    return BadRequest(new { status = "error", message = "Something Went Wrong!" });
+                }
+
+                return Ok(new { status = "sucess" });
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "error", message = ex.Message });
+            }
+        }
+
+        // REFRESH TOKEN
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh()
+        {
+            if (!Request.Cookies.TryGetValue("refresh_token", out var refreshToken))
+                return Unauthorized();
+
+            var jwtSettings = _config.GetSection("JwtSettings");
+
+            var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var userId = userId1 ?? userId2;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var exists = await _service.IsRefreshTokenValid(userId, refreshToken);
+            if (!exists)
+                return Unauthorized();
+
+            var user = _service.GetUserById(userId);
+            if (user == null)
+                return Unauthorized();
+
+            var newAccessToken = JwtHelper.GenerateToken(user, _config);
+
+            Response.Cookies.Append("jwt", newAccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(int.Parse(jwtSettings["ExpiryMinutes"]!))
+            });
+
+            return Ok(new { status = "success" });
+        }
+
+        // LOGOUT
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            if (Request.Cookies.TryGetValue("refresh_token", out var refreshToken))
+            {
+                var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                var userId = userId1 ?? userId2;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await _service.RemoveRefreshToken(userId, refreshToken);
+                }
+            }
+
+            Response.Cookies.Delete("jwt");
+            Response.Cookies.Delete("refresh_token");
+
+            return Ok(new { status = "success", message = "Logged out" });
+        }
+
+
 
         // -------------------------------
         //             SEARCH

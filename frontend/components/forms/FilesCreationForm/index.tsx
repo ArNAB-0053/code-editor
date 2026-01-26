@@ -1,12 +1,11 @@
 import { FileTypeEnum } from "@/@types/_enums";
-import { AButton, AForm, ASelect } from "@/components/ui/antd";
+import { AButton, AForm } from "@/components/ui/antd";
 import { zodToFormik } from "@/lib/formik-zod-adapter";
 import { useFileCreation } from "@/services/files";
 import { CreateFilesFormType, filesSchema } from "@/zod/files.z";
 import { Formik } from "formik";
 import { useSelector } from "react-redux";
 import { selectedUserId } from "@/redux/slices/userSlice";
-import { FormItemComponent } from "@/components/form-item-component";
 import { FaFolderPlus } from "react-icons/fa";
 import { BsFileEarmarkPlusFill } from "react-icons/bs";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import { SetterFunctionTypesBool } from "@/@types/_base";
 import { selectFolderId } from "@/redux/slices/fileFolderSlice";
 import { langs } from "@/constants/lang";
 import { messagesConfig } from "@/config/messages.config";
+import { FileCreationFormItemComponent } from "../form-item-component/file-creation";
 
 export const FilesCreationForm = ({
   setOpen,
@@ -68,7 +68,7 @@ export const FilesCreationForm = ({
       }) => {
         return (
           <AForm name="file-creation-form ">
-            <FormItemComponent
+            <FileCreationFormItemComponent
               name="fileName"
               value={values?.FileName}
               onChange={handleChange("FileName")}
@@ -132,11 +132,10 @@ export const FolderCreationForm = ({
     ParentId: currentFolderId,
   };
 
-
   return (
     <Formik
       initialValues={initialValues}
-      enableReinitialize   
+      enableReinitialize
       validate={zodToFormik(filesSchema)}
       onSubmit={async (values, { setSubmitting }) => {
         const toastId = toast.loading("Creating folder...");
@@ -172,7 +171,7 @@ export const FolderCreationForm = ({
       }) => {
         return (
           <AForm name="folder-creation-form">
-            <FormItemComponent
+            <FileCreationFormItemComponent
               name="fileName"
               value={values?.FileName}
               onChange={handleChange("FileName")}

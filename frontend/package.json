@@ -29,6 +29,7 @@
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
     "concurrently": "^9.2.1",
+    "d3": "^7.9.0",
     "electron-serve": "^3.0.0",
     "formik": "^2.4.9",
     "js-cookie": "^3.0.5",
@@ -51,10 +52,12 @@
     "styled-components": "^6.1.19",
     "swiper": "^12.0.3",
     "tailwind-merge": "^3.4.0",
+    "uuid": "^13.0.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/d3": "^7.4.3",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",

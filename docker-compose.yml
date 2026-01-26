@@ -3,7 +3,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: python-editor
+    container_name: coditor
     ports:
       - "5000:5000"
     volumes:
