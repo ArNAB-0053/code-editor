@@ -74,6 +74,7 @@ export interface IBaseLogoProps {
   size?: number;
   style?: React.CSSProperties;
   className?: string;
+  color?: string;
 }
 
 export interface IBaseReturn {

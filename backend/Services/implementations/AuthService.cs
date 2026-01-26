@@ -61,8 +61,6 @@ namespace backend.Services.implementations
             await CheckUsernameExists(auth.Username);
             await CheckEmailExists(auth.Email);
 
-            Console.WriteLine(auth.Password, confirmPassword);
-
             if (!IsValidPassword(auth.Password)) throw new Exception("Invalid Password Format");
             if (!IsValidPassword(confirmPassword)) throw new Exception("Invalid Confirm Password Format");
 

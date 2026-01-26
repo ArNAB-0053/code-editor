@@ -1,5 +1,6 @@
 "use client";
 import { CheckIcon, CrossIcon } from "@/assets/CheckCrossIcon";
+import { HalfLogo } from "@/assets/Logo";
 import Logo from "@/components/Logo";
 import { themeConfig } from "@/config/themeConfig";
 import { features } from "@/constants/welcome/code";
@@ -88,6 +89,7 @@ const Page = () => {
           textColor={`${theme.activeColor}80`}
           dotColor={`${theme.activeColor}80`}
         /> */}
+        <HalfLogo color={theme.border10} size={200}/>
 
         <div className=" mt-10 relative w-fit ">
           <AnimatePresence mode="wait">
