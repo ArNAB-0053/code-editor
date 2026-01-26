@@ -14,14 +14,19 @@ import { FaExternalLinkAlt, FaFolderOpen } from "react-icons/fa";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { appUrls } from "@/config/navigation.config";
-import { useRestore, useSoftDelete } from "@/services/files";
+import {
+  ISoftDeleteParams,
+  useParentId,
+  useRestore,
+  useSoftDelete,
+} from "@/services/files";
 import { selectedUserId } from "@/redux/slices/userSlice";
-import { ISoftDeleteRequest } from "@/@types/files";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setFolderId } from "@/redux/slices/fileFolderSlice";
 import { ConfirmDeleteModal, RenameModal } from "@/components/modals/three-dot";
 import { setCreatedFileIdRedux } from "@/redux/slices/createdFilesEditorSlice";
+import { messagesConfig } from "@/config/messages.config";
 
 interface ThreeDotDropdownProps {
   fileId: string;
@@ -54,9 +59,12 @@ export const ThreeDotDropdown = ({
   const { mutateAsync: moveToTrash } = useSoftDelete();
   const { mutateAsync: restore } = useRestore();
 
-  const payload: ISoftDeleteRequest = {
+  const { data: parent } = useParentId(fileId);
+
+  const payload: ISoftDeleteParams = {
     OwnerId: userId,
     FileId: fileId,
+    ParentId: parent?.data as string,
   };
 
   const dispatch = useDispatch();
@@ -218,12 +226,16 @@ export const ThreeDotDropdown = ({
                         variant="transparent"
                         hoverBgColor={`${theme.border15}`}
                         onClick={() => {
-                          const toastId = toast.loading("Moving to Trash");
+                          const toastId = toast.loading(
+                            messagesConfig.TRASH.LOADING,
+                          );
                           moveToTrash(payload, {
                             onSuccess: () =>
-                              toast.success("Moved to Trash", { id: toastId }),
+                              toast.success(messagesConfig.TRASH.SUCCESS, {
+                                id: toastId,
+                              }),
                             onError: () =>
-                              toast.error("Something went Wrong", {
+                              toast.error(messagesConfig.TRASH.ERROR, {
                                 id: toastId,
                               }),
                           });
