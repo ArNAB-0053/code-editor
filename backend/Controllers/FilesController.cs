@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using backend.DTO;
 using backend.Models;
 using backend.Services.implementations;
@@ -100,7 +102,11 @@ namespace backend.Controllers
         {
             try
             {
-                var res = _service.GetChildren(parentId);
+                var userId1 = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var userId2 = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                var userId = userId1 ?? userId2;
+                var res = _service.GetChildren(parentId, userId!);
                 if (res == null) return NotFound(new { status = "error", message = "File not found" });
                 return Ok(new { status = "success", data = res });
             }
