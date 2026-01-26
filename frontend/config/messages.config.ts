@@ -69,6 +69,11 @@ export const messagesConfig = {
         SUCCESS: "Password Changed",
         ERROR: "Couldn't Change the Password. Something went wrong.",
     },
+    TRASH: {
+        LOADING: "Moving to Trash",
+        SUCCESS: "Moved to Trash",
+        ERROR: "Error Moving to Trash"
+    },
 
 
     // Default messages

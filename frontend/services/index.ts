@@ -13,6 +13,7 @@ export const QUERY_KEYS = {
     FILE: 'file',
     FOLDER: 'folder',
     FILE_CODE: 'file-code',
+    PARENT_ID: "parent-id",
     
     BREADCRUMB: 'breadcrumbs',
 

@@ -40,16 +40,59 @@ const mapToTreeNode = (item: IFilesModel): DataNode => ({
 const updateTreeData = (
   list: DataNode[],
   key: React.Key,
-  children: DataNode[]
+  children: DataNode[],
+  preserveExpandedChildren: boolean = false,
+  expandedKeys: React.Key[] = [],
 ): DataNode[] =>
   list.map((node) => {
     if (node.key === key) {
-      return { ...node, children };
+      // If preserving expanded children, merge old expanded children with new data
+      if (preserveExpandedChildren && node.children) {
+        const newChildrenMap = new Map(
+          children.map((child) => [child.key, child]),
+        );
+
+        const mergedChildren = children.map((newChild) => {
+          const oldChild = node.children?.find(
+            (old) => old.key === newChild.key,
+          );
+
+          // If this child was previously expanded and has children, preserve them
+          if (
+            oldChild &&
+            expandedKeys.includes(newChild.key) &&
+            oldChild.children
+          ) {
+            return {
+              ...newChild,
+              children: oldChild.children,
+            };
+          }
+
+          return newChild;
+        });
+
+        return {
+          ...node,
+          children: mergedChildren,
+        };
+      }
+
+      return {
+        ...node,
+        children,
+      };
     }
     if (node.children) {
       return {
         ...node,
-        children: updateTreeData(node.children, key, children),
+        children: updateTreeData(
+          node.children,
+          key,
+          children,
+          preserveExpandedChildren,
+          expandedKeys,
+        ),
       };
     }
     return node;
@@ -62,13 +105,8 @@ const FileFolderTree = ({
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
 
-  // const currentFolderId = useSelector(selectFolderId);
   const treeRefreshKey = useSelector(selectTreeRefreshKey);
-  // const currectFile = useSelector(selectedfileId)
   const lastRefreshedNode = useSelector(selectLastRefreshedNode);
-
-  // const {data: rootParentId} = useParentId(currectFile)
-  // console.log("currentFolder => ", currentFolderId, treeRefreshKey);
 
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(["root"]);
   const [treeData, setTreeData] = useState<DataNode[]>([
@@ -96,9 +134,6 @@ const FileFolderTree = ({
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // const { data: fileFolders, refetch } = useChilren(currentFolderId);
-  // console.log(fileFolders)
-
   // a hook for getting children data for tree
   const { getChildren } = useChildrenTree();
 
@@ -115,24 +150,29 @@ const FileFolderTree = ({
 
       // Fetch fresh data
       const data = await getChildren(
-        refreshKey === "root" ? null : String(refreshKey)
+        refreshKey === "root" ? null : String(refreshKey),
       );
       // console.log("==== Fresh data:", data);
+
       const children = data.data.map(mapToTreeNode);
 
-      // Update the tree
-      setTreeData((origin) => updateTreeData(origin, refreshKey, children));
+      // Update the tree while preserving expanded children's state
+      setTreeData((origin) =>
+        updateTreeData(origin, refreshKey, children, true, expandedKeys),
+      );
     };
 
     refresh();
   }, [treeRefreshKey, lastRefreshedNode]);
 
   const onLoadData = async ({ key, children }: any) => {
-    if (children) return;
+    if (children && children.length > 0) return;
     const parentId = key === "root" ? null : String(key);
     const data = await getChildren(parentId);
     const treeChildren = data?.data?.map(mapToTreeNode);
-    setTreeData((origin) => updateTreeData(origin, key, treeChildren));
+    setTreeData((origin) =>
+      updateTreeData(origin, key, treeChildren),
+    );
   };
 
   const onExpand: TreeProps["onExpand"] = (keys) => {
@@ -140,13 +180,12 @@ const FileFolderTree = ({
   };
 
   const onSelect: TreeProps["onSelect"] = (selectedKeys, info) => {
-    // console.log(info.node.key);
     if (info.node.fileType === FileTypeEnum.FILE) {
       dispatch(setCreatedFileIdRedux(info.node.key as string));
       router.push(`${appUrls.CODE}/${info.node.key}`);
     } else {
       dispatch(
-        setFolderId(info.node.key === "root" ? null : String(info.node.key))
+        setFolderId(info.node.key === "root" ? null : String(info.node.key)),
       );
     }
   };

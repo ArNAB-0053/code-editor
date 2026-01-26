@@ -166,8 +166,9 @@ export const getParentId = async (childId: string): Promise<IParentId> => {
 
 export const useParentId = (childId: string) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.FILE, childId],
+    queryKey: [QUERY_KEYS.PARENT_ID, childId],
     queryFn: () => getParentId(childId),
+    enabled: !!childId,
   });
 };
 
@@ -254,10 +255,17 @@ export const useUpdateFilesCodeOutput = () => {
 };
 
 // (PATCH) - (SOFT DELETE) - Trash / Recycle Bin
+export interface ISoftDeleteParams extends ISoftDeleteRequest {
+  ParentId: string;
+}
 export const softDelete = async (
-  payload: ISoftDeleteRequest
+  payload: ISoftDeleteParams
 ): Promise<IBaseReturn> => {
-  const res = await axiosInstance.patch(`${URI}/trash`, payload);
+  const resPayload:ISoftDeleteRequest = {
+    FileId: payload.FileId,
+    OwnerId: payload.OwnerId
+  }
+  const res = await axiosInstance.patch(`${URI}/trash`, resPayload);
 
   if (!res.data) {
     const txt = await res.statusText;
@@ -269,10 +277,9 @@ export const softDelete = async (
 
 export const useSoftDelete = () => {
   const queryClient = useQueryClient();
-  const parentId = useSelector(selectFolderId);
   const dispatch = useDispatch();
   return useMutation({
-    mutationFn: (payload: ISoftDeleteRequest) => softDelete(payload),
+    mutationFn: (payload: ISoftDeleteParams) => softDelete(payload),
     onSuccess: (_res, variable) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE, variable.OwnerId, false],
@@ -281,9 +288,9 @@ export const useSoftDelete = () => {
         queryKey: [QUERY_KEYS.FILE, variable.OwnerId, true],
       });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.FILE, parentId],
+        queryKey: [QUERY_KEYS.FILE, variable.ParentId === "root" ? null : variable.ParentId],
       });
-      dispatch(refreshTree(parentId === null ? "root" : parentId));
+      dispatch(refreshTree(variable.ParentId));
     },
   });
 };

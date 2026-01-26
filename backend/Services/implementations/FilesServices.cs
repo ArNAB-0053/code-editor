@@ -150,6 +150,7 @@ namespace backend.Services.implementations
         public string? GetParentId(string id)
         {
             var result = _files.Find(x => x.Id == id).FirstOrDefault();
+            if (result.ParentId == null) return "root";
             return result.ParentId;
         }
 
