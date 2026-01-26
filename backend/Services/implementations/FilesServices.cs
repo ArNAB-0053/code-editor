@@ -144,7 +144,7 @@ namespace backend.Services.implementations
         public FileCodesModel GetFilesCode(string fileId, string ownerId) => _filesCode.Find(x => x.FileId == fileId && x.OwnerId == ownerId).FirstOrDefault();
 
         // GET children - for tree structure
-        public List<FilesModel> GetChildren(string? parentId) => _files.Find(x => x.ParentId == parentId && x.IsDeleted == false).ToList();
+        public List<FilesModel> GetChildren(string? parentId, string userId) => _files.Find(x => x.ParentId == parentId && x.OwnerId == userId && x.IsDeleted == false).ToList();
 
         // GET parentId from children
         public string? GetParentId(string id)
