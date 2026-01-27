@@ -113,7 +113,7 @@ export default function CreatedEditorComponent({
           // isAutoSaving.current = false;
           toast.error(messagesConfig.AUTOSAVE.FAILED, { id: "autoSave" });
         },
-      }
+      },
     );
   }, [debouncedCode, userId, fileId, dispatch]);
 
@@ -200,8 +200,8 @@ export default function CreatedEditorComponent({
               layout === "vertical"
                 ? "80%"
                 : screenWidth >= 1000
-                ? "60%"
-                : "50%"
+                  ? "60%"
+                  : "50%"
             }
             min={screenWidth >= 1000 ? "40%" : "50%"}
             max="80%"
@@ -216,7 +216,7 @@ export default function CreatedEditorComponent({
               }}
               className={cn(
                 "border-r overflow-hidden! text-white",
-                font?.className
+                font?.className,
               )}
             >
               <CreatedFileEditorHeaderComponent
@@ -274,8 +274,8 @@ export default function CreatedEditorComponent({
               layout === "vertical"
                 ? "60%"
                 : screenWidth >= 1000
-                ? "40%"
-                : "50%"
+                  ? "40%"
+                  : "50%"
             }
             className="overflow-hidden!"
           >
@@ -302,7 +302,7 @@ export default function CreatedEditorComponent({
               <div
                 className={cn(
                   "p-2 overflow-y-auto custom-scrollbar overflow-x-hidden text-wrap ",
-                  font?.className
+                  font?.className,
                 )}
                 style={{
                   height: "calc(100% - 40px)",
@@ -310,6 +310,8 @@ export default function CreatedEditorComponent({
               >
                 {error ? (
                   <span style={{ color: "#ffb4b4" }}>{error}</span>
+                ) : currentOutput.toLowerCase() === "no output" ? (
+                  <p className="opacity-60">No output</p>
                 ) : (
                   currentOutput ||
                   (loading ? (

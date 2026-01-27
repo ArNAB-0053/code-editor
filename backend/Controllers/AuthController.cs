@@ -106,6 +106,7 @@ namespace backend.Controllers
                         name = createdUser.Name,
                         email = createdUser.Email,
                         username = createdUser.Username,
+                        provider,
                     }
                 });
             }
@@ -169,7 +170,8 @@ namespace backend.Controllers
                         id = user?.Id,
                         name = user?.Name,
                         email = user?.Email,
-                        username = user?.Username
+                        username = user?.Username,
+                        provider = user?.Provider
                     }
                 }
             );
@@ -208,9 +210,10 @@ namespace backend.Controllers
             var lastName = User.FindFirst("lastname")?.Value;
 
             var username = User.FindFirst("username")?.Value;
+            var provider = User.FindFirst("provider")?.Value;
             var userId = userId1 ?? userId2;
             var email = email1 ?? email2;
-
+            
             return Ok(
                 new
                 {
@@ -223,7 +226,8 @@ namespace backend.Controllers
                         firstName,
                         middleName,
                         lastName
-                    }
+                    },
+                    provider
                 });
         }
 

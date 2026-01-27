@@ -171,8 +171,8 @@ export default function SharedEditorComponent({
               layout === "vertical"
                 ? "80%"
                 : screenWidth >= 1000
-                ? "60%"
-                : "50%"
+                  ? "60%"
+                  : "50%"
             }
             min={screenWidth >= 1000 ? "40%" : "50%"}
             max="80%"
@@ -187,7 +187,7 @@ export default function SharedEditorComponent({
               }}
               className={cn(
                 "border-r overflow-hidden! text-white",
-                font?.className
+                font?.className,
               )}
             >
               <SharedEditorHeaderComponent
@@ -243,8 +243,8 @@ export default function SharedEditorComponent({
               layout === "vertical"
                 ? "60%"
                 : screenWidth >= 1000
-                ? "40%"
-                : "50%"
+                  ? "40%"
+                  : "50%"
             }
             className="overflow-hidden!"
           >
@@ -271,7 +271,7 @@ export default function SharedEditorComponent({
               <div
                 className={cn(
                   "p-2 overflow-y-auto custom-scrollbar overflow-x-hidden text-wrap ",
-                  font?.className
+                  font?.className,
                 )}
                 style={{
                   height: "calc(100% - 40px)",
@@ -280,7 +280,7 @@ export default function SharedEditorComponent({
                 {error ? (
                   <span style={{ color: "#ffb4b4" }}>{error}</span>
                 ) : (
-                  currentOutput ||
+                  (currentOutput && currentOutput !== "No output") ||
                   (loading ? (
                     <div
                       className="absolute top-0 left-0 w-full h-full flex items-center justify-center backdrop-blur-[2px]"

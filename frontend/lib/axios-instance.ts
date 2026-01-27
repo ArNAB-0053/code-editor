@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await refresh();            
+        // await refresh();
         return axiosInstance(originalRequest); 
       } catch {
         store.dispatch(setUserEmpty());     

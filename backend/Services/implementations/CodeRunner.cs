@@ -158,6 +158,11 @@ namespace PythonEditor.Services.implementations
             await _docker.Containers.WaitContainerAsync(container.ID);
             string output = stdout + stderr;
 
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                output = "No Output";
+            }
+
             await _docker.Containers.RemoveContainerAsync(
                 container.ID,
                 new ContainerRemoveParameters
@@ -171,7 +176,8 @@ namespace PythonEditor.Services.implementations
             return new RunResult
             {
                 success = true,
-                output = output
+                output = output,
+                hasOutput = !string.IsNullOrWhiteSpace(stdout + stderr)
             };
         }
 

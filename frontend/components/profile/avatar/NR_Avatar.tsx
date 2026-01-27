@@ -14,9 +14,9 @@ import { FiLogOut } from "react-icons/fi";
 import { useFont } from "@/context/FontProvider";
 import { IProfileDetails } from "@/@types/_base";
 import { AvatarTemplate } from "@/components/dropdown/avatar-template";
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { NRChangedPasswordModal } from "@/components/modals/change-password/NR";
-import { useLogout, useRefresh } from "@/services/auth";
+import { useLogout } from "@/services/auth";
 
 export interface AccountProps {
   profileDetails: IProfileDetails;
@@ -45,6 +45,8 @@ export const NRAvatarDropdown = ({
   return (
     <>
       <AvatarTemplate
+        userId={profileDetails?.userId}
+        provider={profileDetails?.provider}
         dropdownContent={
           <a onClick={(e) => e.preventDefault()}>
             {!profileDetails?.nameObj && !isLoading ? (
