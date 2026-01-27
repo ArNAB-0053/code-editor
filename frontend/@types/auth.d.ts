@@ -1,5 +1,5 @@
 import { NameObjType } from "./_base";
-import { ProviderTypeEnum, ProviderTypeEnumString } from "./_enums";
+import { ProviderTypeEnumString } from "./_enums";
 
 export interface IAuthReturn {
   message: string;
@@ -13,6 +13,7 @@ export interface IUserDetails {
   name: NameObjType;
   username: string;
   mobileNo?: string | null;
+  provider?: ProviderTypeEnumString;
 }
 
 export interface IAvailability {

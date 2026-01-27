@@ -12,6 +12,7 @@ import {
   setUserEmail,
   setUserUsername,
   setPersistedAt,
+  setUserProvider,
 } from "@/redux/slices/userSlice";
 import { messagesConfig } from "@/config/messages.config";
 import { appUrls } from "@/config/navigation.config";
@@ -22,6 +23,7 @@ import {
   IUserDetails,
 } from "@/@types/auth";
 import { LoginFormType } from "@/zod/auth.z";
+import { ProviderTypeEnum, ProviderTypeEnumString } from "@/@types/_enums";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -47,13 +49,14 @@ export const useAuth = () => {
       const res: IAuthReturn = await loginMutate(values);
       const data: IUserDetails = res?.user;
 
-      // console.log("__AUTH__ Login: ",data)
+      console.log("__AUTH__ Login: ",data)
 
       if (res.status === "success") {
         dispatch(setUserId(data?.id));
         dispatch(setUserName(data?.name));
         dispatch(setUserEmail(data?.email));
         dispatch(setUserUsername(data?.username));
+        dispatch(setUserProvider(data?.provider as ProviderTypeEnumString));
         dispatch(setPersistedAt(Date.now()));
 
         if (showToast)
@@ -111,6 +114,7 @@ export const useAuth = () => {
         dispatch(setUserName(data?.name));
         dispatch(setUserEmail(data?.email));
         dispatch(setUserUsername(data?.username));
+        dispatch(setUserProvider(data?.provider as ProviderTypeEnumString));
         dispatch(setPersistedAt(Date.now()));
 
         router.push(appUrls.FILE);

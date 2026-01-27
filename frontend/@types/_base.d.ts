@@ -4,6 +4,7 @@ import { WebsiteFontsKey } from "./font";
 import React, { ReactNode } from "react";
 import { RegisterFormType } from "@/zod/auth.z";
 import { NextFont } from "next/dist/compiled/@next/font";
+import { ProviderTypeEnum, ProviderTypeEnumString } from "./_enums";
 
 export interface IBaseAFormProps extends Omit<FormProps, "children"> {
   children?: ReactNode;
@@ -54,6 +55,7 @@ export interface IProfileDetails
   nameObj: NameObjType;
   username: string;
   mobileNo?: string;
+  provider: ProviderTypeEnumString;
 }
 export interface IProfileDetailsByUsername
   extends Pick<RegisterFormType, "password" | "email"> {

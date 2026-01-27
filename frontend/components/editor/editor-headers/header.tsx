@@ -14,22 +14,16 @@ import { IoMdShare } from "react-icons/io";
 import { cn } from "@/lib/utils";
 import { AButton } from "@/components/ui/antd";
 import ShareModal from "@/components/modals/share";
-import { transitionString } from "@/styles";
-import { LayoutHorizontalIcon, LayoutVerticalIcon } from "@/assets/LayoutIcons";
-import { spaceGrotesk } from "@/fonts";
-import ATooltip from "@/components/ui/antd/tooltip";
-import {
-  selectEditorLayout,
-  setEditorLayout,
-} from "@/redux/slices/editorLayout";
 import LayoutButton from "./layout-btn";
+import { selectedUserId } from "@/redux/slices/userSlice";
 
 const EditorHeaderComponent = (props: HeaderProps) => {
   const dispatch = useDispatch();
 
+  const userId = useSelector(selectedUserId);
+
   const [open, setOpen] = useState(false);
   const currentCode = useSelector(selectedCode);
-  const layout = useSelector(selectEditorLayout);
 
   const theme = themeConfig(props.editorTheme);
 
@@ -66,17 +60,24 @@ const EditorHeaderComponent = (props: HeaderProps) => {
         lang: props.p_lang,
       });
       const output = res.output ?? "";
-      if (lastOpt.current !== output) {
-        updateOutput(
-          { editorId, output },
-          {
-            onSuccess: (res) => {
-              lastOpt.current = output;
-              dispatch(setOutputRedux(output));
+      console.log(userId)
+      if (userId) {
+        console.log("HEREEEEE")
+        console.log(lastOpt.current !== output)
+        if (lastOpt.current !== output) {
+          updateOutput(
+            { editorId, output },
+            {
+              onSuccess: (res) => {
+                console.log("res")
+                lastOpt.current = output;
+                dispatch(setOutputRedux(output));
+              },
+              onError: (e) => console.log(e)
             },
-          }
-        );
-      }
+          );
+        }
+      } else dispatch(setOutputRedux(output));
     } catch (err: any) {
       props.setError(err.message ?? String(err));
     } finally {
@@ -123,7 +124,7 @@ const EditorHeaderComponent = (props: HeaderProps) => {
           onClick={() => setOpen(true)}
           className={cn(
             props.isShared && "hidden! opacity-0!",
-            "aspect-square! p-0!"
+            "aspect-square! p-0!",
           )}
         >
           <IoMdShare size={18} />

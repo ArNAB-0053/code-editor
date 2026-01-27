@@ -26,6 +26,7 @@ const NavigationDropdown = () => {
 
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
+
   return (
     <Dropdown
       trigger={["click"]}

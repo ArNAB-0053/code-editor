@@ -12,7 +12,9 @@ import { themeConfig } from "@/config/themeConfig";
 import { WebsiteFontsKey } from "@/@types/font";
 import {
   selectedUserEmail,
+  selectedUserId,
   selectedUserName,
+  selectedUserProvider,
   selectedUserUsername,
   setUserEmpty,
 } from "@/redux/slices/userSlice";
@@ -49,20 +51,22 @@ export const AvatarDropdown = ({
   const nameObj = useSelector(selectedUserName);
   const email = useSelector(selectedUserEmail);
   const username = useSelector(selectedUserUsername);
+  const userId = useSelector(selectedUserId);
+  const provider = useSelector(selectedUserProvider);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const fullname = getFullnameFromNameObj(nameObj);
   // console.log("nameObj", fullname);
 
-  const {mutateAsync: logout} = useLogout()
+  const { mutateAsync: logout } = useLogout();
 
   const handleLogout = async () => {
-    const res = await logout()
-    if (res.status = "success") {
-      dispatch(setUserEmpty())
-    } 
-  }
+    const res = await logout();
+    if ((res.status = "success")) {
+      dispatch(setUserEmpty());
+    }
+  };
 
   const theme = themeConfig(editorTheme);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
@@ -70,6 +74,8 @@ export const AvatarDropdown = ({
   return (
     <>
       <AvatarTemplate
+        provider={provider}
+        userId={userId}
         offset={offset}
         {...rest}
         dropdownContent={
