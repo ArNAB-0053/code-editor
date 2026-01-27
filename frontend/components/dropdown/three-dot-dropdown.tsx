@@ -15,7 +15,6 @@ import Link from "next/link";
 import { Eye } from "lucide-react";
 import { appUrls } from "@/config/navigation.config";
 import {
-  ISoftDeleteParams,
   useHardDelete,
   useParentId,
   useRestore,
@@ -25,10 +24,11 @@ import { selectedUserId } from "@/redux/slices/userSlice";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setFolderId } from "@/redux/slices/fileFolderSlice";
-import { ConfirmDeleteModal, RenameModal } from "@/components/modals/three-dot";
+import { RenameModal } from "@/components/modals/three-dot";
 import { setCreatedFileIdRedux } from "@/redux/slices/createdFilesEditorSlice";
 import { messagesConfig } from "@/config/messages.config";
-import { IHardDeleteParams } from "@/@types/files";
+import { IHardDeleteParams, ISoftDeleteParams } from "@/@types/files";
+import { CustomConfirmDeleteModal } from "../modals/three-dot/delete";
 
 interface ThreeDotDropdownProps {
   fileId: string;
@@ -289,7 +289,7 @@ export const ThreeDotDropdown = ({
         </div>
       </Dropdown>
 
-      <ConfirmDeleteModal
+      {/* <ConfirmDeleteModal
         fileName={fileName as string}
         open={open}
         setOpen={setOpen}
@@ -306,6 +306,35 @@ export const ThreeDotDropdown = ({
               }),
           });
         }}
+      /> */}
+
+      <CustomConfirmDeleteModal
+        showModal={open}
+        setShowModal={setOpen}
+        onClick={() => {
+          const toastId = toast.loading(messagesConfig.DELETE.LOADING);
+          detelePermanently(hardDeleteParams, {
+            onSuccess: () => {
+              setOpen(false);
+              toast.success(messagesConfig.DELETE.SUCCESS, {
+                id: toastId,
+              });
+            },
+            onError: () =>
+              toast.error(messagesConfig.DELETE.ERROR, {
+                id: toastId,
+              }),
+          });
+        }}
+        title="Permanently Delete This File?"
+        description={
+          <p className="text-[13px] text-center leading-tight text-neutral-400 mb-2">
+            This action will permanently delete &quot;
+            <b>{fileName}</b>
+            {!isFile && <b> &amp; it&apos;s children</b>}
+            &quot;. You won’t be able to recover it later.
+          </p>
+        }
       />
 
       <RenameModal

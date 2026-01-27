@@ -94,7 +94,10 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
 
         <CButton
           onClick={() => setOpen(true)}
-          className={cn("text-[13px]! hover:opacity-80! h-9/10 rounded-md! px-4! flex! items-center! justify-center! gap-x-2!", transitionString)}
+          className={cn(
+            "text-[13px]! hover:opacity-80! h-9/10 rounded-md! px-4! flex! items-center! justify-center! gap-x-2!",
+            transitionString,
+          )}
           style={{ backgroundColor: theme.activeColor }}
         >
           <FaCopy />
@@ -109,7 +112,7 @@ const SharedEditorHeaderComponent = (props: HeaderProps) => {
         output={props.output ?? ""}
         lang={props.p_lang}
       />
-      {showModal && <ReadOnlyInfoModal setShowModal={setShowModal} />}
+      <ReadOnlyInfoModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 };

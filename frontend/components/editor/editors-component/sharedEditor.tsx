@@ -301,7 +301,7 @@ export default function SharedEditorComponent({
         </StyledSplitter>
       </div>
 
-      {showModal && <ReadOnlyInfoModal setShowModal={setShowModal} />}
+      <ReadOnlyInfoModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 }

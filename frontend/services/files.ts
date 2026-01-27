@@ -22,6 +22,8 @@ import { IBaseReturn } from "@/@types/_base";
 import { useDispatch } from "react-redux";
 import { refreshTree, selectFolderId } from "@/redux/slices/fileFolderSlice";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { messagesConfig } from "@/config/messages.config";
 
 const URI = "api/files";
 
@@ -345,14 +347,25 @@ export const useHardDeleteAll = (ownerId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: hardDeleteAll,
-    onSuccess: () => {
+    onMutate: () => {
+      const toastId = toast.loading(messagesConfig.DELETE_ALL.LOADING);
+      return { toastId };
+    },
+    onSuccess: (_data, _variables, context) => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE, ownerId, false],
       });
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.FILE, ownerId, true],
       });
+      toast.success(messagesConfig.DELETE_ALL.SUCCESS, {
+        id: context?.toastId,
+      });
     },
+    onError: (_error, _variables, context) =>
+      toast.error(messagesConfig.DELETE_ALL.ERROR, {
+        id: context?.toastId,
+      }),
   });
 };
 

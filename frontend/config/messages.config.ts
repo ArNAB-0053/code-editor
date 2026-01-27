@@ -79,6 +79,11 @@ export const messagesConfig = {
         SUCCESS: "Successfully Deleted",
         ERROR: "Error Deleting"
     },
+    DELETE_ALL: {
+        LOADING: "Deleting all...",
+        SUCCESS: "Successfully Deleted",
+        ERROR: "Error Deleting"
+    },
 
 
     // Default messages

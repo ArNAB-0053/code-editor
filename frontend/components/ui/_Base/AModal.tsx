@@ -40,20 +40,24 @@ const BaseAModal = ({
   return (
     <StyledModal
       title={
-        <>
-          <h3 className={`px-2 ${websiteFonts[font]?.className} ${className}`}>
-            {title}
-          </h3>
+        title && (
+          <>
+            <h3
+              className={`px-2 ${websiteFonts[font]?.className} ${className}`}
+            >
+              {title}
+            </h3>
 
-          {useSideIndicator && (
-            <div
-              className="w-4 rounded-r-sm h-[30px] absolute top-4 -left-3"
-              style={{
-                backgroundColor: theme.activeColor,
-              }}
-            />
-          )}
-        </>
+            {useSideIndicator && (
+              <div
+                className="w-4 rounded-r-sm h-[30px] absolute top-4 -left-3"
+                style={{
+                  backgroundColor: theme.activeColor,
+                }}
+              />
+            )}
+          </>
+        )
       }
       closeIcon={
         <BaseCButton

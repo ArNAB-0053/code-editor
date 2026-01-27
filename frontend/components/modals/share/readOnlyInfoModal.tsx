@@ -6,8 +6,10 @@ import { cn } from "@/lib/utils";
 import { SetterFunctionTypesBool } from "@/@types/_base";
 
 const ReadOnlyInfoModal = ({
+  showModal,
   setShowModal,
 }: {
+  showModal?: boolean
   setShowModal: SetterFunctionTypesBool;
 }) => {
   return (
@@ -17,13 +19,14 @@ const ReadOnlyInfoModal = ({
           <FaCircleInfo size={24} />
         </div>
       }
+      showModal={showModal}
       title={
         <h2
           className={cn(
             "text-base font-semibold text-center flex items-center gap-x-1"
           )}
         >
-          This editor is{" "}
+          This editor is
           <p
             className={cn(
               "font-semibold underline underline-offset-4 italic text-[17px] translate-y-px",
