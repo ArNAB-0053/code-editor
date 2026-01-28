@@ -39,6 +39,7 @@ builder.Services.AddSingleton<ShareServices>();
 builder.Services.AddSingleton<RedisService>();
 builder.Services.AddSingleton<FilesServices>();
 builder.Services.AddSingleton<NotesService>();
+builder.Services.AddSingleton<SocialService>();
 builder.Services.Configure<DockerSettings>(
     builder.Configuration.GetSection("DockerSettings")
 );

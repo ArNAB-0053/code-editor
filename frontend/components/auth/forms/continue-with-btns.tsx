@@ -22,7 +22,7 @@ export const ContinueWithGoogle = () => {
 
   const { registerUserUsingProvider: registerUser } = useAuth();
 
-  console.log(session?.user);
+  // console.log(session?.user);
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
       setOpen(true);

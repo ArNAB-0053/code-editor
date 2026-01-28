@@ -5,16 +5,18 @@ import {
 } from "@/redux/slices/preferenceSlice";
 import { useSelector } from "react-redux";
 import { themeConfig } from "@/config/themeConfig";
-import { X } from "lucide-react";
 import FileLangLayoutButtons from "./layout-buttons";
-import { spaceGrotesk, websiteFonts } from "@/fonts";
+import { websiteFonts } from "@/fonts";
 import { WebsiteFontsKey } from "@/@types/font";
 import { FullscreenButton } from "./fullscreen-btn";
 import PublishDropdown from "../dropdown/publish-dropdown";
 import NavigationDropdown from "../dropdown/navigation-dropdown";
-import { FullLogo, HalfLogo } from "@/assets/Logo";
-import { cn } from "@/lib/utils";
+import { HalfLogo } from "@/assets/Logo";
 import Link from "next/link";
+import { selectedUserId, selectedUserProvider } from "@/redux/slices/userSlice";
+import { ProviderTypeEnumString } from "@/@types/_enums";
+import { useRouter } from "next/navigation";
+
 
 const FileLanglayoutHeader = () => {
   const editorTheme = useSelector(selectEditorTheme);
@@ -23,6 +25,10 @@ const FileLanglayoutHeader = () => {
   const websiteFont = useSelector(selectWebsiteFont);
   const font = websiteFonts[websiteFont as WebsiteFontsKey];
 
+  const provider = useSelector(selectedUserProvider);
+  const userId = useSelector(selectedUserId);
+
+  const router = useRouter();
   return (
     <header
       className="h-10 w-full flex items-center justify-between border-b "
@@ -33,14 +39,21 @@ const FileLanglayoutHeader = () => {
     >
       <div className=" flex items-center gap-x-4">
         <Link href="/" className="flex items-center opacity-60">
-          <HalfLogo size={30}/>
+          <HalfLogo size={30} />
         </Link>
 
-        <NavigationDropdown/>
+        <NavigationDropdown />
       </div>
 
       <div className="flex items-center justify-end gap-x-6 h-full">
-        <PublishDropdown />
+        {userId &&
+          (provider === ProviderTypeEnumString.NORMAL ? (
+            <button onClick={() => router.push("/api/connect/github")} className="text-xs">
+              Connect to GitHub
+            </button>
+          ) : (
+            <PublishDropdown />
+          ))}
 
         <div className="w-0.5 h-6 " style={{ backgroundColor: theme.border }} />
 

@@ -17,11 +17,16 @@ axiosInstance.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
+    if (originalRequest.url?.includes(`${BACKEND_URI}/api/user/refresh`)) {
+      store.dispatch(setUserEmpty());
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // await refresh();
+        await refresh();            
         return axiosInstance(originalRequest); 
       } catch {
         store.dispatch(setUserEmpty());     

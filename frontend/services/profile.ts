@@ -8,14 +8,14 @@ import { IProfileDetails, IProfileDetailsByUsername } from "@/@types/_base";
 const API = "api/user"
 
 // PROFILE DETAILS from '/me' API
-export const getMyProfile = async (): Promise<IProfileDetails> => {
+export const whoIsMe = async (): Promise<IProfileDetails> => {
   const res = await axiosInstance.get(`api/user/me`);
   return res.data;
 };
-export const useMyProfile = () => {
+export const useMyDetails = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.ME],
-    queryFn: () => getMyProfile(),
+    queryFn: () => whoIsMe(),
   });
 };
 
@@ -39,7 +39,6 @@ export const getProfileDetailsByUsername = async (username: string): Promise<IPr
       username
     }
   });
-  console.log(res.data)
   return res.data;
 };
 export const useGetProfileDetailsByUsername = (username: string) => {

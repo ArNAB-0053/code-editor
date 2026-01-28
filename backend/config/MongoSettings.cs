@@ -11,5 +11,6 @@
         public string FilesCollectionName { get; set; }
         public string FilesCodeCollectionName { get; set; }
         public string NotesCollectionName { get; set; }
+        public string SocialCollectionName { get; set; }
     }
 }

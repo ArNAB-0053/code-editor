@@ -98,7 +98,7 @@ namespace backend.Services.implementations
             var user = _auth.Find(x =>
                x.Provider == provider &&
                x.ProviderId == providerId
-           ).FirstOrDefault();
+            ).FirstOrDefault();
 
             if (user != null)
             {
