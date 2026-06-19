@@ -8,6 +8,12 @@ export const StyledDiv = styled.div<{ $theme: ThemeTypes }>`
   }
 `;
 
+export const StyledButton = styled.button<{ $theme: ThemeTypes }>`
+  &:hover {
+    color: ${({ $theme }) => $theme.activeColor} !important;
+  }
+`;
+
 export const StyledDivBG = styled.div<{ $theme: ThemeTypes }>`
   &:hover {
     background-color: ${({ $theme }) => $theme.activeColor}20 !important;

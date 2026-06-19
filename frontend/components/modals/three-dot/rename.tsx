@@ -51,7 +51,7 @@ export const RenameModal = ({
   };
   return (
     <StyledAModal
-      title={null}
+      title={<h1 className=" font-semibold text-lg pl-1">Rename</h1>}
       open={openRename}
       closeIcon={null}
       onCancel={() => setOpenRename(false)}
@@ -60,10 +60,9 @@ export const RenameModal = ({
       centered
     >
       <div className="flex justify-center flex-col w-full px-5 py-2 ">
-        <h1 className=" font-semibold text-lg pl-1">Rename</h1>
         {isFile ? (
           <div
-            className="mt-4 py-2 px-3 rounded-md flex items-center justify-between"
+            className="mt-2 py-2 px-3 rounded-md flex items-center justify-between"
             style={{
               background: theme.background,
             }}
@@ -72,6 +71,13 @@ export const RenameModal = ({
               value={renameFile}
               onChange={(e) => setRenameFile(e.target.value)}
               className=" outline-none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleRename();
+                } else if (e.key === "Escape") {
+                  setOpenRename(false);
+                }
+              }}
             />
             <span className="w-fit border-l pl-2 opacity-50">
               {getExtention(lang!)}
@@ -79,7 +85,7 @@ export const RenameModal = ({
           </div>
         ) : (
           <div
-            className="mt-4 py-2 px-3 rounded-md flex items-center justify-between"
+            className="my-2 py-2 px-3 rounded-md flex items-center justify-between"
             style={{
               background: theme.background,
             }}
@@ -88,6 +94,13 @@ export const RenameModal = ({
               value={renameFile}
               onChange={(e) => setRenameFile(e.target.value)}
               className=" outline-none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleRename();
+                } else if (e.key === "Escape") {
+                  setOpenRename(false);
+                }
+              }}
             />
           </div>
         )}
@@ -120,4 +133,3 @@ export const RenameModal = ({
     </StyledAModal>
   );
 };
-

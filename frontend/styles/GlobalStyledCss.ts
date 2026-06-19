@@ -97,8 +97,24 @@ export const GlobalStyles = createGlobalStyle<{
     align-items: center !important;
   }
 
-  
-   
+  .ant-select-content-value {
+        display: flex !important;
+    align-items: center !important;
+  }
+
+  .ant-select-item-option-active,
+  .ant-select-dropdown, .ant-select-item-option-selected:not(.ant-select-item-option-disabled)
+  {
+    background-color: ${({ $theme }) => $theme.border10} !important;
+  }
+
+  .ant-select-item, .ant-select-item-option, .ant-select-item-option-active {
+    color: ${({ $theme }) => $theme.textColor} !important;
+  }     
+
+  .ant-splitter >.ant-splitter-bar, .ant-splitter-bar-collapse-bar {
+    z-index: 10 !important;
+  }
 
   // -----------------------------------------------------------------------------------
   //                    antd Tabs that is inside "share" class.

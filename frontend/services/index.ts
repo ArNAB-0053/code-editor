@@ -17,6 +17,9 @@ export const QUERY_KEYS = {
     BREADCRUMB: 'breadcrumbs',
 
     GITHUB: "github",
+
+
+    NOTE: 'notes',
     
     CONNECTION: 'connection',
     NOTIFICATION: 'notification',

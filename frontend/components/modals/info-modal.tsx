@@ -4,15 +4,16 @@ import { themeConfig } from "@/config/themeConfig";
 import { spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { selectEditorTheme } from "@/redux/slices/preferenceSlice";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { useSelector } from "react-redux";
 
 interface CInfoModalProps {
   setShowModal: SetterFunctionTypesBool;
-  Icon: ReactElement;
+  Icon?: ReactElement;
   title: ReactElement | string;
   description: ReactElement | string;
   buttonText?: string | ReactElement;
+  others?: ReactNode;
 }
 
 const CInfoModal = ({
@@ -21,6 +22,7 @@ const CInfoModal = ({
   description,
   buttonText = "I Understand",
   setShowModal,
+  others
 }: CInfoModalProps) => {
   const editorTheme = useSelector(selectEditorTheme);
   const theme = themeConfig(editorTheme);
@@ -36,7 +38,7 @@ const CInfoModal = ({
       {/* Main Modal */}
       <div
         className={cn(
-          "fixed z-40 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+          "fixed z-[999999] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
           "w-[90vw] max-w-sm",
           "rounded-xl border border-white/10",
           "backdrop-blur-xl",
@@ -61,6 +63,8 @@ const CInfoModal = ({
         >
           {buttonText}
         </button>
+
+        {others}
       </div>
     </>
   );

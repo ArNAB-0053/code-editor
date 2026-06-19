@@ -6,13 +6,17 @@ import {
   fallbackAvatar,
   fallbackInitial,
   fallbackProfileDetails,
+  fallbackUserLocalStorage,
 } from "@/constants/base.const";
-import { AvatarTemplate } from "./avatar-template";
 import { spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { FiLogOut } from "react-icons/fi";
 import { useFont } from "@/context/FontProvider";
 import { IProfileDetails } from "@/@types/_base";
+import { AvatarTemplate } from "@/components/dropdown/avatar-template";
+import { useLayoutEffect, useState } from "react";
+import { NRChangedPasswordModal } from "@/components/modals/change-password/NR";
+import { useLogout, useRefresh } from "@/services/auth";
 
 export interface AccountProps {
   profileDetails: IProfileDetails;
@@ -25,6 +29,18 @@ export const NRAvatarDropdown = ({
 }: AccountProps) => {
   const { theme } = useTheme();
   const { font } = useFont();
+
+  const [open, setOpen] = useState(false);
+
+  const { mutateAsync: logout } = useLogout();
+
+  const handleLogout = async () => {
+    await logout();
+    localStorage.setItem(
+      "persist:user",
+      JSON.stringify(fallbackUserLocalStorage),
+    );
+  };
 
   return (
     <>
@@ -79,8 +95,9 @@ export const NRAvatarDropdown = ({
             type="none"
             className={cn(
               "flex! items-center justify-center gap-x-2 text-[#ff4d4f]! bg-[#ff4d4f]/20! hover:opacity-70 transition-all ease-linear duration-100 font-semibold",
-              spaceGrotesk.className
+              spaceGrotesk.className,
             )}
+            onClick={handleLogout}
             // style={{
             //   background: `${theme.activeColor}20`,
             // }}
@@ -94,6 +111,15 @@ export const NRAvatarDropdown = ({
         username={profileDetails?.username || fallbackProfileDetails.username}
         theme={theme}
         font={font}
+        onClick={() => setOpen(true)}
+        modalComponent={
+          <NRChangedPasswordModal
+            open={open}
+            setOpen={setOpen}
+            id={profileDetails?.userId}
+            username={profileDetails?.username}
+          />
+        }
       />
     </>
   );

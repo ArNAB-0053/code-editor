@@ -21,11 +21,11 @@ import { useState } from "react";
 import { messagesConfig } from "@/config/messages.config";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
-import { FormItemComponent } from ".";
 import { ContinueWithGoogle } from "./continue-with-btns";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { appUrls } from "@/config/navigation.config";
+import { FormItemComponent } from "@/components/forms/form-item-component/NR";
 
 const StyledCheckbox = styled(Checkbox)<{ $theme: ThemeTypes }>`
   .ant-checkbox-indeterminate,
@@ -178,6 +178,7 @@ export const SignUpForm = () => {
       validate={zodToFormik(registerSchema)}
       validateOnChange
       onSubmit={async (values, { setSubmitting }) => {
+        console.log(values)
         await registerUser(values);
         setSubmitting(false);
       }}

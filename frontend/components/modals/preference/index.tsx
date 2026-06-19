@@ -193,7 +193,7 @@ const PreferenceModal = ({
             height: `calc(${MODAL_HEIGHT} + 2vh)`,
           }}
           className="-translate-y-1 p-0 pr-0 mx-0!"
-          direction="horizontal"
+          direction="vertical"
         />
 
         <div

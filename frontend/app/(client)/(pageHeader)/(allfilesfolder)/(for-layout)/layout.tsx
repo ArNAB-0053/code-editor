@@ -15,6 +15,8 @@ const Forlayout = ({ children }: { children: ReactNode }) => {
     IsDeleted: false,
     ParentId: currentFolderId,
   };
+
+  console.log("currentFolderId", currentFolderId)
   const { data: files, isLoading } = useFileListByUserId(payload);
 
   return (

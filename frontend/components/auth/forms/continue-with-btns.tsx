@@ -5,15 +5,11 @@ import { spaceGrotesk } from "@/fonts";
 import { cn } from "@/lib/utils";
 import { signIn, useSession } from "next-auth/react";
 import { FaGithub } from "react-icons/fa";
-import { appUrls } from "@/config/navigation.config";
 import { transitionString } from "@/styles";
-import CompleteSignupModal from "@/components/modals/auth/sign-up/complete-signup";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { RegisterProType } from "@/zod/auth.z";
 import { ProviderTypeEnumString } from "@/@types/_enums";
 import { IRegisterUsingProviderRequest } from "@/@types/auth";
-import { NameObjType } from "@/@types/_base";
 import { parseFullName } from "@/helper/_base.helper";
 import EditorLoader from "@/components/Loaders/editor";
 

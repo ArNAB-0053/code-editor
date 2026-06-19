@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { NameObjType } from "@/@types/_base";
-import { REHYDRATE } from "redux-persist";
 
-const EXPIRE_TIME = 48 * 60 * 60 * 1000;
+export const EXPIRE_TIME = 48 * 60 * 60 * 1000;
 
 export interface IUserState {
   id: string;
@@ -13,7 +12,7 @@ export interface IUserState {
   _persistedAt?: number | null;
 }
 
-const initialState: IUserState = {
+export const initialState: IUserState = {
   id: "",
   name: {
     firstName: "Guest",
@@ -44,24 +43,7 @@ export const userSlice = createSlice({
     setPersistedAt: (state, action: PayloadAction<number>) => {
       state._persistedAt = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(REHYDRATE, (action: any) => {
-      const incomingUser = action.payload;
-      const expireTime = action.payload?._persistedAt
-
-      // console.log("KEY ===> REHYDRATE USER:", incomingUser);
-      // console.log("KEY ===> expired USER: Date.now() - expireTime",  Date.now() - expireTime);
-      // console.log("KEY ===> expired USER: EXPIRE_TIME", EXPIRE_TIME);
-      // console.log("KEY ===> expired USER:",  Date.now() - expireTime > EXPIRE_TIME);
-
-      const expired = Date.now() - expireTime > EXPIRE_TIME
-      if (incomingUser?.id && expired) {
-        return initialState; // FULL RESET
-      }
-
-      return incomingUser; // restore persisted user
-    });
+    setUserEmpty: () => initialState,
   },
 });
 
@@ -71,6 +53,7 @@ export const {
   setUserEmail,
   setUserUsername,
   setPersistedAt,
+  setUserEmpty
 } = userSlice.actions;
 
 export const selectedUserId = (state: RootState) => state.user.id;

@@ -1,8 +1,7 @@
 import { IModalProps } from "@/@types/_base";
 import { createRepoRequest } from "@/app/api/github/create-repo/route";
 import { AInputWithLabel, ASelectWithLabel } from "@/components/_base/_base";
-import EditorLoader from "@/components/Loaders/editor";
-import { AButton, AInput, AModal, ASelect } from "@/components/ui/antd";
+import { AButton, AModal } from "@/components/ui/antd";
 import { getExtention } from "@/helper/getExtention";
 import {
   selectedCreatedFileCode,
@@ -16,7 +15,7 @@ import {
   useGithubRepos,
 } from "@/services/github";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 export const PublishFileModal = ({ open, setOpen }: IModalProps) => {
@@ -33,11 +32,14 @@ export const PublishFileModal = ({ open, setOpen }: IModalProps) => {
   const ext = getExtention(currentLang);
   const path = `${currentFileName}${ext}`;
 
-  const allRepos =
-    repos?.map((repo: any) => ({
-      value: repo.name,
-      label: repo.name,
-    })) ?? [];
+  const allRepos = useMemo(() => {
+    return (
+      repos?.map((repo: any) => ({
+        value: repo.name,
+        label: repo.name,
+      })) ?? []
+    );
+  }, [repos]);
 
   useEffect(() => {
     if (!selectedValue && allRepos.length > 0) {
@@ -58,7 +60,7 @@ export const PublishFileModal = ({ open, setOpen }: IModalProps) => {
     setOpen(false);
   };
 
-  if (status === "loading") return <EditorLoader />;
+  if (status === "loading") return;
 
   return (
     <AModal
@@ -123,7 +125,7 @@ export const PublishRepoModal = ({ open, setOpen }: IModalProps) => {
     setOpen(false);
   };
 
-  if (status === "loading") return <EditorLoader />;
+  if (status === "loading") return;
 
   return (
     <AModal

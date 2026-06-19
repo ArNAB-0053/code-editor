@@ -1,6 +1,7 @@
 import React from "react";
-import { Heading } from "./base";
+
 import { EmptyContent } from "../empty";
+import { Heading } from "../_base/_base";
 
 const FilesComponent = () => {
   return (

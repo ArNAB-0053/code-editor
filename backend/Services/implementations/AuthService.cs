@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using backend.config;
+using backend.DTO;
 using backend.Models;
 using BCrypt.Net;
 using MongoDB.Driver;
@@ -14,7 +15,7 @@ namespace backend.Services.implementations
         private readonly RedisService _redis;
 
         // -------------------------------
-        //             CONSTRUCTOR
+        //          CONSTRUCTOR
         // -------------------------------
         public AuthServices(IConfiguration config, RedisService redis)
         {
@@ -29,7 +30,7 @@ namespace backend.Services.implementations
             // Email Index
             var emailIndex = new CreateIndexModel<AuthModel>(
                                     Builders<AuthModel>.IndexKeys.Ascending(x => x.Email),
-                                    new CreateIndexOptions { Unique = true}
+                                    new CreateIndexOptions { Unique = true }
                                 );
             _auth.Indexes.CreateOne(emailIndex);
 
@@ -43,7 +44,7 @@ namespace backend.Services.implementations
         // -------------------------------
 
         // Create / Sign Up
-        public async Task<AuthModel> Create(AuthModel auth)
+        public async Task<AuthModel> Create(AuthModel auth, string confirmPassword)
         {
             //// REDIS checks for email/username exists or not
             //if (await _redis.Exists($"user:username:{auth.Username}")) throw new Exception("Username already in use");
@@ -61,8 +62,21 @@ namespace backend.Services.implementations
             await CheckEmailExists(auth.Email);
 
             if (!IsValidPassword(auth.Password)) throw new Exception("Invalid Password Format");
+            if (!IsValidPassword(confirmPassword)) throw new Exception("Invalid Confirm Password Format");
+
+            // This ???
+            //if (auth.Password != confirmPassword)
+            //{
+            //    throw new Exception("Password didn't match"); 
+            //}
 
             auth.Password = BCrypt.Net.BCrypt.HashPassword(auth.Password);
+
+            // Or this ??? - which one better ????
+            if (!BCrypt.Net.BCrypt.Verify(confirmPassword, auth.Password))
+            {
+                throw new Exception("Password didn't match");
+            }
 
             _auth.InsertOne(auth);
 
@@ -72,13 +86,9 @@ namespace backend.Services.implementations
             return auth;
         }
 
-        public async Task<AuthModel> FindOrCreateOAuthUser(
-            string email,
-            ProviderEnum provider,
-            string providerId,
-            NameDto name,
-            string username
-        ){
+        // Create With Provider
+        public async Task<AuthModel> FindOrCreateOAuthUser(string email, ProviderEnum provider, string providerId, NameDto name, string username)
+        {
             if (string.IsNullOrWhiteSpace(providerId))
                 throw new Exception("Invalid OAuth provider id");
 
@@ -91,12 +101,12 @@ namespace backend.Services.implementations
            ).FirstOrDefault();
 
             if (user != null)
-                    {
-                        if (user.Provider != provider)
-                            throw new Exception("Account exists with a different login method");
+            {
+                if (user.Provider != provider)
+                    throw new Exception("Account exists with a different login method");
 
-                        return user;
-                    }
+                return user;
+            }
 
             if (!string.IsNullOrEmpty(email))
             {
@@ -112,16 +122,16 @@ namespace backend.Services.implementations
             );
 
             var newUser = new AuthModel
-                            {
-                                Email = email,
-                                Provider = provider,
-                                ProviderId = providerId,
-                                Name = name,
-                                Username = generatedUsername,
-                                Password = null
-                            };
+            {
+                Email = email,
+                Provider = provider,
+                ProviderId = providerId,
+                Name = name,
+                Username = generatedUsername,
+                Password = null
+            };
 
-             _auth.InsertOne(newUser);
+            _auth.InsertOne(newUser);
 
 
             await _redis.SetString($"user:username:{username}", newUser.Id);
@@ -130,7 +140,6 @@ namespace backend.Services.implementations
 
             return newUser;
         }
-
 
         // Get all users
         public List<AuthModel> GetAllUsers() => _auth.Find(x => true).ToList();
@@ -166,15 +175,68 @@ namespace backend.Services.implementations
             return user;
         }
 
+        // store refresh_token in the redis
+        public async Task StoreRefreshTokenInRedis(string userId, string refreshToken, IConfiguration config)
+        {
+            var jwtSettings = config.GetSection("JwtSettings");
+            await _redis.SetString(
+                    $"refresh:{userId}:{refreshToken}",
+                    "valid",
+                    expirySeconds: int.Parse(jwtSettings["ExpiryMinutes"]!)
+                );
+        }
+
+        public async Task<bool> IsRefreshTokenValid(string userId, string refreshToken)
+        {
+            return await _redis.Exists($"refresh:{userId}:{refreshToken}");
+        }
+
+        public async Task RemoveRefreshToken(string userId, string refreshToken)
+        {
+            await _redis.Delete($"refresh:{userId}:{refreshToken}");
+        }
+
+
+        //public void LogOut()
+
+        // Change Password
+        public bool ChangePassword(string id, string username, string oldPassword, string newPassword, string confirmNewPassword)
+        {
+            var user = _auth.Find(x => x.Id == id && x.Username == username).FirstOrDefault();
+            if (user == null) throw new Exception("User not found");
+
+            if (user.Provider != ProviderEnum.NORMAL) throw new Exception("Please use your provider");
+
+            if (!IsValidPassword(newPassword)) throw new Exception("Invalid Password Format");
+            if (!IsValidPassword(confirmNewPassword)) throw new Exception("Invalid Password Format");
+
+            if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.Password)) throw new Exception("Old and New Password didn't match");
+
+            newPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+
+            if (!BCrypt.Net.BCrypt.Verify(confirmNewPassword, newPassword)) throw new Exception("Password didn't match");
+
+            var filter = Builders<AuthModel>.Update
+                .Set(x => x.Password, newPassword)
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            var res = _auth.UpdateOne(x => x.Id == id && x.Username == username, filter);
+            return res.ModifiedCount > 0;
+        }
+
+        // -------------------------------
+        //       AVAILABILITY CHECK
+        // -------------------------------
+
         // Checking Username already exists or not
 
         // retruns a VOID
         public async Task CheckUsernameExists(string username)
         {
-       
+
             username = username.ToLower();
 
-            if (!IsValidUsername(username)) throw new Exception("Invalid Username Format");            
+            if (!IsValidUsername(username)) throw new Exception("Invalid Username Format");
 
             if (await _redis.Exists($"user:username:{username}")) throw new Exception("Username already in use");
             // FALLBACK: MONGO checks for email/username exists or not
@@ -222,7 +284,7 @@ namespace backend.Services.implementations
 
         public async Task<List<UserSearchResult>> SearchByUsernameAsync(string prefix)
         {
-            if(string.IsNullOrWhiteSpace(prefix)) return new List<UserSearchResult>();
+            if (string.IsNullOrWhiteSpace(prefix)) return new List<UserSearchResult>();
 
             prefix = prefix.ToLower().Trim();
 
@@ -287,7 +349,7 @@ namespace backend.Services.implementations
             {
                 var regex = new Regex("^[a-z][a-z0-9_-]{2,17}$");
                 return regex.IsMatch(username);
-            } 
+            }
             catch
             {
                 return false;
@@ -311,11 +373,7 @@ namespace backend.Services.implementations
         }
 
         // Generate Username
-        private async Task<string> GenerateUniqueUsername(
-            string githubUsername,
-            string firstName,
-            string lastName
-        )
+        private async Task<string> GenerateUniqueUsername(string githubUsername, string firstName, string lastName)
         {
             if (!string.IsNullOrWhiteSpace(githubUsername))
             {

@@ -16,3 +16,15 @@ export const fallbackProfileDetails: IProfileDetails = {
   password: "",
   username: "guest",
 }
+
+export const fallbackUserLocalStorage = {
+  id: "",
+  name: {
+    firstName: "Guest",
+    middleName: "",
+    lastName: "",
+  },
+  email: "",
+  username: "",
+  _persistedAt: null,
+};

@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 import { jetBrainsMono } from "@/fonts";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { ContinueWithGoogle } from "./continue-with-btns";
-import { FormItemComponent } from ".";
 import { useAuth } from "@/hooks/useAuth";
+import { FormItemComponent } from "@/components/forms/form-item-component/NR";
 
 export const SignInForm = () => {
   const initialValues = {
