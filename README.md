@@ -1,4 +1,7 @@
-# Coditor
+<div align="center">
+   <img width="597" height="195" alt="ascii-art-text (2)" src="https://github.com/user-attachments/assets/c2eb44a1-f72f-4ba8-a512-030d06af851c" />
+</div>
+
 
 This project is a full-stack, containerized code execution platform designed to safely run user-submitted code inside isolated Docker containers. Users can write, execute, and test code directly from the browser, while the backend ensures security, isolation, and consistent runtime environments.
 
@@ -119,8 +122,3 @@ Once execution ends:
 - Containers are cleaned automatically  
 
 This keeps the system clean and memory-efficient.
-
----
-
-<!-- # 📦 High-Level Architecture Diagram -->
-
